@@ -1,0 +1,540 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>語言講座預告 | Jerome Kuo</title>
+    <meta
+      name="description"
+      content="Jerome Kuo 語言學習講座預告，包含團塊法與拼寫記憶術，整理即將公開的講座主題、預計形式與報名資訊。"
+    />
+    <meta property="og:title" content="語言講座預告 | Jerome Kuo" />
+    <meta
+      property="og:description"
+      content="預計公開的語言學習講座資訊：團塊法、拼寫記憶術，以及後續日期、報名與講義資訊。"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://jjfishjj.github.io/lectures/" />
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #10151f;
+        --panel: #151b27;
+        --panel-strong: #1a2230;
+        --text: #f1eadc;
+        --muted: #9ba3b0;
+        --line: rgba(255, 255, 255, 0.11);
+        --gold: #f3b91e;
+        --gold-soft: rgba(243, 185, 30, 0.13);
+        --blue: #7ab7ff;
+        --green: #9be7bf;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        font-family: Inter, "Noto Sans TC", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", sans-serif;
+        background:
+          radial-gradient(circle at top left, rgba(243, 185, 30, 0.12), transparent 34rem),
+          linear-gradient(180deg, #10151f 0%, #0c111a 100%);
+        color: var(--text);
+      }
+
+      a {
+        color: inherit;
+      }
+
+      .shell {
+        width: min(1120px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      .nav {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        border-bottom: 1px solid var(--line);
+        background: rgba(16, 21, 31, 0.86);
+        backdrop-filter: blur(16px);
+      }
+
+      .nav-inner {
+        min-height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: baseline;
+        gap: 8px;
+        text-decoration: none;
+        font-weight: 750;
+        letter-spacing: 0;
+      }
+
+      .brand span:last-child {
+        color: var(--muted);
+        font-weight: 400;
+      }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+
+      .nav-links a,
+      .button {
+        min-height: 40px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        padding: 0 14px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 650;
+        border: 1px solid transparent;
+        transition: border-color 160ms ease, background-color 160ms ease, color 160ms ease;
+      }
+
+      .nav-links a {
+        color: var(--muted);
+      }
+
+      .nav-links a:hover {
+        color: var(--text);
+        border-color: var(--line);
+        background: rgba(255, 255, 255, 0.04);
+      }
+
+      .button.primary {
+        background: var(--gold);
+        color: #171005;
+      }
+
+      .button.secondary {
+        border-color: var(--line);
+        color: var(--text);
+        background: rgba(255, 255, 255, 0.04);
+      }
+
+      .hero {
+        padding: 86px 0 64px;
+      }
+
+      .eyebrow {
+        width: fit-content;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 22px;
+        padding: 7px 11px;
+        border: 1px solid rgba(243, 185, 30, 0.24);
+        border-radius: 999px;
+        color: var(--gold);
+        background: var(--gold-soft);
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      h1 {
+        max-width: 760px;
+        margin: 0;
+        font-size: clamp(40px, 7vw, 78px);
+        line-height: 0.98;
+        letter-spacing: 0;
+      }
+
+      .lead {
+        max-width: 720px;
+        margin: 24px 0 0;
+        color: var(--muted);
+        font-size: clamp(17px, 2vw, 21px);
+        line-height: 1.75;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 34px;
+      }
+
+      section {
+        padding: 54px 0;
+      }
+
+      .section-head {
+        display: grid;
+        grid-template-columns: 1fr minmax(240px, 420px);
+        gap: 28px;
+        align-items: end;
+        margin-bottom: 28px;
+      }
+
+      h2 {
+        margin: 0;
+        font-size: clamp(28px, 4vw, 42px);
+        letter-spacing: 0;
+      }
+
+      .section-head p,
+      .copy {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.75;
+      }
+
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      .card,
+      .step {
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: linear-gradient(180deg, var(--panel) 0%, #111722 100%);
+        box-shadow: 0 18px 50px rgba(0, 0, 0, 0.24);
+      }
+
+      .card {
+        padding: 26px;
+      }
+
+      .card-top {
+        display: flex;
+        justify-content: space-between;
+        gap: 18px;
+        align-items: flex-start;
+        margin-bottom: 20px;
+      }
+
+      .icon {
+        width: 48px;
+        height: 48px;
+        display: grid;
+        place-items: center;
+        border-radius: 10px;
+        background: var(--gold-soft);
+        color: var(--gold);
+        font-size: 24px;
+      }
+
+      .topic-meta {
+        margin: 0 0 4px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      h3 {
+        margin: 0;
+        font-size: 26px;
+        letter-spacing: 0;
+      }
+
+      .status {
+        flex: 0 0 auto;
+        border: 1px solid rgba(243, 185, 30, 0.28);
+        border-radius: 999px;
+        padding: 6px 10px;
+        color: var(--gold);
+        background: rgba(243, 185, 30, 0.08);
+        font-size: 12px;
+        font-weight: 750;
+      }
+
+      .card p {
+        color: var(--muted);
+        line-height: 1.75;
+      }
+
+      .checks {
+        display: grid;
+        gap: 12px;
+        margin: 22px 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .checks li {
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+        color: rgba(241, 234, 220, 0.9);
+        line-height: 1.5;
+      }
+
+      .checks li::before {
+        content: "✓";
+        flex: 0 0 auto;
+        color: var(--gold);
+        font-weight: 900;
+      }
+
+      .format {
+        padding: 15px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.04);
+      }
+
+      .format small {
+        display: block;
+        margin-bottom: 5px;
+        color: var(--muted);
+      }
+
+      .format strong {
+        color: var(--text);
+      }
+
+      .steps {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .step {
+        padding: 22px;
+      }
+
+      .number {
+        width: 34px;
+        height: 34px;
+        display: grid;
+        place-items: center;
+        margin-bottom: 16px;
+        border-radius: 8px;
+        background: var(--gold);
+        color: #171005;
+        font-weight: 850;
+      }
+
+      .step h3 {
+        font-size: 18px;
+        margin-bottom: 8px;
+      }
+
+      .step p {
+        color: var(--muted);
+        line-height: 1.65;
+        margin: 0;
+      }
+
+      .note {
+        padding: 38px;
+        border-radius: 14px;
+        background: var(--gold);
+        color: #171005;
+        text-align: center;
+      }
+
+      .note h2,
+      .note p {
+        color: inherit;
+      }
+
+      .note p {
+        max-width: 720px;
+        margin: 16px auto 0;
+        line-height: 1.75;
+      }
+
+      footer {
+        padding: 34px 0;
+        color: var(--muted);
+        border-top: 1px solid var(--line);
+      }
+
+      @media (max-width: 780px) {
+        .nav-inner {
+          align-items: flex-start;
+          flex-direction: column;
+          padding: 14px 0;
+        }
+
+        .nav-links {
+          justify-content: flex-start;
+        }
+
+        .hero {
+          padding-top: 56px;
+        }
+
+        .section-head,
+        .cards,
+        .steps {
+          grid-template-columns: 1fr;
+        }
+
+        .card-top {
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="nav">
+      <div class="shell nav-inner">
+        <a class="brand" href="https://jeromekuo.lovable.app/">
+          <strong>Jerome</strong>
+          <span>Kuo</span>
+        </a>
+        <nav class="nav-links" aria-label="主要連結">
+          <a href="https://jeromekuo.lovable.app/">主網站</a>
+          <a href="https://jeromekuo.lovable.app/language">語言資源</a>
+          <a href="https://jeromekuo.lovable.app/contact">聯絡</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="shell">
+          <div class="eyebrow">語言講座預告</div>
+          <h1>Language Learning Lectures</h1>
+          <p class="lead">
+            預備公開的語言學習講座資訊。這裡會整理即將開放的主題、講座形式、
+            報名資訊與講義資源，先從「團塊法」與「拼寫記憶術」開始。
+          </p>
+          <div class="actions">
+            <a class="button primary" href="https://jeromekuo.lovable.app/contact">詢問講座合作</a>
+            <a class="button secondary" href="https://jeromekuo.lovable.app/language">查看語言學習資源</a>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="shell">
+          <div class="section-head">
+            <div>
+              <div class="eyebrow">Upcoming Topics</div>
+              <h2>預計公開的講座主題</h2>
+            </div>
+            <p>
+              內容會保留彈性，後續可補上日期、費用、直播連結、報名表、
+              回放期限與講義下載。
+            </p>
+          </div>
+
+          <div class="cards">
+            <article class="card">
+              <div class="card-top">
+                <div>
+                  <div class="icon">▦</div>
+                  <p class="topic-meta">Chunking Method</p>
+                  <h3>團塊法</h3>
+                </div>
+                <span class="status">預計公開</span>
+              </div>
+              <p>
+                把零散詞彙、句型與發音線索整理成可記憶的語言團塊，
+                降低大腦負擔，讓輸入更容易變成可提取的表達。
+              </p>
+              <ul class="checks">
+                <li>建立語言團塊分類表</li>
+                <li>練習短句到長句的組合</li>
+                <li>設計自己的記憶回收流程</li>
+              </ul>
+              <div class="format">
+                <small>預計形式</small>
+                <strong>90 分鐘講座 + 練習工作紙</strong>
+              </div>
+            </article>
+
+            <article class="card">
+              <div class="card-top">
+                <div>
+                  <div class="icon">Aa</div>
+                  <p class="topic-meta">Spelling Memory System</p>
+                  <h3>拼寫記憶術</h3>
+                </div>
+                <span class="status">規劃中</span>
+              </div>
+              <p>
+                從字母形狀、音節節奏、語源線索與常見拼寫模式切入，
+                建立更穩定的拼寫記憶，不只背單字，也理解單字如何被組成。
+              </p>
+              <ul class="checks">
+                <li>拆解容易混淆的拼寫</li>
+                <li>建立音形連結</li>
+                <li>設計跨語言拼寫提醒卡</li>
+              </ul>
+              <div class="format">
+                <small>預計形式</small>
+                <strong>75 分鐘講座 + 示範練習</strong>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="shell">
+          <div class="section-head">
+            <div>
+              <div class="eyebrow">Lecture Design</div>
+              <h2>講座會聚焦在可實作的記憶方法</h2>
+            </div>
+            <p>
+              每個主題都會從具體的語言學習痛點出發，先拆解記憶負擔，
+              再示範如何把材料整理成可練習、可回收、可持續調整的學習系統。
+            </p>
+          </div>
+
+          <div class="steps">
+            <div class="step">
+              <div class="number">1</div>
+              <h3>內容設計</h3>
+              <p>主題架構與練習方法整理中。</p>
+            </div>
+            <div class="step">
+              <div class="number">2</div>
+              <h3>素材準備</h3>
+              <p>講義、示範題與練習工作紙製作中。</p>
+            </div>
+            <div class="step">
+              <div class="number">3</div>
+              <h3>公開資訊</h3>
+              <p>日期、場次與報名方式將後續公布。</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="shell">
+          <div class="note">
+            <h2>後續可以補上的資訊</h2>
+            <p>
+              講座日期、適合對象、報名表、費用、線上直播連結、回放期限、
+              講義下載與合作邀約方式，都可以集中放在這個頁面更新。
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="shell">
+        © 2026 Jerome Kuo · Standalone GitHub Pages lecture preview.
+      </div>
+    </footer>
+  </body>
+</html>
