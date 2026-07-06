@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#0f0f0f"/>
+  <rect x="0" y="0" width="1200" height="8" fill="#76b900"/>
+  <g font-family="'Helvetica Neue', Arial, sans-serif">
+    <rect x="80" y="90" width="360" height="52" rx="26" fill="#1a2b1a" stroke="#2a4a1a" stroke-width="2"/>
+    <circle cx="118" cy="116" r="7" fill="#76b900"/>
+    <text x="138" y="124" fill="#76b900" font-size="24" font-weight="bold" letter-spacing="1">NVIDIA Agent Skills</text>
+
+    <text x="80" y="270" fill="#ffffff" font-size="82" font-weight="bold">實際應用案例展示</text>
+    <text x="80" y="345" fill="#9a9a9a" font-size="34">52 個精選案例 · GPU 計算 · LLM 訓練 · 推論部署</text>
+    <text x="80" y="395" fill="#9a9a9a" font-size="34">醫療 AI · 視覺 AI · TAO Toolkit · Physical AI</text>
+
+    <rect x="80" y="470" width="500" height="60" rx="12" fill="#141414" stroke="#2a2a2a" stroke-width="2"/>
+    <text x="104" y="509" fill="#76b900" font-size="26" font-family="'Courier New', monospace">npx skills add nvidia/skills</text>
+
+    <text x="80" y="590" fill="#666666" font-size="26">github.com/jjfishjj  ·  jjfishjj.github.io</text>
+  </g>
+</svg>
