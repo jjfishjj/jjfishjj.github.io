@@ -49,6 +49,10 @@ export default function App() {
         <a className="hero-link" href="https://github.com/nvidia/skills" target="_blank" rel="noreferrer">
           github.com/nvidia/skills ↗
         </a>
+        <div className="hero-actions">
+          <a className="profile-link" href="/linkedin/">經歷儀表板</a>
+          <a className="profile-link" href="/lectures/">語言講座</a>
+        </div>
       </header>
 
       <main className="main">
@@ -139,6 +143,10 @@ export default function App() {
         <p>
           Built by{' '}
           <a href="https://github.com/jjfishjj" target="_blank" rel="noreferrer">@jjfishjj</a>
+          {' · '}
+          <a href="/linkedin/">Professional Profile</a>
+          {' · '}
+          <a href="/lectures/">Lectures</a>
           {' · '}
           Data from{' '}
           <a href="https://github.com/nvidia/skills" target="_blank" rel="noreferrer">NVIDIA/skills</a>

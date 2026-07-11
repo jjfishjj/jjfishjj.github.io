@@ -1,0 +1,775 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Professional Profile & Experience Dashboard | Kuo Jun Bin</title>
+    <meta
+      name="description"
+      content="Kuo Jun Bin / Jerome 的專業經歷展示頁，整理 LinkedIn、GitHub 專案、NVIDIA Agent Skills 案例、語言講座與成果數據儀表板。"
+    />
+    <meta property="og:title" content="Kuo Jun Bin | Professional Profile Dashboard" />
+    <meta
+      property="og:description"
+      content="以數據儀表板呈現 AI、GPU computing、部署、醫療 AI、視覺 AI、IC power efficiency 與語言講座相關經驗。"
+    />
+    <meta property="og:type" content="profile" />
+    <meta property="og:url" content="https://jjfishjj.github.io/linkedin/" />
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #0d1117;
+        --panel: #131a24;
+        --panel-2: #172131;
+        --text: #eef2f7;
+        --muted: #98a2b3;
+        --line: rgba(255, 255, 255, 0.12);
+        --green: #76b900;
+        --green-soft: rgba(118, 185, 0, 0.16);
+        --blue: #5aa7ff;
+        --gold: #f3b91e;
+        --pink: #ff7ab6;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-width: 320px;
+        font-family: Inter, "Noto Sans TC", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", sans-serif;
+        background:
+          radial-gradient(circle at 14% 10%, rgba(118, 185, 0, 0.17), transparent 28rem),
+          radial-gradient(circle at 85% 12%, rgba(90, 167, 255, 0.12), transparent 30rem),
+          linear-gradient(180deg, #0d1117 0%, #090d13 100%);
+        color: var(--text);
+      }
+
+      a {
+        color: inherit;
+      }
+
+      .shell {
+        width: min(1160px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        border-bottom: 1px solid var(--line);
+        background: rgba(13, 17, 23, 0.86);
+        backdrop-filter: blur(18px);
+      }
+
+      .topbar-inner {
+        min-height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .brand {
+        text-decoration: none;
+        font-weight: 800;
+        letter-spacing: 0;
+      }
+
+      .brand span {
+        color: var(--green);
+      }
+
+      .nav {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .nav a,
+      .button {
+        min-height: 40px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid transparent;
+        border-radius: 8px;
+        padding: 0 14px;
+        color: var(--muted);
+        font-size: 14px;
+        font-weight: 700;
+        text-decoration: none;
+      }
+
+      .nav a:hover,
+      .button.secondary:hover {
+        color: var(--text);
+        border-color: var(--line);
+        background: rgba(255, 255, 255, 0.05);
+      }
+
+      .button.primary {
+        color: #071006;
+        background: var(--green);
+      }
+
+      .button.secondary {
+        color: var(--text);
+        border-color: var(--line);
+        background: rgba(255, 255, 255, 0.04);
+      }
+
+      .hero {
+        padding: 88px 0 54px;
+      }
+
+      .hero-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.12fr) minmax(300px, 0.88fr);
+        gap: 32px;
+        align-items: end;
+      }
+
+      .eyebrow {
+        width: fit-content;
+        margin-bottom: 18px;
+        padding: 7px 11px;
+        border: 1px solid rgba(118, 185, 0, 0.28);
+        border-radius: 999px;
+        color: var(--green);
+        background: var(--green-soft);
+        font-size: 13px;
+        font-weight: 800;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin-top: 0;
+      }
+
+      h1 {
+        max-width: 780px;
+        margin-bottom: 22px;
+        font-size: clamp(42px, 7vw, 76px);
+        line-height: 0.98;
+        letter-spacing: 0;
+      }
+
+      .lead {
+        max-width: 780px;
+        margin-bottom: 28px;
+        color: var(--muted);
+        font-size: clamp(17px, 2vw, 21px);
+        line-height: 1.75;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .identity-card {
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 24px;
+        background: linear-gradient(180deg, rgba(23, 33, 49, 0.94), rgba(19, 26, 36, 0.94));
+        box-shadow: 0 22px 70px rgba(0, 0, 0, 0.28);
+      }
+
+      .identity-card h2 {
+        margin-bottom: 8px;
+        font-size: 24px;
+      }
+
+      .identity-card p {
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      .id-list {
+        display: grid;
+        gap: 10px;
+        margin-top: 22px;
+      }
+
+      .id-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        padding-top: 10px;
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .id-row strong {
+        color: var(--text);
+      }
+
+      section {
+        padding: 46px 0;
+      }
+
+      .section-head {
+        display: grid;
+        grid-template-columns: 1fr minmax(260px, 420px);
+        gap: 28px;
+        align-items: end;
+        margin-bottom: 24px;
+      }
+
+      h2 {
+        margin-bottom: 0;
+        font-size: clamp(28px, 4vw, 42px);
+        letter-spacing: 0;
+      }
+
+      .section-head p,
+      .muted {
+        color: var(--muted);
+        line-height: 1.75;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .stat,
+      .panel,
+      .experience,
+      .metric-card {
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: rgba(19, 26, 36, 0.86);
+      }
+
+      .stat {
+        padding: 20px;
+      }
+
+      .stat .value {
+        margin-bottom: 8px;
+        color: var(--green);
+        font-size: clamp(28px, 4vw, 44px);
+        font-weight: 900;
+        line-height: 1;
+      }
+
+      .stat .label {
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.5;
+      }
+
+      .dashboard {
+        display: grid;
+        grid-template-columns: minmax(0, 1.2fr) minmax(300px, 0.8fr);
+        gap: 16px;
+      }
+
+      .panel {
+        padding: 24px;
+      }
+
+      .panel h3 {
+        margin-bottom: 16px;
+        font-size: 18px;
+      }
+
+      .bars {
+        display: grid;
+        gap: 14px;
+      }
+
+      .bar-row {
+        display: grid;
+        grid-template-columns: 104px 1fr 38px;
+        gap: 12px;
+        align-items: center;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .track {
+        height: 12px;
+        overflow: hidden;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.08);
+      }
+
+      .fill {
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(90deg, var(--green), var(--blue));
+      }
+
+      .metric-list {
+        display: grid;
+        gap: 12px;
+      }
+
+      .metric-card {
+        padding: 16px;
+      }
+
+      .metric-card strong {
+        display: block;
+        margin-bottom: 6px;
+        color: var(--text);
+      }
+
+      .metric-card span {
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.6;
+      }
+
+      .experience-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .experience {
+        padding: 22px;
+      }
+
+      .experience .tag {
+        width: fit-content;
+        margin-bottom: 16px;
+        padding: 5px 9px;
+        border-radius: 7px;
+        color: #071006;
+        background: var(--green);
+        font-size: 12px;
+        font-weight: 850;
+      }
+
+      .experience h3 {
+        margin-bottom: 10px;
+        font-size: 21px;
+      }
+
+      .experience p {
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+        margin-top: 18px;
+      }
+
+      .chip {
+        border: 1px solid rgba(118, 185, 0, 0.28);
+        border-radius: 999px;
+        padding: 4px 9px;
+        color: var(--green);
+        background: var(--green-soft);
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .timeline {
+        position: relative;
+        display: grid;
+        gap: 14px;
+      }
+
+      .timeline-item {
+        display: grid;
+        grid-template-columns: 142px 1fr;
+        gap: 18px;
+        padding: 20px;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: rgba(19, 26, 36, 0.72);
+      }
+
+      .time {
+        color: var(--green);
+        font-size: 13px;
+        font-weight: 850;
+      }
+
+      .timeline-item h3 {
+        margin-bottom: 8px;
+        font-size: 19px;
+      }
+
+      .timeline-item p {
+        margin-bottom: 0;
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      .outcomes {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .outcome {
+        padding: 24px;
+        border-radius: 14px;
+        color: #071006;
+        background: var(--green);
+      }
+
+      .outcome.alt {
+        color: var(--text);
+        background: linear-gradient(135deg, rgba(90, 167, 255, 0.2), rgba(255, 122, 182, 0.18));
+        border: 1px solid var(--line);
+      }
+
+      .outcome h3 {
+        margin-bottom: 10px;
+        font-size: 22px;
+      }
+
+      .outcome p {
+        margin-bottom: 0;
+        line-height: 1.7;
+      }
+
+      footer {
+        padding: 34px 0;
+        color: var(--muted);
+        border-top: 1px solid var(--line);
+      }
+
+      @media (max-width: 900px) {
+        .hero-grid,
+        .section-head,
+        .dashboard,
+        .experience-grid,
+        .outcomes {
+          grid-template-columns: 1fr;
+        }
+
+        .stats-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 640px) {
+        .topbar-inner {
+          align-items: flex-start;
+          flex-direction: column;
+          padding: 14px 0;
+        }
+
+        .hero {
+          padding-top: 56px;
+        }
+
+        .stats-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .bar-row,
+        .timeline-item {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="shell topbar-inner">
+        <a class="brand" href="/">Kuo Jun Bin <span>/ Jerome</span></a>
+        <nav class="nav" aria-label="主要連結">
+          <a href="/">首頁</a>
+          <a href="/lectures/">語言講座</a>
+          <a href="https://github.com/jjfishjj" target="_blank" rel="noreferrer">GitHub</a>
+          <a href="https://www.linkedin.com/in/kuo-jun-bin-%EC%A4%80%EB%B9%88-jerome-0a224490/" target="_blank" rel="noreferrer">LinkedIn</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="shell hero-grid">
+          <div>
+            <div class="eyebrow">Professional Profile & Experience Dashboard</div>
+            <h1>把 AI 技術探索、專案成果與教學講座整理成可讀的經歷儀表板。</h1>
+            <p class="lead">
+              這個頁面把公開可確認的 GitHub 專案、NVIDIA Agent Skills 案例整理、
+              IC power efficiency 研究方向、語言學習講座規劃與 LinkedIn profile 串成一個專業展示頁。
+            </p>
+            <div class="actions">
+              <a class="button primary" href="https://www.linkedin.com/in/kuo-jun-bin-%EC%A4%80%EB%B9%88-jerome-0a224490/" target="_blank" rel="noreferrer">查看 LinkedIn 原始履歷</a>
+              <a class="button secondary" href="https://github.com/jjfishjj" target="_blank" rel="noreferrer">查看 GitHub 專案</a>
+            </div>
+          </div>
+
+          <aside class="identity-card">
+            <h2>Kuo Jun Bin / 준빈 / Jerome</h2>
+            <p>
+              以 AI tooling、GPU computing、LLM deployment、視覺與醫療 AI、
+              IC power efficiency 和語言學習方法為主要公開作品脈絡。
+            </p>
+            <div class="id-list">
+              <div class="id-row"><span>GitHub</span><strong>@jjfishjj</strong></div>
+              <div class="id-row"><span>Profile Page</span><strong>jjfishjj.github.io</strong></div>
+              <div class="id-row"><span>LinkedIn</span><strong>Kuo Jun Bin</strong></div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section>
+        <div class="shell">
+          <div class="section-head">
+            <div>
+              <div class="eyebrow">Snapshot</div>
+              <h2>公開成果數據</h2>
+            </div>
+            <p>
+              這些數據來自目前公開網站與 GitHub 可確認資料，方便訪客快速看懂你的經驗密度與技術分布。
+            </p>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat">
+              <div class="value">55</div>
+              <div class="label">NVIDIA Agent Skills 案例整理</div>
+            </div>
+            <div class="stat">
+              <div class="value">7</div>
+              <div class="label">AI / GPU 技術分類</div>
+            </div>
+            <div class="stat">
+              <div class="value">21</div>
+              <div class="label">GitHub public repositories</div>
+            </div>
+            <div class="stat">
+              <div class="value">2</div>
+              <div class="label">目前突出展示專案</div>
+            </div>
+            <div class="stat">
+              <div class="value">2</div>
+              <div class="label">已上線展示分頁</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="shell">
+          <div class="section-head">
+            <div>
+              <div class="eyebrow">Capability Map</div>
+              <h2>技術經驗分布</h2>
+            </div>
+            <p>
+              下面用已整理的 55 個案例做技術分布視覺化，最高值為 AI / LLM 的 12 個案例。
+            </p>
+          </div>
+
+          <div class="dashboard">
+            <div class="panel">
+              <h3>NVIDIA Agent Skills 案例數量</h3>
+              <div class="bars">
+                <div class="bar-row">
+                  <span>AI / LLM</span>
+                  <div class="track"><div class="fill" style="width: 100%"></div></div>
+                  <strong>12</strong>
+                </div>
+                <div class="bar-row">
+                  <span>部署 / 推論</span>
+                  <div class="track"><div class="fill" style="width: 83%"></div></div>
+                  <strong>10</strong>
+                </div>
+                <div class="bar-row">
+                  <span>GPU 計算</span>
+                  <div class="track"><div class="fill" style="width: 67%"></div></div>
+                  <strong>8</strong>
+                </div>
+                <div class="bar-row">
+                  <span>TAO Toolkit</span>
+                  <div class="track"><div class="fill" style="width: 67%"></div></div>
+                  <strong>8</strong>
+                </div>
+                <div class="bar-row">
+                  <span>醫療 AI</span>
+                  <div class="track"><div class="fill" style="width: 58%"></div></div>
+                  <strong>7</strong>
+                </div>
+                <div class="bar-row">
+                  <span>視覺 AI</span>
+                  <div class="track"><div class="fill" style="width: 50%"></div></div>
+                  <strong>6</strong>
+                </div>
+                <div class="bar-row">
+                  <span>Physical AI</span>
+                  <div class="track"><div class="fill" style="width: 33%"></div></div>
+                  <strong>4</strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel">
+              <h3>成果閱讀方式</h3>
+              <div class="metric-list">
+                <div class="metric-card">
+                  <strong>技術整理能力</strong>
+                  <span>把 NVIDIA skills 轉成可搜尋、可複製指令、可按分類閱讀的案例展示頁。</span>
+                </div>
+                <div class="metric-card">
+                  <strong>專案研究能力</strong>
+                  <span>以 GPU acceleration、LLM deployment、IC power efficiency 作為公開專案主軸。</span>
+                </div>
+                <div class="metric-card">
+                  <strong>教學產品化能力</strong>
+                  <span>將團塊法與拼寫記憶術整理成可公開、可報名、可持續更新的講座頁。</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="shell">
+          <div class="section-head">
+            <div>
+              <div class="eyebrow">Experience Themes</div>
+              <h2>經驗主題整理</h2>
+            </div>
+            <p>
+              這裡用「可展示給訪客看的能力主題」整理，而不是只列履歷條目，方便招聘者、合作方或學生快速理解。
+            </p>
+          </div>
+
+          <div class="experience-grid">
+            <article class="experience">
+              <div class="tag">AI Engineering</div>
+              <h3>AI / GPU 技術案例轉譯</h3>
+              <p>
+                將 NVIDIA ecosystem 的工具與場景轉成可讀案例，涵蓋 GPU compute、
+                LLM training、inference deployment、RAG、medical AI 和 video AI。
+              </p>
+              <div class="chips">
+                <span class="chip">NVIDIA Skills</span>
+                <span class="chip">GPU Computing</span>
+                <span class="chip">LLM Deployment</span>
+              </div>
+            </article>
+
+            <article class="experience">
+              <div class="tag">Research</div>
+              <h3>IC power efficiency 與系統最佳化</h3>
+              <p>
+                以 clock / power gating、DVFS、AI power prediction 等方向整理晶片節能研究，
+                將技術概念轉成可追蹤的專案成果。
+              </p>
+              <div class="chips">
+                <span class="chip">DVFS</span>
+                <span class="chip">Power Gating</span>
+                <span class="chip">AI Power Prediction</span>
+              </div>
+            </article>
+
+            <article class="experience">
+              <div class="tag">Teaching</div>
+              <h3>語言學習方法與講座設計</h3>
+              <p>
+                正在把團塊法、拼寫記憶術整理成語言學習講座，重點放在可練習、
+                可回收、可持續調整的學習系統。
+              </p>
+              <div class="chips">
+                <span class="chip">團塊法</span>
+                <span class="chip">拼寫記憶術</span>
+                <span class="chip">Lecture Design</span>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="shell">
+          <div class="section-head">
+            <div>
+              <div class="eyebrow">Portfolio Timeline</div>
+              <h2>公開作品脈絡</h2>
+            </div>
+            <p>
+              這是目前可從公開專案確認的展示脈絡，後續可以補上 LinkedIn 裡的正式職稱、公司與任職時間。
+            </p>
+          </div>
+
+          <div class="timeline">
+            <div class="timeline-item">
+              <div class="time">AI / NVIDIA</div>
+              <div>
+                <h3>NVIDIA Agent Skills showcase</h3>
+                <p>
+                  建立 55 個案例的搜尋式展示頁，讓訪客能按技術領域理解 NVIDIA AI tooling 的實際應用。
+                </p>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="time">Research / IC</div>
+              <div>
+                <h3>IC power efficiency research</h3>
+                <p>
+                  整理晶片節能與 AI 功耗預測方向，作為跨硬體、AI 與系統最佳化的公開研究作品。
+                </p>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="time">Education</div>
+              <div>
+                <h3>Language learning lecture preview</h3>
+                <p>
+                  上線語言講座預告頁，先聚焦團塊法與拼寫記憶術，後續可補日期、報名、講義與回放資訊。
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="shell">
+          <div class="outcomes">
+            <div class="outcome">
+              <h3>適合給誰看？</h3>
+              <p>
+                招聘者、合作夥伴、技術社群、課程學生，都可以從這頁快速看到你的技術方向、
+                專案成果與可合作主題。
+              </p>
+            </div>
+            <div class="outcome alt">
+              <h3>下一步可以補強</h3>
+              <p>
+                若提供 LinkedIn 匯出的 PDF 或履歷文字，這頁可以再加入正式工作經歷、
+                時間軸、職責摘要、成就指標與更完整的數據視覺化。
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="shell">
+        © 2026 Kuo Jun Bin / Jerome · LinkedIn profile hub and experience dashboard.
+      </div>
+    </footer>
+  </body>
+</html>
