@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>NCTU Campus Digital Twin</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.161.0/build/three.module.js",
+          "three/addons/": "https://unpkg.com/three@0.161.0/examples/jsm/"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="viewport" aria-label="3D NCTU campus scene">
+        <canvas id="campus-canvas"></canvas>
+        <div class="hud">
+          <div>
+            <p class="eyebrow">OpenUSD / Omniverse / Isaac concept</p>
+            <h1>NCTU Campus Digital Twin</h1>
+          </div>
+          <div class="stats">
+            <span>Buildings 8</span>
+            <span>Routes 3</span>
+            <span>Robots 1</span>
+          </div>
+        </div>
+        <div class="toolbar" aria-label="Scene controls">
+          <button id="view-overview" type="button">Overview</button>
+          <button id="view-gate" type="button">Main Gate</button>
+          <button id="view-plaza" type="button">Plaza</button>
+          <button id="toggle-route" type="button" aria-pressed="true">Route On</button>
+        </div>
+      </section>
+      <aside class="panel" aria-label="Project details">
+        <h2>Campus Scene</h2>
+        <p>
+          A GitHub Pages ready 3D blockout inspired by a Taiwanese university campus. The
+          model uses original proxy geometry for roads, buildings, trees, lights, and an Isaac-style
+          patrol robot route.
+        </p>
+        <dl>
+          <div>
+            <dt>OpenUSD target</dt>
+            <dd>Layered campus geometry and simulation assets</dd>
+          </div>
+          <div>
+            <dt>Omniverse target</dt>
+            <dd>RTX lighting, materials, and digital twin review</dd>
+          </div>
+          <div>
+            <dt>Isaac target</dt>
+            <dd>Robot navigation, sensors, and synthetic data</dd>
+          </div>
+        </dl>
+      </aside>
+    </main>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
