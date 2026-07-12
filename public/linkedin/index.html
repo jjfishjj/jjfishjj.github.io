@@ -6,12 +6,12 @@
     <title>Professional Profile & Experience Dashboard | Kuo Jun Bin</title>
     <meta
       name="description"
-      content="Kuo Jun Bin / Jerome 的專業經歷展示頁，整理 LinkedIn、GitHub 專案、Gamania AI 專案、MetaSens 遊戲經驗、數據分析提案儀表板與語言講座。"
+      content="Kuo Jun Bin / Jerome 的專業經歷展示頁，整理 LinkedIn、GitHub 專案、Gamania AI 專案、MetaSens 遊戲經驗、數據分析提案儀表板、3D 互動展示與語言講座。"
     />
     <meta property="og:title" content="Kuo Jun Bin | Professional Profile Dashboard" />
     <meta
       property="og:description"
-      content="以數據儀表板呈現 AI、GPU computing、遊戲專案、數據分析、IC power efficiency 與語言講座相關經驗。"
+      content="以數據儀表板呈現 AI、GPU computing、Omniverse / Isaac Sim 概念、遊戲專案、數據分析、IC power efficiency 與語言講座相關經驗。"
     />
     <meta property="og:type" content="profile" />
     <meta property="og:url" content="https://jjfishjj.github.io/linkedin/" />
@@ -334,6 +334,140 @@
         line-height: 1.6;
       }
 
+      .sim-lab {
+        display: grid;
+        grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.75fr);
+        gap: 16px;
+        align-items: stretch;
+      }
+
+      .sim-scene {
+        position: relative;
+        min-height: 460px;
+        overflow: hidden;
+        border: 1px solid rgba(118, 185, 0, 0.22);
+        border-radius: 16px;
+        background:
+          linear-gradient(180deg, rgba(10, 16, 24, 0.82), rgba(5, 8, 13, 0.96)),
+          radial-gradient(circle at 50% 20%, rgba(90, 167, 255, 0.16), transparent 28rem);
+      }
+
+      .sim-scene canvas {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+
+      .sim-overlay {
+        position: absolute;
+        left: 18px;
+        right: 18px;
+        bottom: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        pointer-events: none;
+      }
+
+      .sim-status {
+        max-width: 420px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 12px;
+        padding: 12px 14px;
+        color: var(--text);
+        background: rgba(9, 13, 19, 0.74);
+        backdrop-filter: blur(10px);
+        font-size: 13px;
+        line-height: 1.6;
+      }
+
+      .sim-score {
+        min-width: 96px;
+        border-radius: 12px;
+        padding: 12px 14px;
+        color: #071006;
+        background: var(--green);
+        text-align: center;
+        font-weight: 900;
+      }
+
+      .sim-score span {
+        display: block;
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .sim-copy {
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 24px;
+        background: rgba(19, 26, 36, 0.86);
+      }
+
+      .sim-copy h3 {
+        margin-bottom: 10px;
+        font-size: 22px;
+      }
+
+      .sim-copy p {
+        color: var(--muted);
+        line-height: 1.75;
+      }
+
+      .sim-actions {
+        display: grid;
+        gap: 10px;
+        margin: 20px 0;
+      }
+
+      .sim-btn {
+        min-height: 42px;
+        border: 1px solid rgba(118, 185, 0, 0.32);
+        border-radius: 8px;
+        color: var(--text);
+        background: rgba(118, 185, 0, 0.1);
+        font: inherit;
+        font-weight: 800;
+        cursor: pointer;
+      }
+
+      .sim-btn:hover {
+        border-color: rgba(118, 185, 0, 0.72);
+        background: rgba(118, 185, 0, 0.18);
+      }
+
+      .sim-facts {
+        display: grid;
+        gap: 10px;
+        margin-top: 18px;
+      }
+
+      .sim-fact {
+        padding: 12px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        color: var(--muted);
+        background: rgba(255, 255, 255, 0.04);
+        font-size: 13px;
+        line-height: 1.6;
+      }
+
+      .sim-fallback {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        padding: 24px;
+        color: var(--muted);
+        text-align: center;
+        line-height: 1.7;
+      }
+
+      .sim-fallback[hidden] {
+        display: none;
+      }
+
       .experience-grid {
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -454,6 +588,7 @@
         .hero-grid,
         .section-head,
         .dashboard,
+        .sim-lab,
         .experience-grid,
         .outcomes {
           grid-template-columns: 1fr;
@@ -483,6 +618,15 @@
         .timeline-item {
           grid-template-columns: 1fr;
         }
+
+        .sim-scene {
+          min-height: 360px;
+        }
+
+        .sim-overlay {
+          align-items: flex-start;
+          flex-direction: column;
+        }
       }
     </style>
   </head>
@@ -492,6 +636,7 @@
         <a class="brand" href="/">Kuo Jun Bin <span>/ Jerome</span></a>
         <nav class="nav" aria-label="主要連結">
           <a href="/">首頁</a>
+          <a href="#interactive-3d">3D Lab</a>
           <a href="/lectures/">語言講座</a>
           <a href="https://github.com/jjfishjj" target="_blank" rel="noreferrer">GitHub</a>
           <a href="https://www.linkedin.com/in/kuo-jun-bin-%EC%A4%80%EB%B9%88-jerome-0a224490/" target="_blank" rel="noreferrer">LinkedIn</a>
@@ -508,7 +653,7 @@
             <p class="lead">
               這個頁面把公開可確認的 GitHub 專案、NVIDIA Agent Skills 案例整理、
               Gamania AI 專案、MetaSens 遊戲經驗、數據分析提案儀表板、
-              IC power efficiency 研究方向、語言學習講座規劃與 LinkedIn profile 串成一個專業展示頁。
+              Omniverse / Isaac Sim 概念互動、IC power efficiency 研究方向、語言學習講座規劃與 LinkedIn profile 串成一個專業展示頁。
             </p>
             <div class="actions">
               <a class="button primary" href="https://www.linkedin.com/in/kuo-jun-bin-%EC%A4%80%EB%B9%88-jerome-0a224490/" target="_blank" rel="noreferrer">查看 LinkedIn 原始履歷</a>
@@ -639,6 +784,47 @@
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="interactive-3d">
+        <div class="shell">
+          <div class="section-head">
+            <div>
+              <div class="eyebrow">3D Interactive Lab</div>
+              <h2>Omniverse / Isaac Sim 概念互動展示</h2>
+            </div>
+            <p>
+              以瀏覽器可執行的 Three.js 呈現 3D 數位分身與機器人任務概念，讓履歷頁能展示遊戲化、模擬與互動產品能力。
+            </p>
+          </div>
+
+          <div class="sim-lab">
+            <div class="sim-scene" id="simScene" aria-label="3D robotics simulation concept">
+              <div class="sim-fallback" id="simFallback">3D scene loading</div>
+              <div class="sim-overlay">
+                <div class="sim-status" id="simStatus">Omniverse-style digital twin scene ready.</div>
+                <div class="sim-score"><span>Score</span><strong id="simScore">0</strong></div>
+              </div>
+            </div>
+
+            <aside class="sim-copy">
+              <h3>3D 履歷介面可以怎麼延伸</h3>
+              <p>
+                這個區塊把 NVIDIA Omniverse 的數位分身概念、Isaac Sim 的機器人模擬想像，
+                轉成可在網頁上互動的作品集展示。後續可以替換成真實模型、關卡任務或產品 demo。
+              </p>
+              <div class="sim-actions">
+                <button class="sim-btn" id="missionBtn" type="button">Launch Robot Mission</button>
+                <button class="sim-btn" id="resetMissionBtn" type="button">Reset Simulation</button>
+              </div>
+              <div class="sim-facts">
+                <div class="sim-fact">Digital twin: 展示 3D 場景、資料節點與產品流程。</div>
+                <div class="sim-fact">Robotics sim: 用任務路徑呈現 Isaac Sim 類型的機器人測試概念。</div>
+                <div class="sim-fact">Mini game: 可延伸成收集、避障、路徑規劃或產品 onboarding 遊戲。</div>
+              </div>
+            </aside>
           </div>
         </div>
       </section>
@@ -842,5 +1028,247 @@
         © 2026 Kuo Jun Bin / Jerome · LinkedIn profile hub and experience dashboard.
       </div>
     </footer>
+    <script type="module">
+      import * as THREE from "https://unpkg.com/three@0.160.0/build/three.module.js";
+
+      const sceneHost = document.querySelector("#simScene");
+      const fallback = document.querySelector("#simFallback");
+      const statusEl = document.querySelector("#simStatus");
+      const scoreEl = document.querySelector("#simScore");
+      const missionBtn = document.querySelector("#missionBtn");
+      const resetBtn = document.querySelector("#resetMissionBtn");
+
+      if (sceneHost) {
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x071018);
+
+        const camera = new THREE.PerspectiveCamera(48, 1, 0.1, 100);
+        camera.position.set(7, 5.4, 7);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, preserveDrawingBuffer: true });
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.shadowMap.enabled = true;
+        sceneHost.prepend(renderer.domElement);
+        fallback.hidden = true;
+
+        const keyLight = new THREE.DirectionalLight(0xffffff, 1.25);
+        keyLight.position.set(5, 8, 6);
+        keyLight.castShadow = true;
+        scene.add(keyLight);
+        scene.add(new THREE.AmbientLight(0x7aa7ff, 0.42));
+
+        const floor = new THREE.Mesh(
+          new THREE.PlaneGeometry(12, 12, 24, 24),
+          new THREE.MeshStandardMaterial({
+            color: 0x0f1722,
+            metalness: 0.28,
+            roughness: 0.72,
+          }),
+        );
+        floor.rotation.x = -Math.PI / 2;
+        floor.receiveShadow = true;
+        scene.add(floor);
+
+        const grid = new THREE.GridHelper(12, 12, 0x76b900, 0x1d3340);
+        grid.position.y = 0.012;
+        scene.add(grid);
+
+        const hub = new THREE.Group();
+        scene.add(hub);
+
+        const nodeMaterial = new THREE.MeshStandardMaterial({
+          color: 0x76b900,
+          emissive: 0x1d4d00,
+          metalness: 0.35,
+          roughness: 0.38,
+        });
+        const visitedMaterial = new THREE.MeshStandardMaterial({
+          color: 0x5aa7ff,
+          emissive: 0x0b3e73,
+          metalness: 0.3,
+          roughness: 0.36,
+        });
+        const targetMaterial = new THREE.MeshStandardMaterial({
+          color: 0xf3b91e,
+          emissive: 0x5f4100,
+          metalness: 0.28,
+          roughness: 0.34,
+        });
+
+        const targetPositions = [
+          new THREE.Vector3(-3.6, 0.22, -2.8),
+          new THREE.Vector3(3.4, 0.22, -2.6),
+          new THREE.Vector3(3.2, 0.22, 2.8),
+          new THREE.Vector3(-3.3, 0.22, 2.5),
+        ];
+        const targets = targetPositions.map((position, index) => {
+          const node = new THREE.Mesh(new THREE.CylinderGeometry(0.34, 0.46, 0.28, 32), nodeMaterial.clone());
+          node.position.copy(position);
+          node.castShadow = true;
+          node.receiveShadow = true;
+          node.userData.index = index;
+          hub.add(node);
+
+          const ring = new THREE.Mesh(
+            new THREE.TorusGeometry(0.58, 0.025, 8, 48),
+            new THREE.MeshBasicMaterial({ color: 0x76b900 }),
+          );
+          ring.position.set(position.x, 0.05, position.z);
+          ring.rotation.x = Math.PI / 2;
+          hub.add(ring);
+          node.userData.ring = ring;
+          return node;
+        });
+
+        const robot = new THREE.Group();
+        const body = new THREE.Mesh(
+          new THREE.BoxGeometry(0.7, 0.52, 0.88),
+          new THREE.MeshStandardMaterial({ color: 0x202d3d, metalness: 0.52, roughness: 0.28 }),
+        );
+        body.position.y = 0.58;
+        body.castShadow = true;
+        robot.add(body);
+
+        const head = new THREE.Mesh(
+          new THREE.BoxGeometry(0.48, 0.32, 0.38),
+          new THREE.MeshStandardMaterial({ color: 0x76b900, emissive: 0x1c4a00, metalness: 0.22, roughness: 0.38 }),
+        );
+        head.position.y = 1.02;
+        head.castShadow = true;
+        robot.add(head);
+
+        const wheelMaterial = new THREE.MeshStandardMaterial({ color: 0x070a0f, metalness: 0.25, roughness: 0.45 });
+        [-0.46, 0.46].forEach((x) => {
+          [-0.32, 0.32].forEach((z) => {
+            const wheel = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.16, 0.12, 24), wheelMaterial);
+            wheel.rotation.z = Math.PI / 2;
+            wheel.position.set(x, 0.28, z);
+            wheel.castShadow = true;
+            robot.add(wheel);
+          });
+        });
+        robot.position.set(0, 0, 0);
+        scene.add(robot);
+
+        const pathMaterial = new THREE.LineBasicMaterial({ color: 0x5aa7ff, transparent: true, opacity: 0.8 });
+        const pathGeometry = new THREE.BufferGeometry().setFromPoints([
+          new THREE.Vector3(0, 0.08, 0),
+          ...targetPositions.map((p) => new THREE.Vector3(p.x, 0.08, p.z)),
+          new THREE.Vector3(0, 0.08, 0),
+        ]);
+        const pathLine = new THREE.Line(pathGeometry, pathMaterial);
+        scene.add(pathLine);
+
+        const dataCubes = [];
+        const cubeMaterial = new THREE.MeshStandardMaterial({
+          color: 0x5aa7ff,
+          emissive: 0x06284d,
+          metalness: 0.2,
+          roughness: 0.42,
+        });
+        for (let i = 0; i < 18; i += 1) {
+          const cube = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.16, 0.16), cubeMaterial.clone());
+          const angle = (i / 18) * Math.PI * 2;
+          const radius = 4.7 + (i % 3) * 0.22;
+          cube.position.set(Math.cos(angle) * radius, 0.5 + (i % 5) * 0.22, Math.sin(angle) * radius);
+          cube.castShadow = true;
+          scene.add(cube);
+          dataCubes.push(cube);
+        }
+
+        let activeMission = false;
+        let targetIndex = 0;
+        let score = 0;
+        let orbit = 0;
+        const clock = new THREE.Clock();
+
+        function resizeScene() {
+          const width = sceneHost.clientWidth;
+          const height = Math.max(sceneHost.clientHeight, 320);
+          camera.aspect = width / height;
+          camera.updateProjectionMatrix();
+          renderer.setSize(width, height, false);
+        }
+
+        function setScore(value) {
+          score = value;
+          scoreEl.textContent = String(score);
+        }
+
+        function resetMission() {
+          activeMission = false;
+          targetIndex = 0;
+          robot.position.set(0, 0, 0);
+          robot.rotation.y = 0;
+          targets.forEach((target) => {
+            target.material = nodeMaterial.clone();
+            target.userData.ring.material.color.set(0x76b900);
+          });
+          targets[0].material = targetMaterial.clone();
+          setScore(0);
+          statusEl.textContent = "Omniverse-style digital twin scene ready.";
+        }
+
+        function startMission() {
+          activeMission = true;
+          targets[targetIndex].material = targetMaterial.clone();
+          statusEl.textContent = "Isaac Sim-style robot mission running.";
+        }
+
+        missionBtn?.addEventListener("click", startMission);
+        resetBtn?.addEventListener("click", resetMission);
+        sceneHost.addEventListener("pointermove", (event) => {
+          const rect = sceneHost.getBoundingClientRect();
+          orbit = ((event.clientX - rect.left) / rect.width - 0.5) * 0.9;
+        });
+
+        function animate() {
+          const delta = clock.getDelta();
+          const elapsed = clock.elapsedTime;
+
+          hub.rotation.y = Math.sin(elapsed * 0.22) * 0.04;
+          camera.position.x = Math.sin(elapsed * 0.1 + orbit) * 7.5;
+          camera.position.z = Math.cos(elapsed * 0.1 + orbit) * 7.5;
+          camera.lookAt(0, 0.25, 0);
+
+          targets.forEach((target, index) => {
+            target.position.y = 0.22 + Math.sin(elapsed * 2.2 + index) * 0.04;
+            target.userData.ring.rotation.z += delta * (0.75 + index * 0.12);
+          });
+          dataCubes.forEach((cube, index) => {
+            cube.rotation.x += delta * 0.6;
+            cube.rotation.y += delta * 0.8;
+            cube.position.y += Math.sin(elapsed * 1.4 + index) * 0.0009;
+          });
+
+          if (activeMission) {
+            const target = targetPositions[targetIndex];
+            const destination = new THREE.Vector3(target.x, 0, target.z);
+            const direction = destination.clone().sub(robot.position);
+            const distance = direction.length();
+            if (distance > 0.05) {
+              direction.normalize();
+              robot.position.add(direction.multiplyScalar(Math.min(distance, delta * 1.7)));
+              robot.rotation.y = Math.atan2(direction.x, direction.z);
+            } else {
+              targets[targetIndex].material = visitedMaterial.clone();
+              targets[targetIndex].userData.ring.material.color.set(0x5aa7ff);
+              setScore(score + 25);
+              targetIndex = (targetIndex + 1) % targetPositions.length;
+              targets[targetIndex].material = targetMaterial.clone();
+              statusEl.textContent = targetIndex === 0 ? "Mission loop complete. Digital twin route verified." : "Robot route planning checkpoint reached.";
+            }
+          }
+
+          renderer.render(scene, camera);
+          requestAnimationFrame(animate);
+        }
+
+        resizeScene();
+        resetMission();
+        animate();
+        window.addEventListener("resize", resizeScene);
+      }
+    </script>
   </body>
 </html>
