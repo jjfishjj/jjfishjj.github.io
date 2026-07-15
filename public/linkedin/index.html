@@ -125,14 +125,51 @@
       }
 
       .hero {
-        padding: 88px 0 54px;
+        position: relative;
+        min-height: 760px;
+        overflow: hidden;
+        padding: 118px 0 72px;
+        display: grid;
+        align-items: center;
+        isolation: isolate;
+      }
+
+      .galaxy-scene {
+        position: absolute;
+        inset: 0;
+        z-index: -2;
+        background:
+          radial-gradient(circle at 52% 45%, rgba(118, 185, 0, 0.22), transparent 19rem),
+          radial-gradient(circle at 78% 16%, rgba(90, 167, 255, 0.18), transparent 27rem),
+          linear-gradient(135deg, rgba(4, 8, 12, 0.78), rgba(13, 17, 23, 0.96));
+      }
+
+      .galaxy-scene canvas {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+
+      .hero::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background:
+          linear-gradient(90deg, rgba(9, 13, 19, 0.9) 0%, rgba(9, 13, 19, 0.68) 38%, rgba(9, 13, 19, 0.02) 100%),
+          linear-gradient(180deg, rgba(9, 13, 19, 0.02) 0%, rgba(9, 13, 19, 0.88) 100%);
+        pointer-events: none;
       }
 
       .hero-grid {
         display: grid;
-        grid-template-columns: minmax(0, 1.12fr) minmax(300px, 0.88fr);
+        grid-template-columns: minmax(0, 0.76fr) minmax(360px, 1.24fr);
         gap: 32px;
-        align-items: end;
+        align-items: center;
+      }
+
+      .hero-copy {
+        max-width: 650px;
       }
 
       .eyebrow {
@@ -155,15 +192,15 @@
       }
 
       h1 {
-        max-width: 780px;
+        max-width: 680px;
         margin-bottom: 22px;
-        font-size: clamp(42px, 7vw, 76px);
+        font-size: clamp(40px, 5.7vw, 68px);
         line-height: 0.98;
         letter-spacing: 0;
       }
 
       .lead {
-        max-width: 780px;
+        max-width: 660px;
         margin-bottom: 28px;
         color: var(--muted);
         font-size: clamp(17px, 2vw, 21px);
@@ -174,6 +211,53 @@
         display: flex;
         flex-wrap: wrap;
         gap: 12px;
+      }
+
+      .constellation-panel {
+        justify-self: end;
+        width: min(100%, 430px);
+        display: grid;
+        gap: 12px;
+        align-self: end;
+        padding-top: 0;
+        transform: translateY(250px);
+      }
+
+      .constellation-title {
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 850;
+        letter-spacing: 0;
+        text-transform: uppercase;
+      }
+
+      .constellation-stack {
+        display: grid;
+        gap: 10px;
+      }
+
+      .constellation-item {
+        display: grid;
+        grid-template-columns: 108px 1fr;
+        gap: 14px;
+        align-items: center;
+        min-height: 58px;
+        border: 1px solid rgba(255, 255, 255, 0.13);
+        border-radius: 8px;
+        padding: 10px 12px;
+        background: rgba(9, 13, 19, 0.36);
+        backdrop-filter: blur(14px);
+      }
+
+      .constellation-item strong {
+        color: var(--green);
+        font-size: 14px;
+      }
+
+      .constellation-item span {
+        color: var(--text);
+        font-size: 13px;
+        line-height: 1.55;
       }
 
       .identity-card {
@@ -594,6 +678,21 @@
           grid-template-columns: 1fr;
         }
 
+        .hero {
+          min-height: 880px;
+        }
+
+        .hero::after {
+          background:
+            linear-gradient(180deg, rgba(9, 13, 19, 0.88) 0%, rgba(9, 13, 19, 0.55) 48%, rgba(9, 13, 19, 0.92) 100%);
+        }
+
+        .constellation-panel {
+          justify-self: stretch;
+          padding-top: 210px;
+          transform: none;
+        }
+
         .stats-grid {
           grid-template-columns: repeat(2, minmax(0, 1fr));
         }
@@ -608,6 +707,20 @@
 
         .hero {
           padding-top: 56px;
+          min-height: 820px;
+        }
+
+        .hero-grid {
+          gap: 22px;
+        }
+
+        .constellation-item {
+          grid-template-columns: 1fr;
+          gap: 4px;
+        }
+
+        .constellation-panel {
+          padding-top: 180px;
         }
 
         .stats-grid {
@@ -646,14 +759,15 @@
 
     <main>
       <section class="hero">
+        <div class="galaxy-scene" id="resumeGalaxy" aria-hidden="true"></div>
         <div class="shell hero-grid">
-          <div>
-            <div class="eyebrow">Professional Profile & Experience Dashboard</div>
-            <h1>把 AI 技術探索、專案成果與教學講座整理成可讀的經歷儀表板。</h1>
+          <div class="hero-copy">
+            <div class="eyebrow">3D Resume Interface</div>
+            <h1>一眼看懂 AI、遊戲、數據與硬體交會的 3D 履歷星圖。</h1>
             <p class="lead">
-              這個頁面把公開可確認的 GitHub 專案、NVIDIA Agent Skills 案例整理、
-              Gamania AI 專案、MetaSens 遊戲經驗、數據分析提案儀表板、
-              Omniverse / Isaac Sim 概念互動、IC power efficiency 研究方向、語言學習講座規劃與 LinkedIn profile 串成一個專業展示頁。
+              這個頁面把 LinkedIn 經歷、GitHub 專案、NVIDIA / Google 認證方向、
+              Gamania AI workflow、MetaSens Web3 game、半導體材料研究與語言學習講座，
+              轉成可旋轉、可探索的履歷 constellation。
             </p>
             <div class="actions">
               <a class="button primary" href="https://www.linkedin.com/in/kuo-jun-bin-%EC%A4%80%EB%B9%88-jerome-0a224490/" target="_blank" rel="noreferrer">查看 LinkedIn 原始履歷</a>
@@ -661,16 +775,29 @@
             </div>
           </div>
 
-          <aside class="identity-card">
-            <h2>Kuo Jun Bin / 준빈 / Jerome</h2>
-            <p>
-              以 AI tooling、GPU computing、LLM deployment、遊戲專案、數據分析、
-              IC power efficiency 和語言學習方法為主要公開作品脈絡。
-            </p>
-            <div class="id-list">
-              <div class="id-row"><span>GitHub</span><strong>@jjfishjj</strong></div>
-              <div class="id-row"><span>Profile Page</span><strong>jjfishjj.github.io</strong></div>
-              <div class="id-row"><span>LinkedIn</span><strong>Kuo Jun Bin</strong></div>
+          <aside class="constellation-panel" aria-label="3D resume constellation key">
+            <div class="constellation-title">Live orbit nodes</div>
+            <div class="constellation-stack">
+              <div class="constellation-item">
+                <strong>AI Core</strong>
+                <span>NVIDIA / Google certified direction, LLM deployment, RAG, AI TOP ATOM workshop.</span>
+              </div>
+              <div class="constellation-item">
+                <strong>Game Data</strong>
+                <span>Gamania, Prasia, GA workflow, AI image/video workshop and user behavior analytics.</span>
+              </div>
+              <div class="constellation-item">
+                <strong>Web3 Game</strong>
+                <span>MetaSens / MetaFame NFT, token, gamification, backend data analysis.</span>
+              </div>
+              <div class="constellation-item">
+                <strong>Hardware</strong>
+                <span>Semiconductor materials, thin films, GPU / CPU / motherboard component thinking.</span>
+              </div>
+              <div class="constellation-item">
+                <strong>Language</strong>
+                <span>2025 multilingual conference speaker, memory system design and learning science.</span>
+              </div>
             </div>
           </aside>
         </div>
@@ -1007,11 +1134,227 @@
         © 2026 Kuo Jun Bin / Jerome · LinkedIn profile hub and experience dashboard.
       </div>
     </footer>
-    <script type="module">
-      import * as THREE from "https://unpkg.com/three@0.160.0/build/three.module.js";
+	    <script type="module">
+	      import * as THREE from "https://unpkg.com/three@0.160.0/build/three.module.js";
+	
+	      const galaxyHost = document.querySelector("#resumeGalaxy");
+	      if (galaxyHost) {
+	        const scene = new THREE.Scene();
+	        const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 160);
+	        camera.position.set(3.6, 5.8, 18);
 
-      const sceneHost = document.querySelector("#simScene");
-      const fallback = document.querySelector("#simFallback");
+	        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
+	        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+	        renderer.setClearColor(0x000000, 0);
+	        galaxyHost.appendChild(renderer.domElement);
+
+	        const root = new THREE.Group();
+	        root.position.set(4.55, 2.05, 0);
+	        root.scale.setScalar(1.34);
+	        scene.add(root);
+
+	        scene.add(new THREE.AmbientLight(0x9db8ff, 0.7));
+	        const keyLight = new THREE.DirectionalLight(0xffffff, 1.4);
+	        keyLight.position.set(7, 9, 8);
+	        scene.add(keyLight);
+	        const rimLight = new THREE.PointLight(0x76b900, 5.4, 48);
+	        rimLight.position.set(4, 5, 9);
+	        scene.add(rimLight);
+
+	        const coreMaterial = new THREE.MeshStandardMaterial({
+	          color: 0x101821,
+	          emissive: 0x143600,
+	          emissiveIntensity: 0.58,
+	          metalness: 0.58,
+	          roughness: 0.24,
+	        });
+	        const core = new THREE.Mesh(new THREE.IcosahedronGeometry(1.55, 2), coreMaterial);
+	        root.add(core);
+
+	        const coreWire = new THREE.LineSegments(
+	          new THREE.WireframeGeometry(new THREE.IcosahedronGeometry(1.78, 2)),
+	          new THREE.LineBasicMaterial({ color: 0x76b900, transparent: true, opacity: 0.92 }),
+	        );
+	        root.add(coreWire);
+
+	        const orbitMaterials = [
+	          new THREE.LineBasicMaterial({ color: 0x76b900, transparent: true, opacity: 0.62 }),
+	          new THREE.LineBasicMaterial({ color: 0x5aa7ff, transparent: true, opacity: 0.5 }),
+	          new THREE.LineBasicMaterial({ color: 0xf3b91e, transparent: true, opacity: 0.46 }),
+	        ];
+	        [4.1, 5.9, 7.5].forEach((radius, index) => {
+	          const points = [];
+	          for (let i = 0; i <= 160; i += 1) {
+	            const angle = (i / 160) * Math.PI * 2;
+	            points.push(new THREE.Vector3(Math.cos(angle) * radius, 0, Math.sin(angle) * radius));
+	          }
+	          const orbit = new THREE.Line(new THREE.BufferGeometry().setFromPoints(points), orbitMaterials[index]);
+	          orbit.rotation.x = Math.PI / 2.5 + index * 0.18;
+	          orbit.rotation.z = index * 0.55;
+	          root.add(orbit);
+	        });
+
+	        const resumeNodes = [
+	          { label: "AI Core", detail: "NVIDIA / Google / LLM", color: 0x76b900, size: 0.64, angle: 0.1, level: 0.7 },
+	          { label: "Gamania", detail: "Game data + AI workflow", color: 0x5aa7ff, size: 0.54, angle: 1.1, level: -0.2 },
+	          { label: "MetaSens", detail: "Web3 game / NFT / token", color: 0xff7ab6, size: 0.52, angle: 2.15, level: 0.45 },
+	          { label: "Hardware", detail: "Semiconductor / GPU / CPU", color: 0xf3b91e, size: 0.58, angle: 3.2, level: -0.55 },
+	          { label: "GitHub", detail: "Prototype portfolio", color: 0x8fd3ff, size: 0.5, angle: 4.25, level: 0.12 },
+	          { label: "Language", detail: "Speaker + memory design", color: 0xd0ff66, size: 0.5, angle: 5.25, level: -0.35 },
+	        ];
+
+	        function makeLabelTexture(title, detail, color) {
+	          const canvas = document.createElement("canvas");
+	          canvas.width = 512;
+	          canvas.height = 192;
+	          const ctx = canvas.getContext("2d");
+	          ctx.clearRect(0, 0, canvas.width, canvas.height);
+	          ctx.fillStyle = "rgba(7, 10, 15, 0.74)";
+	          ctx.strokeStyle = `#${color.toString(16).padStart(6, "0")}`;
+	          ctx.lineWidth = 4;
+	          ctx.beginPath();
+	          ctx.roundRect(20, 20, 472, 150, 22);
+	          ctx.fill();
+	          ctx.stroke();
+	          ctx.fillStyle = "#eef2f7";
+	          ctx.font = "800 34px Inter, sans-serif";
+	          ctx.fillText(title, 46, 78);
+	          ctx.fillStyle = "#aeb8c8";
+	          ctx.font = "600 22px Inter, sans-serif";
+	          ctx.fillText(detail, 46, 120);
+	          return new THREE.CanvasTexture(canvas);
+	        }
+
+	        const nodeGroup = new THREE.Group();
+	        const nodeMeshes = [];
+	        root.add(nodeGroup);
+
+	        resumeNodes.forEach((item, index) => {
+	          const radius = index % 2 === 0 ? 6.6 : 5.2;
+	          const position = new THREE.Vector3(
+	            Math.cos(item.angle) * radius,
+	            item.level,
+	            Math.sin(item.angle) * radius,
+	          );
+	          const material = new THREE.MeshStandardMaterial({
+	            color: item.color,
+	            emissive: item.color,
+	            emissiveIntensity: 0.55,
+	            metalness: 0.42,
+	            roughness: 0.3,
+	          });
+	          const node = new THREE.Mesh(new THREE.SphereGeometry(item.size, 42, 42), material);
+	          node.position.copy(position);
+	          node.userData = item;
+	          nodeGroup.add(node);
+	          nodeMeshes.push(node);
+
+	          const connector = new THREE.Line(
+	            new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, 0), position]),
+	            new THREE.LineBasicMaterial({ color: item.color, transparent: true, opacity: 0.52 }),
+	          );
+	          nodeGroup.add(connector);
+
+	          const ring = new THREE.Mesh(
+	            new THREE.TorusGeometry(item.size * 1.45, 0.025, 8, 72),
+	            new THREE.MeshBasicMaterial({ color: item.color, transparent: true, opacity: 0.95 }),
+	          );
+	          ring.position.copy(position);
+	          ring.rotation.x = Math.PI / 2;
+	          nodeGroup.add(ring);
+	          node.userData.ring = ring;
+
+	          const labelTexture = makeLabelTexture(item.label, item.detail, item.color);
+	          const label = new THREE.Sprite(
+	            new THREE.SpriteMaterial({ map: labelTexture, transparent: true, depthWrite: false }),
+	          );
+	          label.position.copy(position.clone().add(new THREE.Vector3(0, 1.08, 0)));
+	          label.scale.set(3.7, 1.38, 1);
+	          nodeGroup.add(label);
+	          node.userData.label = label;
+	        });
+
+	        const particleCount = 220;
+	        const particlePositions = new Float32Array(particleCount * 3);
+	        const particleColors = new Float32Array(particleCount * 3);
+	        const particleColor = new THREE.Color();
+	        for (let i = 0; i < particleCount; i += 1) {
+	          const radius = 8 + Math.random() * 18;
+	          const angle = Math.random() * Math.PI * 2;
+	          const y = (Math.random() - 0.5) * 9;
+	          particlePositions[i * 3] = Math.cos(angle) * radius;
+	          particlePositions[i * 3 + 1] = y;
+	          particlePositions[i * 3 + 2] = Math.sin(angle) * radius;
+	          particleColor.set(i % 3 === 0 ? 0x76b900 : i % 3 === 1 ? 0x5aa7ff : 0xf3b91e);
+	          particleColors[i * 3] = particleColor.r;
+	          particleColors[i * 3 + 1] = particleColor.g;
+	          particleColors[i * 3 + 2] = particleColor.b;
+	        }
+	        const particleGeometry = new THREE.BufferGeometry();
+	        particleGeometry.setAttribute("position", new THREE.BufferAttribute(particlePositions, 3));
+	        particleGeometry.setAttribute("color", new THREE.BufferAttribute(particleColors, 3));
+	        const particles = new THREE.Points(
+	          particleGeometry,
+	          new THREE.PointsMaterial({ size: 0.078, vertexColors: true, transparent: true, opacity: 0.82 }),
+	        );
+	        scene.add(particles);
+
+	        const raycaster = new THREE.Raycaster();
+	        const pointer = new THREE.Vector2(-10, -10);
+	        let targetTilt = 0;
+	        let activeNode = null;
+	        const clock = new THREE.Clock();
+
+	        function resizeGalaxy() {
+	          const width = Math.max(galaxyHost.clientWidth, 320);
+	          const height = Math.max(galaxyHost.clientHeight, 520);
+	          camera.aspect = width / height;
+	          camera.updateProjectionMatrix();
+	          renderer.setSize(width, height, false);
+	        }
+
+	        galaxyHost.addEventListener("pointermove", (event) => {
+	          const rect = galaxyHost.getBoundingClientRect();
+	          pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+	          pointer.y = -(((event.clientY - rect.top) / rect.height) * 2 - 1);
+	          targetTilt = pointer.x * 0.42;
+	        });
+
+	        function animateGalaxy() {
+	          const elapsed = clock.elapsedTime;
+	          root.rotation.y += (targetTilt - root.rotation.y) * 0.02;
+	          root.rotation.y += 0.0028;
+	          root.rotation.x = Math.sin(elapsed * 0.22) * 0.07;
+	          camera.lookAt(root.position.x, root.position.y, root.position.z);
+	          core.rotation.x += 0.008;
+	          core.rotation.y += 0.011;
+	          coreWire.rotation.y -= 0.006;
+	          particles.rotation.y -= 0.0009;
+
+	          raycaster.setFromCamera(pointer, camera);
+	          const hit = raycaster.intersectObjects(nodeMeshes, false)[0]?.object ?? null;
+	          activeNode = hit;
+
+	          nodeMeshes.forEach((node, index) => {
+	            const pulse = 1 + Math.sin(elapsed * 2.2 + index) * 0.04;
+	            const hover = node === activeNode ? 1.35 : 1;
+	            node.scale.setScalar(pulse * hover);
+	            node.userData.ring.rotation.z += 0.012 + index * 0.001;
+	            node.userData.ring.scale.setScalar(node === activeNode ? 1.22 : 1);
+	            node.userData.label.material.opacity = node === activeNode ? 1 : 0.72;
+	          });
+
+	          renderer.render(scene, camera);
+	          requestAnimationFrame(animateGalaxy);
+	        }
+
+	        resizeGalaxy();
+	        animateGalaxy();
+	        window.addEventListener("resize", resizeGalaxy);
+	      }
+
+	      const sceneHost = document.querySelector("#simScene");
+	      const fallback = document.querySelector("#simFallback");
       const statusEl = document.querySelector("#simStatus");
       const scoreEl = document.querySelector("#simScore");
       const missionBtn = document.querySelector("#missionBtn");
