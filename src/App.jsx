@@ -51,6 +51,7 @@ export default function App() {
         </a>
         <div className="hero-actions">
           <a className="profile-link" href="/linkedin/">經歷儀表板</a>
+          <a className="profile-link" href="/ai-prompt-game-tutorial/">AI 遊戲教學</a>
           <a className="profile-link" href="/lectures/">語言講座</a>
         </div>
       </header>
@@ -145,6 +146,8 @@ export default function App() {
           <a href="https://github.com/jjfishjj" target="_blank" rel="noreferrer">@jjfishjj</a>
           {' · '}
           <a href="/linkedin/">Professional Profile</a>
+          {' · '}
+          <a href="/ai-prompt-game-tutorial/">AI Game Tutorial</a>
           {' · '}
           <a href="/lectures/">Lectures</a>
           {' · '}
