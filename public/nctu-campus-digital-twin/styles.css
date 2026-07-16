@@ -1,0 +1,36 @@
+:root {
+  color-scheme: dark;
+  --bg: #0a0d12;
+  --panel: rgba(11, 17, 25, 0.86);
+  --line: rgba(255, 255, 255, 0.14);
+  --text: #f4f7fb;
+  --muted: #a8b3c4;
+  --accent: #4fd1a5;
+  --accent-2: #f6c85f;
+}
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100vh; overflow: hidden; background: var(--bg); color: var(--text); font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+button { border: 1px solid var(--line); border-radius: 8px; padding: 10px 13px; background: rgba(255, 255, 255, 0.1); color: var(--text); font: inherit; cursor: pointer; }
+button:hover, button:focus-visible { border-color: rgba(79, 209, 165, 0.8); outline: none; }
+.app-shell { display: grid; grid-template-columns: minmax(0, 1fr) 340px; min-height: 100vh; }
+.viewport { position: relative; min-width: 0; background: #0d121a; }
+#campus-canvas { display: block; width: 100%; height: 100vh; }
+.hud { position: absolute; top: 24px; left: 24px; right: 24px; display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; pointer-events: none; }
+.eyebrow { margin: 0 0 6px; color: var(--accent); font-size: 12px; font-weight: 700; letter-spacing: 0; text-transform: uppercase; }
+h1 { margin: 0; font-size: clamp(28px, 5vw, 64px); line-height: 0.95; }
+.stats { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; max-width: 330px; }
+.stats span { border: 1px solid var(--line); border-radius: 999px; padding: 8px 10px; background: rgba(0, 0, 0, 0.28); color: var(--muted); font-size: 13px; }
+.toolbar { position: absolute; left: 24px; bottom: 24px; display: flex; flex-wrap: wrap; gap: 10px; }
+.panel { border-left: 1px solid var(--line); padding: 28px; background: var(--panel); backdrop-filter: blur(16px); overflow: auto; }
+.panel h2 { margin: 0 0 14px; font-size: 24px; }
+.panel p { margin: 0 0 24px; color: var(--muted); line-height: 1.6; }
+dl { display: grid; gap: 16px; margin: 0; }
+dt { color: var(--accent-2); font-weight: 700; }
+dd { margin: 4px 0 0; color: var(--muted); line-height: 1.45; }
+@media (max-width: 860px) {
+  body { overflow: auto; }
+  .app-shell { grid-template-columns: 1fr; }
+  #campus-canvas { height: 70vh; }
+  .hud { flex-direction: column; }
+  .panel { border-left: 0; border-top: 1px solid var(--line); }
+}
