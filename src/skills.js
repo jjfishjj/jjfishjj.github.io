@@ -308,6 +308,13 @@ export const CATS = [
 // 我的相關作品
 export const PROJECTS = [
   {
+    icon: '🧭',
+    title: 'nvidia-agent-skill-labs',
+    desc: '55 個 NVIDIA Agent Skills 專案索引頁 + 8 個精選延伸專案 README 作品集地圖',
+    tags: ['NVIDIA Skills', 'Portfolio Map', 'AI Infrastructure', 'GitHub Pages'],
+    url: '/nvidia-agent-skill-labs/',
+  },
+  {
     icon: '🚀',
     title: 'nvidia-computex2026-optimizer',
     desc: 'Vera Rubin、Nemotron 3 Ultra 550B、Alpamayo 2 Super 的最佳化工具包',

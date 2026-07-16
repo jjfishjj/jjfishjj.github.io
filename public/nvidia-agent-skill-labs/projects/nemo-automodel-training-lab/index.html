@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NeMo AutoModel Training Lab | NVIDIA Agent Skill Labs</title>
+    <meta name="description" content="整理 LLM/VLM 分散式訓練流程，展示我理解資料、模型、GPU 記憶體與訓練配置的能力。" />
+    <link rel="stylesheet" href="../../styles.css" />
+    
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="shell topbar-inner">
+        <a class="brand" href="/nvidia-agent-skill-labs/">NVIDIA Skill Labs <span>/ Jerome</span></a>
+        <nav class="nav" aria-label="主要連結">
+          <a href="/">首頁</a>
+          <a href="/linkedin/">經歷儀表板</a>
+          <a href="/ai-prompt-game-tutorial/">AI 遊戲教學</a>
+          <a href="/nvidia-agent-skill-labs/">Skill Labs</a>
+        </nav>
+      </div>
+    </header>
+    
+  <section class="hero">
+    <div class="shell">
+      <div class="badge">Selected Project README</div>
+      <h1>NeMo AutoModel Training Lab</h1>
+      <p class="lead">整理 LLM/VLM 分散式訓練流程，展示我理解資料、模型、GPU 記憶體與訓練配置的能力。</p>
+      <div class="actions">
+        <a class="button primary" href="../../">回到總索引</a>
+        <a class="button secondary" href="../../skills/nemo-automodel-distributed-training/">查看對應 skill</a>
+      </div>
+    </div>
+  </section>
+  <main class="shell">
+    <div class="detail-layout">
+      <article class="detail-card">
+        <h2>Project Purpose</h2>
+        <p>整理 LLM/VLM 分散式訓練流程，展示我理解資料、模型、GPU 記憶體與訓練配置的能力。</p>
+        <h2>Target Scenario</h2>
+        <p>用 8 張 H100 fine-tune Llama-3 70B，自動設定 FSDP2 + gradient checkpointing。</p>
+        <h2>Proposed Architecture</h2>
+        <ol>
+          <li>定義 input data、model、asset、document 或 video stream。</li>
+          <li>建立 baseline workflow 與假設條件。</li>
+          <li>導入對應 NVIDIA skill 作為 acceleration、training、deployment 或 simulation layer。</li>
+          <li>用 benchmark、demo walkthrough 或 checklist 驗證結果。</li>
+          <li>整理成 GitHub README、demo page 與 LinkedIn 摘要。</li>
+        </ol>
+        <h2>Deliverables</h2>
+        <ul><li>訓練設定模板</li><li>資料集準備流程</li><li>GPU 記憶體規劃表</li><li>fine-tuning 實驗紀錄</li></ul>
+        <h2>Milestones</h2>
+        <ol><li>定義小型可跑模型</li><li>規劃資料與 tokenizer</li><li>整理分散式訓練參數</li><li>完成實驗與限制說明</li></ol>
+      </article>
+      <aside class="detail-card">
+        <h2>Stack</h2>
+        <div class="tag-row"><span class="tag">NVIDIA NeMo</span><span class="tag">PyTorch</span><span class="tag">FSDP2 concept</span><span class="tag">HuggingFace dataset</span><span class="tag">training plan</span></div>
+        <h2 style="margin-top:28px">Mapped Skill</h2>
+        <p><code>nemo-automodel-distributed-training</code></p>
+        <h2>Related Skill Directions</h2>
+        <ul><li><a href="../../skills/nemo-automodel-model-onboarding/">AutoModel 模型上線</a></li><li><a href="../../skills/launch-nemo-rl/">NeMo-RL</a></li><li><a href="../../skills/mcore-run-on-slurm/">Megatron-Core</a></li><li><a href="../../skills/nemo-mbridge-recipe-recommender/">NeMo MBridge</a></li></ul>
+      </aside>
+    </div>
+  </main>
+    <footer>
+      <div class="shell">Independent NVIDIA Agent Skills portfolio page by Jerome Kuo.</div>
+    </footer>
+    
+  </body>
+</html>
