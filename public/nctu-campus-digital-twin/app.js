@@ -110,14 +110,14 @@ scene.add(campus);
 
 box("Daxue Road", [9, 0.18, 132], [70, -0.02, 2], materials.road, -0.12);
 addRoad([[-62, -20], [-34, -18], [-7, -13], [23, -8], [58, 2]], 5.5);
-addRoad([[58, 25], [42, 22], [22, 18], [-3, 17], [-28, 20], [-53, 27]], 5);
+addRoad([[67, 22], [59, 22], [54, 18], [47, 14], [38, 13], [28, 11], [-3, 17], [-28, 20], [-53, 27]], 5);
 addRoad([[-34, -42], [-31, -18], [-28, 3], [-28, 28], [-20, 45]], 4.2);
 addRoad([[12, -45], [12, -24], [14, -2], [21, 19], [31, 40]], 4.2);
-addRoad([[-50, 34], [-20, 30], [10, 29], [38, 31], [58, 25]], 3.6, materials.path);
+addRoad([[-50, 34], [-20, 30], [10, 29], [35, 38], [50, 37], [58, 25]], 3.6, materials.path);
 
 const lake = new THREE.Mesh(new THREE.CylinderGeometry(10, 10, 0.28, 48), materials.water);
 lake.name = "竹湖";
-lake.position.set(46, 0.06, 12);
+lake.position.set(46, 0.06, 31);
 lake.scale.z = 0.62;
 lake.receiveShadow = true;
 scene.add(lake);
@@ -135,7 +135,7 @@ scene.add(athleticField);
 
 const buildings = [
   ["浩然圖書館", [18, 10, 16], [12, 5, -2], materials.landmark, 0.06],
-  ["行政大樓", [13, 7, 10], [32, 3.5, 12], materials.landmark, -0.14],
+  ["行政大樓", [13, 7, 10], [28, 3.5, 24], materials.landmark, -0.08],
   ["中正堂", [14, 6, 9], [30, 3, 25], materials.academic, -0.18],
   ["資訊技術服務中心", [13, 7, 8], [8, 3.5, 19], materials.academic, 0.08],
   ["工程一館", [15, 8, 10], [-16, 4, 4], materials.engineering, -0.05],
@@ -164,17 +164,19 @@ for (const [name, size, position, material, rotation] of buildings) {
   addBuilding(name, size, position, material, rotation);
 }
 
-box("北大門", [1.2, 5, 13], [61, 2.5, 25], materials.landmark, -0.14);
+box("北大門北柱", [1.8, 5.5, 3.2], [62, 2.75, 27.5], materials.landmark, 0);
+box("北大門南柱", [1.8, 5.5, 3.2], [62, 2.75, 16.5], materials.landmark, 0);
+box("北大門門楣", [1.3, 1, 8], [62, 5.4, 22], materials.landmark, 0);
 box("南大門", [1.2, 4, 12], [-63, 2, -20], materials.landmark, 0.18);
 
 const labelGroup = new THREE.Group();
 scene.add(labelGroup);
 for (const [text, position, width] of [
-  ["北大門", [58, 7, 27], 12],
+  ["北大門", [62, 8, 22], 8],
   ["南大門", [-59, 7, -21], 12],
-  ["竹湖", [46, 4, 12], 9],
+  ["竹湖", [46, 4, 31], 9],
   ["浩然圖書館", [12, 13, -2], 18],
-  ["行政大樓", [32, 10, 12], 15],
+  ["行政大樓", [28, 10, 24], 15],
   ["工程館群", [-23, 14, -5], 15],
   ["田徑場", [-45, 5, 38], 12],
   ["學生宿舍區", [25, 13, 41], 17]
@@ -238,7 +240,7 @@ scene.add(new THREE.HemisphereLight(0xd7efff, 0x355538, 1.8));
 
 const views = {
   overview: { camera: [88, 76, 104], target: [0, 0, 0] },
-  northGate: { camera: [91, 25, 45], target: [48, 3, 18] },
+  northGate: { camera: [82, 9, 22], target: [42, 2, 22] },
   library: { camera: [35, 24, 29], target: [12, 3, -2] },
   lake: { camera: [72, 25, 31], target: [43, 1, 11] }
 };
