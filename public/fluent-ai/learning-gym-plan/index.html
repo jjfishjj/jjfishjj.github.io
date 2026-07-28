@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fluent AI | 語言天份訓練計畫</title>
+    <meta
+      name="description"
+      content="Fluent AI 語言天份訓練計畫：用 6 日學習健身房，把聽力、語塊、語氣、記憶、社交修補與口說輸出做成卡牌任務。"
+    />
+    <meta property="og:title" content="Fluent AI | 語言天份訓練計畫" />
+    <meta property="og:description" content="我用卡牌與情境任務設計一套 6 日語言學習健身房。" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://jjfishjj.github.io/fluent-ai/learning-gym-plan/" />
+    <link rel="stylesheet" href="../assets/game.css" />
+  </head>
+  <body data-mode="plan">
+    <header class="topbar">
+      <div class="shell topbar-inner">
+        <a class="brand" href="/">Jerome<span>Kuo</span></a>
+        <nav class="nav" aria-label="主要導覽">
+          <a href="/fluent-ai/practice/">卡牌練習場</a>
+          <a href="/ai-prompt-game-tutorial/">AI 遊戲教學</a>
+          <a href="/lectures/">語言講座</a>
+          <a href="/linkedin/">經歷儀表板</a>
+        </nav>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div class="shell hero-grid">
+        <div>
+          <div class="kicker">FLUENT AI / LEARNING GYM PLAN</div>
+          <h1>我把語言學習設計成 6 日天份訓練健身房。</h1>
+          <p class="lead">
+            這不是背單字表，而是一套卡牌式訓練路線。我每天只訓練一組核心能力：
+            聽力預測、語塊重組、社交修補、故事記憶、專注回合，最後用情境任務整合輸出。
+          </p>
+          <div class="actions">
+            <a class="button primary" href="#plan">查看訓練表</a>
+            <a class="button secondary" href="/fluent-ai/practice/">進入卡牌練習場</a>
+          </div>
+        </div>
+        <aside class="arena-visual" aria-label="語言訓練積木視覺">
+          <div class="arena-track">
+            <div class="arena-block">聽</div>
+            <div class="arena-block">說</div>
+            <div class="arena-block">記</div>
+          </div>
+          <div class="arena-note">
+            我用像積木一樣可以組裝的方式看語言學習：每張卡都是一個可練習、可替換、可組合的能力模組。
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <main id="plan">
+      <section class="shell planner">
+        <div>
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">6-DAY GYM ROUTE</div>
+              <h2>訓練路線</h2>
+              <p>每一天都像健身房的一個訓練菜單：先暖身，再做主訓練，最後把能力放回真實情境。</p>
+            </div>
+          </div>
+          <div class="plan-grid" id="planGrid"></div>
+        </div>
+
+        <aside class="sidebar">
+          <section class="panel">
+            <div class="section-kicker">CARD LIBRARY</div>
+            <h2>天份卡牌庫</h2>
+            <ul class="plan-list" id="planDeck"></ul>
+          </section>
+          <section class="mission-card" id="missionCard"></section>
+          <section class="panel">
+            <div class="section-kicker">SAMPLE BUILD</div>
+            <ul class="selected-list" id="selectedList"></ul>
+          </section>
+          <section class="panel result-box" id="resultBox"></section>
+          <section class="panel">
+            <div class="section-kicker">TRAINING STATS</div>
+            <div class="stat-grid" id="statGrid"></div>
+          </section>
+        </aside>
+      </section>
+    </main>
+
+    <footer>
+      <div class="shell">Fluent AI Learning Gym / Scenario cards, talent cards, and daily practice loops.</div>
+    </footer>
+
+    <script src="../assets/game.js"></script>
+  </body>
+</html>

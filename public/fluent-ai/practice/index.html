@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fluent AI | 語言天份卡牌訓練場</title>
+    <meta
+      name="description"
+      content="用卡牌情境遊戲訓練語言天份：抽任務、選天份卡、看組合適配度，練習聽力、語塊、語氣、記憶與社交修補。"
+    />
+    <meta property="og:title" content="Fluent AI | 語言天份卡牌訓練場" />
+    <meta property="og:description" content="我把語言學習拆成可玩的情境卡牌，用任務、天份卡與回饋訓練外語反應力。" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://jjfishjj.github.io/fluent-ai/practice/" />
+    <link rel="stylesheet" href="../assets/game.css" />
+  </head>
+  <body data-mode="practice">
+    <header class="topbar">
+      <div class="shell topbar-inner">
+        <a class="brand" href="/">Jerome<span>Kuo</span></a>
+        <nav class="nav" aria-label="主要導覽">
+          <a href="/fluent-ai/learning-gym-plan/">訓練計畫</a>
+          <a href="/ai-prompt-game-tutorial/">AI 遊戲教學</a>
+          <a href="/linkedin/">經歷儀表板</a>
+          <a href="https://github.com/jjfishjj" target="_blank" rel="noreferrer">GitHub</a>
+        </nav>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div class="shell hero-grid">
+        <div>
+          <div class="kicker">FLUENT AI / TALENT CARD ARENA</div>
+          <h1>我把語言天份訓練做成卡牌情境遊戲。</h1>
+          <p class="lead">
+            我參考積木式遊戲的任務感，把外語能力拆成一張張天份卡：回音模仿、語塊拼接、情緒換裝、
+            記憶宮殿、預測聽力、社交修補。每一回合抽一個真實情境，再用三張卡組出解法。
+          </p>
+          <div class="actions">
+            <a class="button primary" href="#arena">開始抽卡</a>
+            <a class="button secondary" href="/fluent-ai/learning-gym-plan/">看 6 日訓練計畫</a>
+          </div>
+        </div>
+        <aside class="hero-panel">
+          <div class="section-kicker">GAME LOOP</div>
+          <h2>一回合 3 步驟</h2>
+          <p>先拿到情境任務，再選 2 到 3 張天份卡，系統會依照任務需求給出組合分數與補強方向。</p>
+          <div class="mini-board">
+            <div class="mini-tile"><strong>01 抽任務</strong><span>機場、面試、遊戲公會、語言交換等真實情境。</span></div>
+            <div class="mini-tile"><strong>02 選卡</strong><span>每張卡代表一種語言天份與訓練策略。</span></div>
+            <div class="mini-tile"><strong>03 看回饋</strong><span>命中聽力、結構、語氣、記憶、修補等能力。</span></div>
+            <div class="mini-tile"><strong>04 開口練</strong><span>把卡牌組合變成 45 秒口說任務。</span></div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <main id="arena">
+      <section class="shell">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">SCENARIO CARD GAME</div>
+            <h2>抽任務，配天份卡</h2>
+            <p>我把語言天份設計成可以被組合的卡牌。不同情境會需要不同能力：聽力預測、句型結構、語氣控制、反應速度或社交修補。</p>
+          </div>
+          <div class="controls-row">
+            <button class="pill-button" id="drawMission" type="button">抽新任務</button>
+            <button class="pill-button" id="drawCards" type="button">重抽卡牌</button>
+            <button class="pill-button active" id="autoBuild" type="button">推薦組合</button>
+          </div>
+        </div>
+
+        <div class="game-layout">
+          <div>
+            <article class="mission-card" id="missionCard"></article>
+            <div class="controls-row">
+              <span class="goal-chip">規則：最多選 3 張卡</span>
+              <span class="goal-chip">目標：讓組合適配度超過 80</span>
+              <span class="goal-chip">練習：用選到的卡做 45 秒回答</span>
+            </div>
+            <div class="talent-grid" id="talentGrid" aria-label="語言天份卡牌"></div>
+          </div>
+
+          <aside class="sidebar">
+            <section class="panel">
+              <div class="section-kicker">CURRENT BUILD</div>
+              <h2>我目前的卡組</h2>
+              <ul class="selected-list" id="selectedList"></ul>
+            </section>
+            <section class="panel result-box" id="resultBox"></section>
+            <section class="panel">
+              <div class="section-kicker">STATS</div>
+              <div class="stat-grid" id="statGrid"></div>
+            </section>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="shell">Fluent AI Practice / Language talent cards for scenario-based training.</div>
+    </footer>
+
+    <script src="../assets/game.js"></script>
+  </body>
+</html>
