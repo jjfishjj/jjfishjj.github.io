@@ -3,162 +3,269 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
 const canvas = document.querySelector("#campus-canvas");
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x0d121a);
-scene.fog = new THREE.Fog(0x0d121a, 55, 155);
+scene.background = new THREE.Color(0x93bed2);
+scene.fog = new THREE.Fog(0x93bed2, 100, 220);
 
-const camera = new THREE.PerspectiveCamera(48, 1, 0.1, 500);
-camera.position.set(42, 42, 58);
+const camera = new THREE.PerspectiveCamera(46, 1, 0.1, 500);
+camera.position.set(88, 76, 104);
 
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 controls.target.set(0, 0, 0);
 controls.maxPolarAngle = Math.PI * 0.48;
-controls.minDistance = 18;
-controls.maxDistance = 130;
+controls.minDistance = 20;
+controls.maxDistance = 190;
 
 const materials = {
-  ground: new THREE.MeshStandardMaterial({ color: 0x25352c, roughness: 0.95 }),
-  road: new THREE.MeshStandardMaterial({ color: 0x20252d, roughness: 0.86 }),
-  path: new THREE.MeshStandardMaterial({ color: 0x6f6b59, roughness: 0.9 }),
-  plaza: new THREE.MeshStandardMaterial({ color: 0x958a72, roughness: 0.76 }),
-  buildingA: new THREE.MeshStandardMaterial({ color: 0xc2d7e8, roughness: 0.7 }),
-  buildingB: new THREE.MeshStandardMaterial({ color: 0xd6ba82, roughness: 0.76 }),
-  buildingC: new THREE.MeshStandardMaterial({ color: 0xbac0c8, roughness: 0.72 }),
-  roof: new THREE.MeshStandardMaterial({ color: 0x485160, roughness: 0.8 }),
-  glass: new THREE.MeshStandardMaterial({ color: 0x7dc7d8, roughness: 0.35, metalness: 0.1 }),
-  tree: new THREE.MeshStandardMaterial({ color: 0x2f8f5d, roughness: 0.82 }),
-  trunk: new THREE.MeshStandardMaterial({ color: 0x7d5a3e, roughness: 0.95 }),
-  route: new THREE.LineBasicMaterial({ color: 0x4fd1a5, linewidth: 3 }),
-  robot: new THREE.MeshStandardMaterial({ color: 0xf6c85f, roughness: 0.48, metalness: 0.08 })
+  lawn: new THREE.MeshStandardMaterial({ color: 0x6f9c68, roughness: 0.96 }),
+  road: new THREE.MeshStandardMaterial({ color: 0x4b5158, roughness: 0.9 }),
+  path: new THREE.MeshStandardMaterial({ color: 0xb9ac91, roughness: 0.9 }),
+  water: new THREE.MeshStandardMaterial({ color: 0x55a9bd, roughness: 0.24, metalness: 0.08 }),
+  track: new THREE.MeshStandardMaterial({ color: 0xb65f4d, roughness: 0.86, side: THREE.DoubleSide }),
+  field: new THREE.MeshStandardMaterial({ color: 0x4d8f56, roughness: 0.96 }),
+  roof: new THREE.MeshStandardMaterial({ color: 0x5b626a, roughness: 0.82 }),
+  academic: new THREE.MeshStandardMaterial({ color: 0xd6d0bf, roughness: 0.78 }),
+  engineering: new THREE.MeshStandardMaterial({ color: 0xbfc9ce, roughness: 0.72 }),
+  landmark: new THREE.MeshStandardMaterial({ color: 0xd7ae6f, roughness: 0.7 }),
+  residence: new THREE.MeshStandardMaterial({ color: 0xc89473, roughness: 0.8 }),
+  glass: new THREE.MeshStandardMaterial({ color: 0x73b9c8, roughness: 0.3, metalness: 0.08 }),
+  tree: new THREE.MeshStandardMaterial({ color: 0x2f7750, roughness: 0.88 }),
+  trunk: new THREE.MeshStandardMaterial({ color: 0x76513b, roughness: 0.96 }),
+  route: new THREE.LineBasicMaterial({ color: 0xffcf4a }),
+  robot: new THREE.MeshStandardMaterial({ color: 0xf2c84b, roughness: 0.42, metalness: 0.12 })
 };
 
-function box(name, size, position, material, castShadow = true) {
+function box(name, size, position, material, rotation = 0) {
   const mesh = new THREE.Mesh(new THREE.BoxGeometry(...size), material);
   mesh.name = name;
   mesh.position.set(...position);
-  mesh.castShadow = castShadow;
-  mesh.receiveShadow = true;
-  scene.add(mesh);
-  return mesh;
-}
-
-function cylinder(name, radiusTop, radiusBottom, height, position, material, segments = 24) {
-  const mesh = new THREE.Mesh(new THREE.CylinderGeometry(radiusTop, radiusBottom, height, segments), material);
-  mesh.name = name;
-  mesh.position.set(...position);
+  mesh.rotation.y = rotation;
   mesh.castShadow = true;
   mesh.receiveShadow = true;
   scene.add(mesh);
   return mesh;
 }
 
-box("campus ground", [120, 0.4, 92], [0, -0.22, 0], materials.ground, false);
-box("main boulevard", [12, 0.05, 88], [-14, 0.03, 0], materials.road, false);
-box("east campus road", [82, 0.05, 10], [16, 0.04, -20], materials.road, false);
-box("science walkway", [70, 0.06, 4], [12, 0.08, 18], materials.path, false);
-box("central plaza", [24, 0.08, 20], [4, 0.11, 2], materials.plaza, false);
-box("main gate marker", [18, 3.6, 1.2], [-14, 1.8, 43], materials.buildingB);
-
-const buildingData = [
-  ["engineering hall", [16, 10, 13], [-38, 5, 10], materials.buildingA],
-  ["library", [20, 7, 15], [12, 3.5, 27], materials.buildingB],
-  ["admin center", [14, 8, 12], [32, 4, 5], materials.buildingC],
-  ["ai lab", [14, 11, 14], [34, 5.5, -28], materials.buildingA],
-  ["student center", [18, 6, 10], [-37, 3, -25], materials.buildingB],
-  ["robotics lab", [14, 8, 12], [4, 4, -33], materials.buildingC],
-  ["lecture hall", [12, 7, 18], [-5, 3.5, 30], materials.buildingC],
-  ["innovation hub", [16, 12, 12], [44, 6, 24], materials.buildingA]
-];
-
-for (const [name, size, position, material] of buildingData) {
-  const building = box(name, size, position, material);
-  box(`${name} roof`, [size[0] + 0.8, 0.6, size[2] + 0.8], [position[0], position[1] + size[1] / 2 + 0.3, position[2]], materials.roof);
-  box(`${name} glass`, [size[0] * 0.72, size[1] * 0.46, 0.18], [position[0], position[1], position[2] + size[2] / 2 + 0.1], materials.glass);
-  building.userData.kind = "campus-building";
+function addBuilding(name, size, position, material, rotation = 0) {
+  const building = box(name, size, position, material, rotation);
+  const roof = box(`${name} roof`, [size[0] + 0.5, 0.45, size[2] + 0.5], [position[0], position[1] + size[1] / 2 + 0.22, position[2]], materials.roof, rotation);
+  building.userData.kind = "building";
+  roof.userData.kind = "roof";
+  return building;
 }
 
-const treePositions = [
-  [-28, 0, 35], [-20, 0, 34], [-7, 0, 35], [8, 0, 38], [24, 0, 36],
-  [-26, 0, 19], [-13, 0, 19], [6, 0, 18], [20, 0, 18], [36, 0, 18],
-  [-47, 0, -7], [-28, 0, -6], [-2, 0, -7], [21, 0, -8], [46, 0, -8],
-  [-44, 0, -38], [-29, 0, -38], [-11, 0, -39], [15, 0, -40], [35, 0, -40]
+function addRoad(points, width, material = materials.road) {
+  const curve = new THREE.CatmullRomCurve3(points.map(([x, z]) => new THREE.Vector3(x, 0.08, z)));
+  const road = new THREE.Mesh(new THREE.TubeGeometry(curve, 48, width / 2, 8, false), material);
+  road.scale.y = 0.055;
+  road.receiveShadow = true;
+  scene.add(road);
+  return curve;
+}
+
+function addLabel(text, position, width = 16) {
+  const labelCanvas = document.createElement("canvas");
+  labelCanvas.width = 512;
+  labelCanvas.height = 128;
+  const context = labelCanvas.getContext("2d");
+  context.fillStyle = "rgba(17, 25, 31, 0.86)";
+  context.roundRect(8, 8, 496, 112, 18);
+  context.fill();
+  context.font = "600 42px sans-serif";
+  context.textAlign = "center";
+  context.textBaseline = "middle";
+  context.fillStyle = "#ffffff";
+  context.fillText(text, 256, 65);
+  const texture = new THREE.CanvasTexture(labelCanvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: texture, transparent: true, depthTest: false }));
+  sprite.position.set(...position);
+  sprite.scale.set(width, width / 4, 1);
+  sprite.renderOrder = 20;
+  scene.add(sprite);
+  return sprite;
+}
+
+const campusShape = new THREE.Shape();
+campusShape.moveTo(-66, -22);
+campusShape.lineTo(-53, -48);
+campusShape.lineTo(8, -54);
+campusShape.lineTo(52, -38);
+campusShape.lineTo(66, -6);
+campusShape.lineTo(61, 33);
+campusShape.lineTo(35, 50);
+campusShape.lineTo(-34, 51);
+campusShape.lineTo(-61, 34);
+campusShape.closePath();
+const campus = new THREE.Mesh(new THREE.ShapeGeometry(campusShape), materials.lawn);
+campus.rotation.x = -Math.PI / 2;
+campus.receiveShadow = true;
+scene.add(campus);
+
+box("Daxue Road", [9, 0.18, 132], [70, -0.02, 2], materials.road, -0.12);
+addRoad([[-62, -20], [-34, -18], [-7, -13], [23, -8], [58, 2]], 5.5);
+addRoad([[58, 25], [42, 22], [22, 18], [-3, 17], [-28, 20], [-53, 27]], 5);
+addRoad([[-34, -42], [-31, -18], [-28, 3], [-28, 28], [-20, 45]], 4.2);
+addRoad([[12, -45], [12, -24], [14, -2], [21, 19], [31, 40]], 4.2);
+addRoad([[-50, 34], [-20, 30], [10, 29], [38, 31], [58, 25]], 3.6, materials.path);
+
+const lake = new THREE.Mesh(new THREE.CylinderGeometry(10, 10, 0.28, 48), materials.water);
+lake.name = "竹湖";
+lake.position.set(46, 0.06, 12);
+lake.scale.z = 0.62;
+lake.receiveShadow = true;
+scene.add(lake);
+
+const track = new THREE.Mesh(new THREE.RingGeometry(9, 13, 64), materials.track);
+track.rotation.x = -Math.PI / 2;
+track.position.set(-45, 0.14, 38);
+track.scale.x = 1.55;
+scene.add(track);
+const athleticField = new THREE.Mesh(new THREE.CircleGeometry(8.7, 48), materials.field);
+athleticField.rotation.x = -Math.PI / 2;
+athleticField.position.set(-45, 0.15, 38);
+athleticField.scale.x = 1.55;
+scene.add(athleticField);
+
+const buildings = [
+  ["浩然圖書館", [18, 10, 16], [12, 5, -2], materials.landmark, 0.06],
+  ["行政大樓", [13, 7, 10], [32, 3.5, 12], materials.landmark, -0.14],
+  ["中正堂", [14, 6, 9], [30, 3, 25], materials.academic, -0.18],
+  ["資訊技術服務中心", [13, 7, 8], [8, 3.5, 19], materials.academic, 0.08],
+  ["工程一館", [15, 8, 10], [-16, 4, 4], materials.engineering, -0.05],
+  ["工程二館", [17, 9, 11], [-17, 4.5, -13], materials.engineering, 0.04],
+  ["工程三館", [16, 8, 10], [-4, 4, -29], materials.engineering, -0.16],
+  ["工程四館", [13, 8, 9], [-28, 4, 14], materials.engineering, 0.06],
+  ["工程五館", [15, 10, 10], [-35, 5, 1], materials.engineering, -0.08],
+  ["工程六館", [13, 8, 10], [-29, 4, -13], materials.engineering, -0.12],
+  ["科學一館", [14, 8, 9], [-7, 4, 31], materials.academic, -0.04],
+  ["科學二館", [12, 7, 9], [-19, 3.5, 33], materials.academic, 0.1],
+  ["科學三館", [13, 8, 8], [-7, 4, 18], materials.academic, 0.02],
+  ["生物醫學大樓", [13, 9, 10], [46, 4.5, -8], materials.academic, -0.25],
+  ["電子資訊研究大樓", [12, 10, 9], [43, 5, -23], materials.engineering, -0.18],
+  ["管理一館", [13, 7, 9], [0, 3.5, -17], materials.academic, 0.05],
+  ["綜合球館", [17, 7, 12], [-23, 3.5, 44], materials.academic, -0.08],
+  ["學生宿舍九舍", [12, 8, 7], [12, 4, 41], materials.residence, -0.08],
+  ["學生宿舍十舍", [12, 8, 7], [26, 4, 41], materials.residence, -0.08],
+  ["學生宿舍十一舍", [12, 8, 7], [39, 4, 36], materials.residence, -0.14],
+  ["學生宿舍十二舍", [12, 8, 7], [-39, 4, -34], materials.residence, -0.1],
+  ["學生宿舍十三舍", [12, 8, 7], [-26, 4, -39], materials.residence, -0.08],
+  ["學生餐廳", [14, 5, 8], [-12, 2.5, -43], materials.residence, 0.05],
+  ["竹軒女舍", [14, 8, 8], [13, 4, -44], materials.residence, 0.1]
 ];
 
-for (const [x, , z] of treePositions) {
-  cylinder("tree trunk", 0.28, 0.34, 2.5, [x, 1.25, z], materials.trunk, 10);
-  cylinder("tree canopy", 1.8, 0.7, 4.4, [x, 4.3, z], materials.tree, 18);
+for (const [name, size, position, material, rotation] of buildings) {
+  addBuilding(name, size, position, material, rotation);
+}
+
+box("北大門", [1.2, 5, 13], [61, 2.5, 25], materials.landmark, -0.14);
+box("南大門", [1.2, 4, 12], [-63, 2, -20], materials.landmark, 0.18);
+
+const labelGroup = new THREE.Group();
+scene.add(labelGroup);
+for (const [text, position, width] of [
+  ["北大門", [58, 7, 27], 12],
+  ["南大門", [-59, 7, -21], 12],
+  ["竹湖", [46, 4, 12], 9],
+  ["浩然圖書館", [12, 13, -2], 18],
+  ["行政大樓", [32, 10, 12], 15],
+  ["工程館群", [-23, 14, -5], 15],
+  ["田徑場", [-45, 5, 38], 12],
+  ["學生宿舍區", [25, 13, 41], 17]
+]) {
+  labelGroup.add(addLabel(text, position, width));
+}
+
+function addTree(x, z, scale = 1) {
+  const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.22 * scale, 0.3 * scale, 2.2 * scale, 8), materials.trunk);
+  const crown = new THREE.Mesh(new THREE.ConeGeometry(1.35 * scale, 3.5 * scale, 12), materials.tree);
+  trunk.position.set(x, 1.1 * scale, z);
+  crown.position.set(x, 3.6 * scale, z);
+  trunk.castShadow = true;
+  crown.castShadow = true;
+  scene.add(trunk, crown);
+}
+
+for (let i = 0; i < 88; i += 1) {
+  const angle = (i / 88) * Math.PI * 2;
+  const radiusX = 57 + Math.sin(i * 2.7) * 4;
+  const radiusZ = 43 + Math.cos(i * 1.9) * 3;
+  addTree(Math.cos(angle) * radiusX, Math.sin(angle) * radiusZ, 0.75 + (i % 4) * 0.08);
+}
+for (const [x, z] of [[-41, 13], [-38, 20], [-12, 9], [1, 8], [20, 8], [38, 3], [52, 26], [25, -16], [2, -39], [-48, -8], [-51, 4]]) {
+  addTree(x, z, 0.9);
 }
 
 const routePoints = [
-  new THREE.Vector3(-14, 0.4, 42),
-  new THREE.Vector3(-14, 0.4, 12),
-  new THREE.Vector3(4, 0.4, 2),
-  new THREE.Vector3(12, 0.4, 23),
-  new THREE.Vector3(31, 0.4, 5),
-  new THREE.Vector3(34, 0.4, -25),
-  new THREE.Vector3(4, 0.4, -33),
-  new THREE.Vector3(-14, 0.4, -5)
+  new THREE.Vector3(57, 0.65, 24),
+  new THREE.Vector3(34, 0.65, 18),
+  new THREE.Vector3(15, 0.65, 2),
+  new THREE.Vector3(-14, 0.65, 3),
+  new THREE.Vector3(-25, 0.65, -14),
+  new THREE.Vector3(0, 0.65, -18),
+  new THREE.Vector3(18, 0.65, -4),
+  new THREE.Vector3(42, 0.65, 9)
 ];
-const route = new THREE.Line(new THREE.BufferGeometry().setFromPoints(routePoints), materials.route);
-route.name = "isaac patrol route";
+const patrolCurve = new THREE.CatmullRomCurve3(routePoints, true);
+const route = new THREE.Line(new THREE.BufferGeometry().setFromPoints(patrolCurve.getPoints(120)), materials.route);
 scene.add(route);
 
 const robot = new THREE.Group();
-robot.name = "isaac patrol robot";
-const robotBase = new THREE.Mesh(new THREE.BoxGeometry(3.2, 0.8, 2.3), materials.robot);
-const robotMast = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.18, 2.8, 16), materials.robot);
-const robotSensor = new THREE.Mesh(new THREE.SphereGeometry(0.55, 24, 12), materials.glass);
-robotBase.castShadow = true;
-robotMast.position.y = 1.6;
-robotSensor.position.y = 3.05;
+const robotBase = new THREE.Mesh(new THREE.BoxGeometry(2.8, 0.8, 2), materials.robot);
+const robotMast = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.16, 2.5, 16), materials.robot);
+const robotSensor = new THREE.Mesh(new THREE.SphereGeometry(0.48, 20, 12), materials.glass);
+robotMast.position.y = 1.55;
+robotSensor.position.y = 2.9;
 robot.add(robotBase, robotMast, robotSensor);
 scene.add(robot);
 
-const sun = new THREE.DirectionalLight(0xfff4d0, 3.2);
-sun.position.set(32, 62, 24);
+const sun = new THREE.DirectionalLight(0xfff1cf, 3.1);
+sun.position.set(60, 90, 45);
 sun.castShadow = true;
 sun.shadow.mapSize.set(2048, 2048);
+sun.shadow.camera.left = -90;
+sun.shadow.camera.right = 90;
+sun.shadow.camera.top = 90;
+sun.shadow.camera.bottom = -90;
 scene.add(sun);
-scene.add(new THREE.HemisphereLight(0x8ecaff, 0x203525, 1.4));
-
-function addCampusLight(x, z) {
-  const pole = cylinder("campus light pole", 0.08, 0.08, 4.5, [x, 2.25, z], materials.roof, 10);
-  const bulb = new THREE.PointLight(0xf6c85f, 1.1, 20);
-  bulb.position.set(x, 4.8, z);
-  scene.add(bulb);
-  return pole;
-}
-[-32, -14, 4, 22, 40].forEach((x) => addCampusLight(x, 18));
-[-14, 12, 34].forEach((x) => addCampusLight(x, -20));
+scene.add(new THREE.HemisphereLight(0xd7efff, 0x355538, 1.8));
 
 const views = {
-  overview: { camera: [42, 42, 58], target: [0, 0, 0] },
-  gate: { camera: [-28, 16, 58], target: [-14, 2, 31] },
-  plaza: { camera: [23, 18, 27], target: [4, 1, 2] }
+  overview: { camera: [88, 76, 104], target: [0, 0, 0] },
+  northGate: { camera: [91, 25, 45], target: [48, 3, 18] },
+  library: { camera: [35, 24, 29], target: [12, 3, -2] },
+  lake: { camera: [72, 25, 31], target: [43, 1, 11] }
 };
 
-function setView(view) {
-  const next = views[view];
-  camera.position.set(...next.camera);
-  controls.target.set(...next.target);
+function setView(key) {
+  camera.position.set(...views[key].camera);
+  controls.target.set(...views[key].target);
   controls.update();
 }
+
 document.querySelector("#view-overview").addEventListener("click", () => setView("overview"));
-document.querySelector("#view-gate").addEventListener("click", () => setView("gate"));
-document.querySelector("#view-plaza").addEventListener("click", () => setView("plaza"));
+document.querySelector("#view-north-gate").addEventListener("click", () => setView("northGate"));
+document.querySelector("#view-library").addEventListener("click", () => setView("library"));
+document.querySelector("#view-lake").addEventListener("click", () => setView("lake"));
+document.querySelector("#toggle-labels").addEventListener("click", (event) => {
+  labelGroup.visible = !labelGroup.visible;
+  event.currentTarget.textContent = labelGroup.visible ? "地標開啟" : "地標關閉";
+  event.currentTarget.setAttribute("aria-pressed", String(labelGroup.visible));
+});
 document.querySelector("#toggle-route").addEventListener("click", (event) => {
   route.visible = !route.visible;
-  event.currentTarget.textContent = route.visible ? "Route On" : "Route Off";
+  robot.visible = route.visible;
+  event.currentTarget.textContent = route.visible ? "路線開啟" : "路線關閉";
   event.currentTarget.setAttribute("aria-pressed", String(route.visible));
 });
 
-const pathCurve = new THREE.CatmullRomCurve3(routePoints, true);
-let clock = new THREE.Clock();
+const clock = new THREE.Clock();
 let routeTime = 0;
 
 function resize() {
@@ -170,14 +277,14 @@ function resize() {
 
 function animate() {
   resize();
-  const delta = clock.getDelta();
-  routeTime = (routeTime + delta * 0.045) % 1;
-  const point = pathCurve.getPointAt(routeTime);
-  const ahead = pathCurve.getPointAt((routeTime + 0.01) % 1);
+  routeTime = (routeTime + clock.getDelta() * 0.035) % 1;
+  const point = patrolCurve.getPointAt(routeTime);
+  const ahead = patrolCurve.getPointAt((routeTime + 0.008) % 1);
   robot.position.copy(point);
   robot.lookAt(ahead.x, point.y, ahead.z);
   controls.update();
   renderer.render(scene, camera);
   requestAnimationFrame(animate);
 }
+
 animate();
