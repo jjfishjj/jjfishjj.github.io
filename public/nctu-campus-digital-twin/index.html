@@ -35,19 +35,41 @@
           <button id="view-north-gate" type="button">北大門</button>
           <button id="view-library" type="button">浩然圖書館</button>
           <button id="view-lake" type="button">竹湖</button>
+          <button id="walk-tour" type="button" aria-pressed="false">步行導覽</button>
           <button id="toggle-labels" type="button" aria-pressed="true">地標開啟</button>
           <button id="toggle-route" type="button" aria-pressed="true">路線開啟</button>
         </div>
       </section>
       <aside class="panel" aria-label="校園配置資訊">
+        <section id="landmark-detail" class="landmark-detail" hidden>
+          <div class="detail-head">
+            <div>
+              <p class="detail-type">校園地標</p>
+              <h2 id="detail-title">竹湖</h2>
+            </div>
+            <button id="close-detail" class="close-detail" type="button" aria-label="關閉地標介紹">×</button>
+          </div>
+          <img id="detail-image" src="https://nctuhistory.lib.nycu.edu.tw/collectionImg/306-1969-0003-0370001.jpg" alt="從竹湖遠望校園建築的歷史照片" />
+          <p id="detail-description"></p>
+          <a id="detail-source" class="source-link" href="https://nctuhistory.lib.nycu.edu.tw/list_detail.aspx?cultiD=8677" target="_blank" rel="noreferrer">查看陽明交大官方典藏</a>
+        </section>
         <h2>光復校區配置</h2>
         <p>
           依陽明交大官方校園圖校正的概念模型。大學路與北大門位於東側，竹湖、行政大樓與浩然圖書館形成校園東部核心，工程館群集中於中央，宿舍與運動區分布在南北兩端。
         </p>
         <dl>
-          <div><dt>東側入口</dt><dd>北大門、大學路、竹湖、行政大樓</dd></div>
-          <div><dt>中央教學區</dt><dd>浩然圖書館、工程一至六館、科學館群</dd></div>
-          <div><dt>生活與運動區</dt><dd>綜合球館、田徑場、學生宿舍與餐廳</dd></div>
+          <div>
+            <dt>東側入口</dt>
+            <dd>北大門、大學路、竹湖、行政大樓</dd>
+          </div>
+          <div>
+            <dt>中央教學區</dt>
+            <dd>浩然圖書館、工程一至六館、科學館群</dd>
+          </div>
+          <div>
+            <dt>生活與運動區</dt>
+            <dd>綜合球館、田徑場、學生宿舍與餐廳</dd>
+          </div>
         </dl>
         <p class="source-note">配置依 2025 年官方光復校區圖概略建模，非測量或導航用途。</p>
       </aside>
@@ -55,3 +77,4 @@
     <script type="module" src="./app.js"></script>
   </body>
 </html>
+
