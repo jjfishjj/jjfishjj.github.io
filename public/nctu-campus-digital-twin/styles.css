@@ -134,6 +134,31 @@ h1 {
   font-weight: 700;
 }
 
+.tour-route-field {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.tour-route-field select {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 7px 28px 7px 9px;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text);
+  font: inherit;
+}
+
+.tour-route-field select:focus-visible {
+  border-color: var(--accent);
+  outline: 2px solid rgba(79, 209, 165, 0.28);
+}
+
 #tour-map-svg {
   display: block;
   width: 100%;
@@ -152,6 +177,10 @@ h1 {
   stroke-width: 13;
 }
 
+.map-road-secondary {
+  stroke-width: 8;
+}
+
 .map-lake {
   fill: rgba(85, 169, 189, 0.72);
   stroke: rgba(154, 225, 235, 0.8);
@@ -165,6 +194,12 @@ h1 {
 
 .map-library {
   fill: rgba(215, 174, 111, 0.58);
+}
+
+.map-track {
+  fill: rgba(77, 143, 86, 0.42);
+  stroke: rgba(246, 200, 95, 0.72);
+  stroke-width: 4;
 }
 
 #tour-map-route {
@@ -207,6 +242,7 @@ h1 {
   min-width: 0;
   padding: 7px 6px;
   font-size: 11px;
+  overflow-wrap: anywhere;
 }
 
 .tour-map-stops button[aria-pressed="true"] {
@@ -279,15 +315,14 @@ h1 {
 
 .tour-stations {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(var(--tour-stop-count, 4), 1fr);
   gap: 8px;
   margin-top: 8px;
   color: var(--muted);
   font-size: 10px;
 }
 
-.tour-stations span:nth-child(2),
-.tour-stations span:nth-child(3) {
+.tour-stations span:not(:first-child):not(:last-child) {
   text-align: center;
 }
 
