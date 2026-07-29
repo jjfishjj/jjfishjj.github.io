@@ -324,31 +324,141 @@ const views = {
 const walkTourButton = document.querySelector("#walk-tour");
 const walkTourCurve = new THREE.CatmullRomCurve3([
   new THREE.Vector3(82, 4.6, 22),
-  new THREE.Vector3(69, 4.2, 22),
-  new THREE.Vector3(61, 4, 22),
-  new THREE.Vector3(56, 4, 23),
-  new THREE.Vector3(52, 4, 25),
-  new THREE.Vector3(49, 4, 28),
-  new THREE.Vector3(46, 4, 34),
-  new THREE.Vector3(40, 4, 36)
+  new THREE.Vector3(69, 4.5, 22),
+  new THREE.Vector3(61, 4.5, 22),
+  new THREE.Vector3(56, 4.5, 23),
+  new THREE.Vector3(52, 4.5, 25),
+  new THREE.Vector3(49, 4.5, 30),
+  new THREE.Vector3(43, 4.5, 35),
+  new THREE.Vector3(41, 4.5, 37),
+  new THREE.Vector3(36, 4.5, 34),
+  new THREE.Vector3(37, 4.5, 29),
+  new THREE.Vector3(38, 4.5, 23),
+  new THREE.Vector3(37, 4.5, 17),
+  new THREE.Vector3(36, 4.5, 10),
+  new THREE.Vector3(38, 5, 5),
+  new THREE.Vector3(41, 5.8, 0),
+  new THREE.Vector3(44, 6.5, -4)
 ], false, "catmullrom", 0.45);
+const tourGuide = document.querySelector("#tour-guide");
+const tourStep = document.querySelector("#tour-step");
+const tourTitle = document.querySelector("#tour-title");
+const tourNarration = document.querySelector("#tour-narration");
+const tourPercent = document.querySelector("#tour-percent");
+const tourProgress = document.querySelector(".tour-progress");
+const tourProgressFill = document.querySelector("#tour-progress-fill");
+const tourPauseButton = document.querySelector("#tour-pause");
+const tourAudioButton = document.querySelector("#tour-audio");
+const tourExitButton = document.querySelector("#tour-exit");
+const tourStops = [
+  {
+    title: "北大門",
+    progress: 0,
+    narration: "導覽從光復校區北大門出發。穿過校門後，竹湖位於行進方向左側，中央道路則向校園核心延伸。"
+  },
+  {
+    title: "竹湖",
+    progress: 0.34,
+    landmark: "lake",
+    narration: "竹湖是光復校區早期的重要景觀。從湖畔可以辨認行政大樓、中正堂與浩然圖書館形成的校園東部核心。"
+  },
+  {
+    title: "行政大樓",
+    progress: 0.58,
+    landmark: "administration",
+    narration: "行政大樓位於竹湖內側，是校園早期行政核心。導覽在此轉入中央道路，繼續前往浩然圖書館。"
+  },
+  {
+    title: "浩然圖書館",
+    progress: 1,
+    narration: "浩然圖書館位於中央教學區東側，周圍連接工程館群與主要校園道路。本次校園核心導覽在此完成。"
+  }
+];
+const tourSegmentDurations = [7, 6, 9];
+const tourStopDuration = 3.5;
 let walkTourActive = false;
-let walkTourElapsed = 0;
-const walkTourDuration = 12;
+let walkTourPaused = false;
+let walkTourCompleted = false;
+let tourAudioEnabled = true;
+let tourStopIndex = 0;
+let tourSegmentElapsed = 0;
+let tourStopElapsed = 0;
+let tourHolding = true;
 
-function stopWalkTour() {
+function updateTourProgress(progress) {
+  const percent = Math.round(progress * 100);
+  tourProgressFill.style.width = `${percent}%`;
+  tourPercent.textContent = `${percent}%`;
+  tourProgress.setAttribute("aria-valuenow", String(percent));
+}
+
+function speakTourStop(index) {
+  if (!tourAudioEnabled || !("speechSynthesis" in window)) return;
+  window.speechSynthesis.cancel();
+  const stop = tourStops[index];
+  const utterance = new SpeechSynthesisUtterance(`${stop.title}。${stop.narration}`);
+  utterance.lang = "zh-TW";
+  utterance.rate = 0.95;
+  window.speechSynthesis.speak(utterance);
+}
+
+function showTourStop(index) {
+  const stop = tourStops[index];
+  tourStep.textContent = `第 ${index + 1} 站，共 ${tourStops.length} 站`;
+  tourTitle.textContent = stop.title;
+  tourNarration.textContent = stop.narration;
+  updateTourProgress(stop.progress);
+  if (stop.landmark) {
+    showLandmark(stop.landmark);
+  } else {
+    detailPanel.hidden = true;
+  }
+  speakTourStop(index);
+}
+
+function stopWalkTour(hideGuide = true) {
   walkTourActive = false;
+  walkTourPaused = false;
+  walkTourCompleted = false;
   controls.enabled = true;
   walkTourButton.textContent = "步行導覽";
   walkTourButton.setAttribute("aria-pressed", "false");
+  tourPauseButton.textContent = "暫停";
+  tourPauseButton.setAttribute("aria-pressed", "false");
+  if (hideGuide) tourGuide.hidden = true;
+  if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+}
+
+function completeWalkTour() {
+  walkTourActive = false;
+  walkTourCompleted = true;
+  controls.enabled = true;
+  walkTourButton.textContent = "重新導覽";
+  walkTourButton.setAttribute("aria-pressed", "false");
+  tourPauseButton.disabled = true;
+  tourExitButton.textContent = "關閉";
+  updateTourProgress(1);
 }
 
 function startWalkTour() {
   walkTourActive = true;
-  walkTourElapsed = 0;
+  walkTourPaused = false;
+  walkTourCompleted = false;
+  tourStopIndex = 0;
+  tourSegmentElapsed = 0;
+  tourStopElapsed = 0;
+  tourHolding = true;
   controls.enabled = false;
   walkTourButton.textContent = "停止導覽";
   walkTourButton.setAttribute("aria-pressed", "true");
+  tourGuide.hidden = false;
+  tourPauseButton.disabled = false;
+  tourPauseButton.textContent = "暫停";
+  tourPauseButton.setAttribute("aria-pressed", "false");
+  tourExitButton.textContent = "結束";
+  camera.position.copy(walkTourCurve.getPointAt(0));
+  controls.target.copy(walkTourCurve.getPointAt(0.02)).setY(2);
+  showTourStop(0);
 }
 
 function setView(key) {
@@ -368,6 +478,24 @@ walkTourButton.addEventListener("click", () => {
   } else {
     startWalkTour();
   }
+});
+tourPauseButton.addEventListener("click", () => {
+  if (!walkTourActive) return;
+  walkTourPaused = !walkTourPaused;
+  tourPauseButton.textContent = walkTourPaused ? "繼續" : "暫停";
+  tourPauseButton.setAttribute("aria-pressed", String(walkTourPaused));
+  if (walkTourPaused && "speechSynthesis" in window) window.speechSynthesis.pause();
+  if (!walkTourPaused && "speechSynthesis" in window) window.speechSynthesis.resume();
+});
+tourAudioButton.addEventListener("click", () => {
+  tourAudioEnabled = !tourAudioEnabled;
+  tourAudioButton.textContent = tourAudioEnabled ? "語音開啟" : "語音關閉";
+  tourAudioButton.setAttribute("aria-pressed", String(tourAudioEnabled));
+  if (!tourAudioEnabled && "speechSynthesis" in window) window.speechSynthesis.cancel();
+  if (tourAudioEnabled && !tourGuide.hidden) speakTourStop(tourStopIndex);
+});
+tourExitButton.addEventListener("click", () => {
+  stopWalkTour();
 });
 document.querySelector("#toggle-labels").addEventListener("click", (event) => {
   labelGroup.visible = !labelGroup.visible;
@@ -400,16 +528,38 @@ function animate() {
   robot.position.copy(point);
   robot.lookAt(ahead.x, point.y, ahead.z);
 
-  if (walkTourActive) {
-    walkTourElapsed += delta;
-    const progress = Math.min(walkTourElapsed / walkTourDuration, 1);
-    const easedProgress = progress * progress * (3 - 2 * progress);
-    const walkPoint = walkTourCurve.getPointAt(easedProgress);
-    const lookPoint = walkTourCurve.getPointAt(Math.min(easedProgress + 0.035, 1));
-    camera.position.copy(walkPoint);
-    controls.target.set(lookPoint.x, 2, lookPoint.z);
-    if (progress >= 1) {
-      stopWalkTour();
+  if (walkTourActive && !walkTourPaused) {
+    if (tourHolding) {
+      tourStopElapsed += delta;
+      if (tourStopElapsed >= tourStopDuration) {
+        if (tourStopIndex === tourStops.length - 1) {
+          completeWalkTour();
+        } else {
+          tourHolding = false;
+          tourSegmentElapsed = 0;
+        }
+      }
+    } else {
+      const segmentDuration = tourSegmentDurations[tourStopIndex];
+      tourSegmentElapsed += delta;
+      const segmentProgress = Math.min(tourSegmentElapsed / segmentDuration, 1);
+      const easedProgress = segmentProgress * segmentProgress * (3 - 2 * segmentProgress);
+      const startProgress = tourStops[tourStopIndex].progress;
+      const endProgress = tourStops[tourStopIndex + 1].progress;
+      const progress = THREE.MathUtils.lerp(startProgress, endProgress, easedProgress);
+      const walkPoint = walkTourCurve.getPointAt(progress);
+      const lookPoint = progress > 0.96
+        ? new THREE.Vector3(8, 4, -4)
+        : walkTourCurve.getPointAt(progress + 0.025);
+      camera.position.copy(walkPoint);
+      controls.target.set(lookPoint.x, 2, lookPoint.z);
+      updateTourProgress(progress);
+      if (segmentProgress >= 1) {
+        tourStopIndex += 1;
+        tourStopElapsed = 0;
+        tourHolding = true;
+        showTourStop(tourStopIndex);
+      }
     }
   }
 
