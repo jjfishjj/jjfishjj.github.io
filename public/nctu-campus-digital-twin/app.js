@@ -109,17 +109,20 @@ campus.receiveShadow = true;
 scene.add(campus);
 
 box("Daxue Road", [9, 0.18, 132], [70, -0.02, 2], materials.road, -0.12);
-addRoad([[-62, -20], [-34, -18], [-7, -13], [23, -8], [58, 2]], 5.5);
-addRoad([[67, 22], [59, 22], [54, 18], [47, 14], [38, 13], [28, 11], [-3, 17], [-28, 20], [-53, 27]], 5);
+addRoad([[-62, -20], [-43, -18], [-28, -13], [-13, -9], [3, -7], [15, -3], [26, 5]], 5.5);
+addRoad([[67, 22], [59, 22], [54, 19], [48, 16], [40, 14], [31, 10], [26, 5], [15, -3], [3, -7], [-12, -5], [-27, 1], [-42, 12]], 5);
 addRoad([[-34, -42], [-31, -18], [-28, 3], [-28, 28], [-20, 45]], 4.2);
-addRoad([[12, -45], [12, -24], [14, -2], [21, 19], [31, 40]], 4.2);
+addRoad([[18, -45], [18, -25], [20, -10], [22, 3], [26, 15], [31, 40]], 4.2);
 addRoad([[-50, 34], [-20, 30], [10, 29], [35, 38], [50, 37], [58, 25]], 3.6, materials.path);
+addRoad([[-43, 12], [-36, 2], [-31, -11], [-20, -20], [-5, -25], [8, -28]], 3.4, materials.path);
+box("library plaza", [22, 0.08, 12], [8, 0.11, 8], materials.path);
 
 const lake = new THREE.Mesh(new THREE.CylinderGeometry(10, 10, 0.28, 48), materials.water);
 lake.name = "竹湖";
 lake.position.set(46, 0.06, 31);
 lake.scale.z = 0.62;
 lake.receiveShadow = true;
+lake.userData.landmark = "lake";
 scene.add(lake);
 
 const track = new THREE.Mesh(new THREE.RingGeometry(9, 13, 64), materials.track);
@@ -133,14 +136,15 @@ athleticField.position.set(-45, 0.15, 38);
 athleticField.scale.x = 1.55;
 scene.add(athleticField);
 
+const buildingMeshes = new Map();
 const buildings = [
-  ["浩然圖書館", [18, 10, 16], [12, 5, -2], materials.landmark, 0.06],
+  ["浩然圖書館", [18, 10, 16], [8, 5, -4], materials.landmark, 0.02],
   ["行政大樓", [13, 7, 10], [28, 3.5, 24], materials.landmark, -0.08],
   ["中正堂", [14, 6, 9], [30, 3, 25], materials.academic, -0.18],
   ["資訊技術服務中心", [13, 7, 8], [8, 3.5, 19], materials.academic, 0.08],
-  ["工程一館", [15, 8, 10], [-16, 4, 4], materials.engineering, -0.05],
-  ["工程二館", [17, 9, 11], [-17, 4.5, -13], materials.engineering, 0.04],
-  ["工程三館", [16, 8, 10], [-4, 4, -29], materials.engineering, -0.16],
+  ["工程一館", [15, 8, 10], [-24, 4, 1], materials.engineering, -0.05],
+  ["工程二館", [17, 9, 11], [-14, 4.5, -13], materials.engineering, 0.04],
+  ["工程三館", [16, 8, 10], [2, 4, -27], materials.engineering, -0.12],
   ["工程四館", [13, 8, 9], [-28, 4, 14], materials.engineering, 0.06],
   ["工程五館", [15, 10, 10], [-35, 5, 1], materials.engineering, -0.08],
   ["工程六館", [13, 8, 10], [-29, 4, -13], materials.engineering, -0.12],
@@ -161,8 +165,10 @@ const buildings = [
 ];
 
 for (const [name, size, position, material, rotation] of buildings) {
-  addBuilding(name, size, position, material, rotation);
+  buildingMeshes.set(name, addBuilding(name, size, position, material, rotation));
 }
+
+buildingMeshes.get("行政大樓").userData.landmark = "administration";
 
 box("北大門北柱", [1.8, 5.5, 3.2], [62, 2.75, 27.5], materials.landmark, 0);
 box("北大門南柱", [1.8, 5.5, 3.2], [62, 2.75, 16.5], materials.landmark, 0);
@@ -175,7 +181,7 @@ for (const [text, position, width] of [
   ["北大門", [62, 8, 22], 8],
   ["南大門", [-59, 7, -21], 12],
   ["竹湖", [46, 4, 31], 9],
-  ["浩然圖書館", [12, 13, -2], 18],
+  ["浩然圖書館", [8, 13, -4], 18],
   ["行政大樓", [28, 10, 24], 15],
   ["工程館群", [-23, 14, -5], 15],
   ["田徑場", [-45, 5, 38], 12],
@@ -183,6 +189,76 @@ for (const [text, position, width] of [
 ]) {
   labelGroup.add(addLabel(text, position, width));
 }
+
+const landmarkData = {
+  lake: {
+    title: "竹湖",
+    image: "https://nctuhistory.lib.nycu.edu.tw/collectionImg/306-1969-0003-0370001.jpg",
+    alt: "從竹湖遠望圖書館、行政大樓與中正堂的歷史照片",
+    description: "竹湖位於北大門進校後的左側，是光復校區早期核心景觀。這張 1981 年官方典藏照片由湖畔望向圖書館、行政大樓與中正堂。",
+    source: "https://nctuhistory.lib.nycu.edu.tw/list_detail.aspx?cultiD=8677&search_mode=1&search_val=%E4%B8%AD%E6%AD%A3%E5%A0%82&url=4"
+  },
+  administration: {
+    title: "行政大樓",
+    image: "https://nctuhistory.lib.nycu.edu.tw/collectionImg/306-1969-0003-1560001.jpg",
+    alt: "交通大學光復校區行政大樓歷史照片",
+    description: "行政大樓位於竹湖更內側，是光復校區早期行政核心，與中正堂、圖書館共同構成北大門進校後的重要建築群。照片為 1981 年官方典藏。",
+    source: "https://nctuhistory.lib.nycu.edu.tw/search_solution.aspx?search_mode=1&search_val=%E8%A1%8C%E6%94%BF%E5%A4%A7%E6%A8%93"
+  }
+};
+
+const detailPanel = document.querySelector("#landmark-detail");
+const detailTitle = document.querySelector("#detail-title");
+const detailImage = document.querySelector("#detail-image");
+const detailDescription = document.querySelector("#detail-description");
+const detailSource = document.querySelector("#detail-source");
+const interactiveLandmarks = [lake, buildingMeshes.get("行政大樓")];
+
+function showLandmark(key) {
+  const data = landmarkData[key];
+  detailTitle.textContent = data.title;
+  detailImage.src = data.image;
+  detailImage.alt = data.alt;
+  detailDescription.textContent = data.description;
+  detailSource.href = data.source;
+  detailPanel.hidden = false;
+}
+
+document.querySelector("#close-detail").addEventListener("click", () => {
+  detailPanel.hidden = true;
+});
+
+const landmarkRaycaster = new THREE.Raycaster();
+const landmarkPointer = new THREE.Vector2();
+let pointerStart = null;
+
+function updateLandmarkPointer(event) {
+  const bounds = canvas.getBoundingClientRect();
+  landmarkPointer.x = ((event.clientX - bounds.left) / bounds.width) * 2 - 1;
+  landmarkPointer.y = -((event.clientY - bounds.top) / bounds.height) * 2 + 1;
+  landmarkRaycaster.setFromCamera(landmarkPointer, camera);
+  return landmarkRaycaster.intersectObjects(interactiveLandmarks, false)[0];
+}
+
+canvas.addEventListener("pointerdown", (event) => {
+  pointerStart = { x: event.clientX, y: event.clientY };
+});
+
+canvas.addEventListener("pointermove", (event) => {
+  canvas.style.cursor = updateLandmarkPointer(event) ? "pointer" : "grab";
+});
+
+canvas.addEventListener("pointerup", (event) => {
+  if (!pointerStart || Math.hypot(event.clientX - pointerStart.x, event.clientY - pointerStart.y) > 5) {
+    pointerStart = null;
+    return;
+  }
+  const hit = updateLandmarkPointer(event);
+  if (hit?.object.userData.landmark) {
+    showLandmark(hit.object.userData.landmark);
+  }
+  pointerStart = null;
+});
 
 function addTree(x, z, scale = 1) {
   const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.22 * scale, 0.3 * scale, 2.2 * scale, 8), materials.trunk);
@@ -241,11 +317,42 @@ scene.add(new THREE.HemisphereLight(0xd7efff, 0x355538, 1.8));
 const views = {
   overview: { camera: [88, 76, 104], target: [0, 0, 0] },
   northGate: { camera: [82, 9, 22], target: [42, 2, 22] },
-  library: { camera: [35, 24, 29], target: [12, 3, -2] },
-  lake: { camera: [72, 25, 31], target: [43, 1, 11] }
+  library: { camera: [32, 24, 25], target: [8, 3, -4] },
+  lake: { camera: [70, 24, 45], target: [46, 1, 31] }
 };
 
+const walkTourButton = document.querySelector("#walk-tour");
+const walkTourCurve = new THREE.CatmullRomCurve3([
+  new THREE.Vector3(82, 4.6, 22),
+  new THREE.Vector3(69, 4.2, 22),
+  new THREE.Vector3(61, 4, 22),
+  new THREE.Vector3(56, 4, 23),
+  new THREE.Vector3(52, 4, 25),
+  new THREE.Vector3(49, 4, 28),
+  new THREE.Vector3(46, 4, 34),
+  new THREE.Vector3(40, 4, 36)
+], false, "catmullrom", 0.45);
+let walkTourActive = false;
+let walkTourElapsed = 0;
+const walkTourDuration = 12;
+
+function stopWalkTour() {
+  walkTourActive = false;
+  controls.enabled = true;
+  walkTourButton.textContent = "步行導覽";
+  walkTourButton.setAttribute("aria-pressed", "false");
+}
+
+function startWalkTour() {
+  walkTourActive = true;
+  walkTourElapsed = 0;
+  controls.enabled = false;
+  walkTourButton.textContent = "停止導覽";
+  walkTourButton.setAttribute("aria-pressed", "true");
+}
+
 function setView(key) {
+  stopWalkTour();
   camera.position.set(...views[key].camera);
   controls.target.set(...views[key].target);
   controls.update();
@@ -255,6 +362,13 @@ document.querySelector("#view-overview").addEventListener("click", () => setView
 document.querySelector("#view-north-gate").addEventListener("click", () => setView("northGate"));
 document.querySelector("#view-library").addEventListener("click", () => setView("library"));
 document.querySelector("#view-lake").addEventListener("click", () => setView("lake"));
+walkTourButton.addEventListener("click", () => {
+  if (walkTourActive) {
+    stopWalkTour();
+  } else {
+    startWalkTour();
+  }
+});
 document.querySelector("#toggle-labels").addEventListener("click", (event) => {
   labelGroup.visible = !labelGroup.visible;
   event.currentTarget.textContent = labelGroup.visible ? "地標開啟" : "地標關閉";
@@ -279,14 +393,30 @@ function resize() {
 
 function animate() {
   resize();
-  routeTime = (routeTime + clock.getDelta() * 0.035) % 1;
+  const delta = clock.getDelta();
+  routeTime = (routeTime + delta * 0.035) % 1;
   const point = patrolCurve.getPointAt(routeTime);
   const ahead = patrolCurve.getPointAt((routeTime + 0.008) % 1);
   robot.position.copy(point);
   robot.lookAt(ahead.x, point.y, ahead.z);
+
+  if (walkTourActive) {
+    walkTourElapsed += delta;
+    const progress = Math.min(walkTourElapsed / walkTourDuration, 1);
+    const easedProgress = progress * progress * (3 - 2 * progress);
+    const walkPoint = walkTourCurve.getPointAt(easedProgress);
+    const lookPoint = walkTourCurve.getPointAt(Math.min(easedProgress + 0.035, 1));
+    camera.position.copy(walkPoint);
+    controls.target.set(lookPoint.x, 2, lookPoint.z);
+    if (progress >= 1) {
+      stopWalkTour();
+    }
+  }
+
   controls.update();
   renderer.render(scene, camera);
   requestAnimationFrame(animate);
 }
 
 animate();
+
