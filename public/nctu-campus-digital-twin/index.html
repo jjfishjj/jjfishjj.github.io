@@ -30,6 +30,30 @@
             <span>巡邏機器人 1</span>
           </div>
         </div>
+        <section id="tour-guide" class="tour-guide" aria-live="polite" hidden>
+          <div class="tour-guide-head">
+            <div>
+              <p id="tour-step" class="tour-step">第 1 站，共 4 站</p>
+              <h2 id="tour-title">北大門</h2>
+            </div>
+            <span id="tour-percent" class="tour-percent">0%</span>
+          </div>
+          <div class="tour-progress" role="progressbar" aria-label="校園導覽進度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+            <span id="tour-progress-fill"></span>
+          </div>
+          <div class="tour-stations" aria-hidden="true">
+            <span>北大門</span>
+            <span>竹湖</span>
+            <span>行政大樓</span>
+            <span>浩然圖書館</span>
+          </div>
+          <p id="tour-narration" class="tour-narration"></p>
+          <div class="tour-actions">
+            <button id="tour-pause" type="button" aria-pressed="false">暫停</button>
+            <button id="tour-audio" type="button" aria-pressed="true">語音開啟</button>
+            <button id="tour-exit" type="button">結束</button>
+          </div>
+        </section>
         <div class="toolbar" aria-label="場景視角">
           <button id="view-overview" type="button">全景</button>
           <button id="view-north-gate" type="button">北大門</button>
