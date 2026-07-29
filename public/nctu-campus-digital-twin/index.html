@@ -35,22 +35,30 @@
             <h2>導覽地圖</h2>
             <span id="tour-map-status">點選站點前往</span>
           </div>
-          <svg id="tour-map-svg" viewBox="0 0 260 180" role="img" aria-label="北大門至浩然圖書館的導覽路線與目前位置">
+          <label class="tour-route-field" for="tour-route-select">
+            <span>導覽路線</span>
+            <select id="tour-route-select">
+              <option value="core">校園核心</option>
+              <option value="engineering">工程館群</option>
+              <option value="residence">宿舍生活區</option>
+              <option value="sports">運動區</option>
+            </select>
+          </label>
+          <svg id="tour-map-svg" viewBox="0 0 260 180" role="img" aria-label="目前導覽路線與位置">
             <path class="map-campus" d="M16 24 L218 18 L246 68 L226 164 L54 170 L12 126 Z" />
-            <path class="map-road" d="M238 87 C180 84 124 76 68 91 C55 112 69 139 88 160" />
-            <ellipse class="map-lake" cx="82" cy="49" rx="25" ry="13" />
-            <rect class="map-building" x="41" y="70" width="34" height="24" rx="2" />
-            <rect class="map-building map-library" x="52" y="141" width="47" height="25" rx="2" />
+            <path class="map-road" d="M238 76 C190 76 158 86 130 95 C106 102 79 93 50 84" />
+            <path class="map-road map-road-secondary" d="M153 22 C153 57 151 93 146 156" />
+            <ellipse class="map-lake" cx="186" cy="44" rx="18" ry="10" />
+            <rect class="map-building" x="153" y="50" width="22" height="17" rx="2" />
+            <rect class="map-building map-library" x="118" y="83" width="26" height="23" rx="2" />
+            <rect class="map-building" x="68" y="77" width="38" height="29" rx="2" />
+            <rect class="map-building" x="136" y="21" width="38" height="16" rx="2" />
+            <ellipse class="map-track" cx="51" cy="34" rx="20" ry="11" />
             <polyline id="tour-map-route" points="" />
             <g id="tour-map-stations" aria-hidden="true"></g>
             <circle id="tour-map-position" cx="228" cy="86" r="6" />
           </svg>
-          <div class="tour-map-stops" aria-label="直接前往導覽站點">
-            <button type="button" data-tour-stop="0" aria-pressed="true">北大門</button>
-            <button type="button" data-tour-stop="1" aria-pressed="false">竹湖</button>
-            <button type="button" data-tour-stop="2" aria-pressed="false">行政大樓</button>
-            <button type="button" data-tour-stop="3" aria-pressed="false">浩然圖書館</button>
-          </div>
+          <div id="tour-map-stops" class="tour-map-stops" aria-label="直接前往導覽站點"></div>
         </section>
         <section id="tour-guide" class="tour-guide" aria-live="polite" hidden>
           <div class="tour-guide-head">
@@ -63,12 +71,7 @@
           <div class="tour-progress" role="progressbar" aria-label="校園導覽進度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
             <span id="tour-progress-fill"></span>
           </div>
-          <div class="tour-stations" aria-hidden="true">
-            <span>北大門</span>
-            <span>竹湖</span>
-            <span>行政大樓</span>
-            <span>浩然圖書館</span>
-          </div>
+          <div id="tour-station-labels" class="tour-stations" aria-hidden="true"></div>
           <p id="tour-narration" class="tour-narration"></p>
           <div class="tour-actions">
             <button id="tour-pause" type="button" aria-pressed="false">暫停</button>
