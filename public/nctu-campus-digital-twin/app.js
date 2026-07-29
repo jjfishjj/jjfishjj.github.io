@@ -321,25 +321,57 @@ const views = {
   lake: { camera: [70, 24, 45], target: [46, 1, 31] }
 };
 
+const tourRoutes = {
+  core: {
+    label: "校園核心",
+    points: [[82, 4.6, 22], [69, 4.5, 22], [61, 4.5, 22], [56, 4.5, 23], [52, 4.5, 25], [49, 4.5, 30], [43, 4.5, 35], [41, 4.5, 37], [36, 4.5, 34], [37, 4.5, 29], [38, 4.5, 23], [37, 4.5, 17], [36, 4.5, 10], [38, 5, 5], [41, 5.8, 0], [44, 6.5, -4]],
+    stops: [
+      { title: "北大門", progress: 0, narration: "導覽從光復校區北大門出發。穿過校門後，竹湖位於行進方向左側，中央道路則向校園核心延伸。" },
+      { title: "竹湖", progress: 0.34, landmark: "lake", narration: "竹湖是光復校區早期的重要景觀。從湖畔可以辨認行政大樓、中正堂與浩然圖書館形成的校園東部核心。" },
+      { title: "行政大樓", progress: 0.58, landmark: "administration", narration: "行政大樓位於竹湖內側，是校園早期行政核心。導覽在此轉入中央道路，繼續前往浩然圖書館。" },
+      { title: "浩然圖書館", progress: 1, narration: "浩然圖書館位於中央教學區東側，周圍連接工程館群與主要校園道路。本次校園核心導覽在此完成。" }
+    ],
+    durations: [7, 6, 9],
+    endTarget: [8, 4, -4]
+  },
+  engineering: {
+    label: "工程館群",
+    points: [[32, 6, -4], [25, 5, -2], [18, 5, 3], [7, 5, 6], [-5, 5, 8], [-16, 5, 10], [-24, 5, 10], [-18, 5, 6], [-9, 5, 0], [-2, 5, -7], [-1, 5, -13], [-7, 5, -5], [-18, 5, -3], [-29, 5, -3]],
+    stops: [
+      { title: "浩然圖書館", progress: 0, narration: "工程館群導覽從浩然圖書館東側出發，沿中央教學區道路往西進入主要工程館區。" },
+      { title: "工程一館", progress: 0.42, narration: "工程一館位於工程館群北側，周圍連接科學館群與校園中央道路，是工程教學區的重要入口。" },
+      { title: "工程二館", progress: 0.72, narration: "工程二館位於工程館群南側，與管理一館及工程三館共同形成中央偏南的教學區。" },
+      { title: "工程六館", progress: 1, narration: "工程六館位於工程館群西南側。從此處可沿內環道路前往其他工程館與南側生活區。" }
+    ],
+    durations: [7, 6, 7],
+    endTarget: [-29, 4, -13]
+  },
+  residence: {
+    label: "宿舍生活區",
+    points: [[60, 5, 22], [55, 5, 28], [50, 5, 36], [42, 5, 46], [32, 5, 49], [26, 5, 49], [19, 5, 49], [12, 5, 49], [18, 5, 43], [20, 5, 30], [20, 5, 15], [18, 5, 0], [15, 5, -15], [8, 5, -28], [0, 5, -40], [-12, 5, -52]],
+    stops: [
+      { title: "北大門", progress: 0, narration: "宿舍生活區導覽從北大門內側出發，先沿東側道路前往校園北側的學生宿舍。" },
+      { title: "學生宿舍十一舍", progress: 0.22, narration: "十一舍位於校園東北側，鄰近竹湖與北側生活動線，是北側宿舍群的第一站。" },
+      { title: "學生宿舍九、十舍", progress: 0.48, narration: "九舍與十舍並列於校園北側，周圍連接餐飲、運動及中央教學區的步行路線。" },
+      { title: "學生餐廳", progress: 1, narration: "學生餐廳位於校園南側生活區，鄰近南側宿舍與主要步道，宿舍生活區導覽在此完成。" }
+    ],
+    durations: [7, 7, 12],
+    endTarget: [-12, 2.5, -43]
+  },
+  sports: {
+    label: "運動區",
+    points: [[32, 6, -4], [23, 5, 3], [12, 5, 12], [0, 5, 23], [-10, 5, 34], [-18, 5, 42], [-23, 5, 52], [-32, 5, 49], [-40, 5, 47], [-45, 5, 50]],
+    stops: [
+      { title: "浩然圖書館", progress: 0, narration: "運動區導覽從浩然圖書館出發，沿中央道路往校園西北側前進。" },
+      { title: "綜合球館", progress: 0.65, narration: "綜合球館位於校園北側，是室內球類、訓練與大型活動的重要場地。" },
+      { title: "田徑場", progress: 1, narration: "田徑場位於綜合球館西側，包含環形跑道與中央運動場，本次運動區導覽在此完成。" }
+    ],
+    durations: [10, 7],
+    endTarget: [-45, 1, 38]
+  }
+};
+
 const walkTourButton = document.querySelector("#walk-tour");
-const walkTourCurve = new THREE.CatmullRomCurve3([
-  new THREE.Vector3(82, 4.6, 22),
-  new THREE.Vector3(69, 4.5, 22),
-  new THREE.Vector3(61, 4.5, 22),
-  new THREE.Vector3(56, 4.5, 23),
-  new THREE.Vector3(52, 4.5, 25),
-  new THREE.Vector3(49, 4.5, 30),
-  new THREE.Vector3(43, 4.5, 35),
-  new THREE.Vector3(41, 4.5, 37),
-  new THREE.Vector3(36, 4.5, 34),
-  new THREE.Vector3(37, 4.5, 29),
-  new THREE.Vector3(38, 4.5, 23),
-  new THREE.Vector3(37, 4.5, 17),
-  new THREE.Vector3(36, 4.5, 10),
-  new THREE.Vector3(38, 5, 5),
-  new THREE.Vector3(41, 5.8, 0),
-  new THREE.Vector3(44, 6.5, -4)
-], false, "catmullrom", 0.45);
 const tourGuide = document.querySelector("#tour-guide");
 const tourStep = document.querySelector("#tour-step");
 const tourTitle = document.querySelector("#tour-title");
@@ -354,33 +386,16 @@ const tourMapRoute = document.querySelector("#tour-map-route");
 const tourMapStations = document.querySelector("#tour-map-stations");
 const tourMapPosition = document.querySelector("#tour-map-position");
 const tourMapStatus = document.querySelector("#tour-map-status");
-const tourMapStopButtons = [...document.querySelectorAll("[data-tour-stop]")];
-const tourStops = [
-  {
-    title: "北大門",
-    progress: 0,
-    narration: "導覽從光復校區北大門出發。穿過校門後，竹湖位於行進方向左側，中央道路則向校園核心延伸。"
-  },
-  {
-    title: "竹湖",
-    progress: 0.34,
-    landmark: "lake",
-    narration: "竹湖是光復校區早期的重要景觀。從湖畔可以辨認行政大樓、中正堂與浩然圖書館形成的校園東部核心。"
-  },
-  {
-    title: "行政大樓",
-    progress: 0.58,
-    landmark: "administration",
-    narration: "行政大樓位於竹湖內側，是校園早期行政核心。導覽在此轉入中央道路，繼續前往浩然圖書館。"
-  },
-  {
-    title: "浩然圖書館",
-    progress: 1,
-    narration: "浩然圖書館位於中央教學區東側，周圍連接工程館群與主要校園道路。本次校園核心導覽在此完成。"
-  }
-];
-const tourSegmentDurations = [7, 6, 9];
+const tourMapStops = document.querySelector("#tour-map-stops");
+const tourStationLabels = document.querySelector("#tour-station-labels");
+const tourRouteSelect = document.querySelector("#tour-route-select");
+const tourMapSvg = document.querySelector("#tour-map-svg");
 const tourStopDuration = 3.5;
+let currentRouteKey = "core";
+let currentRoute = tourRoutes[currentRouteKey];
+let tourStops = currentRoute.stops;
+let tourSegmentDurations = currentRoute.durations;
+let walkTourCurve = createTourCurve(currentRoute.points);
 let walkTourActive = false;
 let walkTourPaused = false;
 let walkTourCompleted = false;
@@ -390,10 +405,14 @@ let tourSegmentElapsed = 0;
 let tourStopElapsed = 0;
 let tourHolding = true;
 
+function createTourCurve(points) {
+  return new THREE.CatmullRomCurve3(points.map((point) => new THREE.Vector3(...point)), false, "catmullrom", 0.45);
+}
+
 function projectTourPoint(point) {
   return {
-    x: 20 + (point.x - 30) * 4,
-    y: 150 - point.z * 2.9
+    x: 20 + (point.x + 66) * (220 / 148),
+    y: 16 + (51 - point.z) * (148 / 105)
   };
 }
 
@@ -405,16 +424,50 @@ function updateTourMap(progress, status) {
 }
 
 function selectTourMapStop(index) {
-  tourMapStopButtons.forEach((button, buttonIndex) => {
+  [...tourMapStops.querySelectorAll("[data-tour-stop]")].forEach((button, buttonIndex) => {
     button.setAttribute("aria-pressed", String(buttonIndex === index));
   });
 }
 
-const mapRoutePoints = walkTourCurve.getPoints(70).map((point) => {
-  const mapPoint = projectTourPoint(point);
-  return `${mapPoint.x.toFixed(1)},${mapPoint.y.toFixed(1)}`;
-});
-tourMapRoute.setAttribute("points", mapRoutePoints.join(" "));
+function renderTourRoute() {
+  const mapRoutePoints = walkTourCurve.getPoints(70).map((point) => {
+    const mapPoint = projectTourPoint(point);
+    return `${mapPoint.x.toFixed(1)},${mapPoint.y.toFixed(1)}`;
+  });
+  tourMapRoute.setAttribute("points", mapRoutePoints.join(" "));
+  tourMapStations.replaceChildren();
+  tourMapStops.replaceChildren();
+  tourStationLabels.replaceChildren();
+  tourStationLabels.style.setProperty("--tour-stop-count", String(tourStops.length));
+  tourMapSvg.setAttribute("aria-label", `${currentRoute.label}導覽路線與目前位置`);
+
+  tourStops.forEach((stop, index) => {
+    const point = projectTourPoint(walkTourCurve.getPointAt(stop.progress));
+    const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    circle.setAttribute("class", "map-station-dot");
+    circle.setAttribute("cx", point.x.toFixed(1));
+    circle.setAttribute("cy", point.y.toFixed(1));
+    circle.setAttribute("r", "7");
+    const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    label.setAttribute("class", "map-station-number");
+    label.setAttribute("x", point.x.toFixed(1));
+    label.setAttribute("y", point.y.toFixed(1));
+    label.textContent = String(index + 1);
+    tourMapStations.append(circle, label);
+
+    const button = document.createElement("button");
+    button.type = "button";
+    button.dataset.tourStop = String(index);
+    button.setAttribute("aria-pressed", String(index === 0));
+    button.textContent = stop.title;
+    tourMapStops.append(button);
+
+    const stationLabel = document.createElement("span");
+    stationLabel.textContent = stop.title;
+    tourStationLabels.append(stationLabel);
+  });
+  updateTourMap(0, `已選：${currentRoute.label}`);
+}
 
 function updateTourProgress(progress) {
   const percent = Math.round(progress * 100);
@@ -491,15 +544,14 @@ function startWalkTour() {
   tourPauseButton.textContent = "暫停";
   tourPauseButton.setAttribute("aria-pressed", "false");
   tourExitButton.textContent = "結束";
-  camera.position.copy(walkTourCurve.getPointAt(0));
-  controls.target.copy(walkTourCurve.getPointAt(0.02)).setY(2);
+  placeTourCamera(0);
   showTourStop(0);
 }
 
 function placeTourCamera(progress) {
   const walkPoint = walkTourCurve.getPointAt(progress);
   const lookPoint = progress > 0.96
-    ? new THREE.Vector3(8, 4, -4)
+    ? new THREE.Vector3(...currentRoute.endTarget)
     : walkTourCurve.getPointAt(Math.min(progress + 0.025, 1));
   camera.position.copy(walkPoint);
   controls.target.set(lookPoint.x, 2, lookPoint.z);
@@ -523,6 +575,21 @@ function jumpToTourStop(index) {
   tourExitButton.textContent = "結束";
   placeTourCamera(tourStops[index].progress);
   showTourStop(index);
+}
+
+function switchTourRoute(key) {
+  stopWalkTour();
+  currentRouteKey = key;
+  currentRoute = tourRoutes[currentRouteKey];
+  tourStops = currentRoute.stops;
+  tourSegmentDurations = currentRoute.durations;
+  walkTourCurve = createTourCurve(currentRoute.points);
+  tourStopIndex = 0;
+  tourSegmentElapsed = 0;
+  tourStopElapsed = 0;
+  tourHolding = true;
+  detailPanel.hidden = true;
+  renderTourRoute();
 }
 
 function setView(key) {
@@ -561,9 +628,11 @@ tourAudioButton.addEventListener("click", () => {
 tourExitButton.addEventListener("click", () => {
   stopWalkTour();
 });
-tourMapStopButtons.forEach((button) => {
-  button.addEventListener("click", () => jumpToTourStop(Number(button.dataset.tourStop)));
+tourMapStops.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-tour-stop]");
+  if (button) jumpToTourStop(Number(button.dataset.tourStop));
 });
+tourRouteSelect.addEventListener("change", () => switchTourRoute(tourRouteSelect.value));
 document.querySelector("#toggle-labels").addEventListener("click", (event) => {
   labelGroup.visible = !labelGroup.visible;
   event.currentTarget.textContent = labelGroup.visible ? "地標開啟" : "地標關閉";
@@ -630,21 +699,7 @@ function animate() {
   requestAnimationFrame(animate);
 }
 
-tourStops.forEach((stop, index) => {
-  const point = projectTourPoint(walkTourCurve.getPointAt(stop.progress));
-  const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-  circle.setAttribute("class", "map-station-dot");
-  circle.setAttribute("cx", point.x.toFixed(1));
-  circle.setAttribute("cy", point.y.toFixed(1));
-  circle.setAttribute("r", "7");
-  const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
-  label.setAttribute("class", "map-station-number");
-  label.setAttribute("x", point.x.toFixed(1));
-  label.setAttribute("y", point.y.toFixed(1));
-  label.textContent = String(index + 1);
-  tourMapStations.append(circle, label);
-});
-updateTourMap(0, "點選站點前往");
+renderTourRoute();
 
 animate();
 
