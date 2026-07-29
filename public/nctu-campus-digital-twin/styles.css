@@ -101,6 +101,119 @@ h1 {
   font-size: 13px;
 }
 
+.tour-map {
+  position: absolute;
+  z-index: 3;
+  top: 118px;
+  right: 24px;
+  width: 280px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(9, 14, 20, 0.88);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(16px);
+}
+
+.tour-map-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.tour-map-head h2 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.tour-map-head span {
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+#tour-map-svg {
+  display: block;
+  width: 100%;
+  aspect-ratio: 13 / 9;
+}
+
+.map-campus {
+  fill: rgba(111, 156, 104, 0.2);
+  stroke: rgba(255, 255, 255, 0.22);
+  stroke-width: 1.5;
+}
+
+.map-road {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.16);
+  stroke-width: 13;
+}
+
+.map-lake {
+  fill: rgba(85, 169, 189, 0.72);
+  stroke: rgba(154, 225, 235, 0.8);
+  stroke-width: 1.5;
+}
+
+.map-building {
+  fill: rgba(214, 208, 191, 0.42);
+  stroke: rgba(255, 255, 255, 0.3);
+}
+
+.map-library {
+  fill: rgba(215, 174, 111, 0.58);
+}
+
+#tour-map-route {
+  fill: none;
+  stroke: var(--accent-2);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.map-station-dot {
+  fill: #101820;
+  stroke: var(--accent-2);
+  stroke-width: 2;
+}
+
+.map-station-number {
+  fill: var(--text);
+  font-size: 8px;
+  font-weight: 700;
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+
+#tour-map-position {
+  fill: var(--accent);
+  stroke: var(--text);
+  stroke-width: 2.5;
+  filter: drop-shadow(0 0 5px rgba(79, 209, 165, 0.8));
+}
+
+.tour-map-stops {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.tour-map-stops button {
+  min-width: 0;
+  padding: 7px 6px;
+  font-size: 11px;
+}
+
+.tour-map-stops button[aria-pressed="true"] {
+  border-color: var(--accent);
+  background: rgba(79, 209, 165, 0.18);
+}
+
 .toolbar {
   position: absolute;
   left: 24px;
@@ -299,7 +412,7 @@ dd {
 
   #campus-canvas {
     height: 70vh;
-    min-height: 520px;
+    min-height: 760px;
   }
 
   .hud {
@@ -319,6 +432,17 @@ dd {
     left: 16px;
     width: calc(100% - 32px);
     padding: 14px;
+  }
+
+  .tour-map {
+    top: auto;
+    right: 16px;
+    bottom: 180px;
+    width: min(260px, calc(100% - 32px));
+  }
+
+  .viewport:has(.tour-guide:not([hidden])) #campus-canvas {
+    min-height: 920px;
   }
 
   .tour-narration {
