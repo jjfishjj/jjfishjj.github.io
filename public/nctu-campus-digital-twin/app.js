@@ -350,6 +350,11 @@ const tourProgressFill = document.querySelector("#tour-progress-fill");
 const tourPauseButton = document.querySelector("#tour-pause");
 const tourAudioButton = document.querySelector("#tour-audio");
 const tourExitButton = document.querySelector("#tour-exit");
+const tourMapRoute = document.querySelector("#tour-map-route");
+const tourMapStations = document.querySelector("#tour-map-stations");
+const tourMapPosition = document.querySelector("#tour-map-position");
+const tourMapStatus = document.querySelector("#tour-map-status");
+const tourMapStopButtons = [...document.querySelectorAll("[data-tour-stop]")];
 const tourStops = [
   {
     title: "北大門",
@@ -385,11 +390,39 @@ let tourSegmentElapsed = 0;
 let tourStopElapsed = 0;
 let tourHolding = true;
 
+function projectTourPoint(point) {
+  return {
+    x: 20 + (point.x - 30) * 4,
+    y: 150 - point.z * 2.9
+  };
+}
+
+function updateTourMap(progress, status) {
+  const mapPoint = projectTourPoint(walkTourCurve.getPointAt(progress));
+  tourMapPosition.setAttribute("cx", mapPoint.x.toFixed(1));
+  tourMapPosition.setAttribute("cy", mapPoint.y.toFixed(1));
+  if (status) tourMapStatus.textContent = status;
+}
+
+function selectTourMapStop(index) {
+  tourMapStopButtons.forEach((button, buttonIndex) => {
+    button.setAttribute("aria-pressed", String(buttonIndex === index));
+  });
+}
+
+const mapRoutePoints = walkTourCurve.getPoints(70).map((point) => {
+  const mapPoint = projectTourPoint(point);
+  return `${mapPoint.x.toFixed(1)},${mapPoint.y.toFixed(1)}`;
+});
+tourMapRoute.setAttribute("points", mapRoutePoints.join(" "));
+
 function updateTourProgress(progress) {
   const percent = Math.round(progress * 100);
   tourProgressFill.style.width = `${percent}%`;
   tourPercent.textContent = `${percent}%`;
   tourProgress.setAttribute("aria-valuenow", String(percent));
+  const nextStop = tourStops[Math.min(tourStopIndex + 1, tourStops.length - 1)];
+  updateTourMap(progress, tourHolding ? `停留：${tourStops[tourStopIndex].title}` : `前往：${nextStop.title}`);
 }
 
 function speakTourStop(index) {
@@ -407,6 +440,7 @@ function showTourStop(index) {
   tourStep.textContent = `第 ${index + 1} 站，共 ${tourStops.length} 站`;
   tourTitle.textContent = stop.title;
   tourNarration.textContent = stop.narration;
+  selectTourMapStop(index);
   updateTourProgress(stop.progress);
   if (stop.landmark) {
     showLandmark(stop.landmark);
@@ -426,6 +460,7 @@ function stopWalkTour(hideGuide = true) {
   tourPauseButton.textContent = "暫停";
   tourPauseButton.setAttribute("aria-pressed", "false");
   if (hideGuide) tourGuide.hidden = true;
+  tourMapStatus.textContent = `目前：${tourStops[tourStopIndex].title}`;
   if ("speechSynthesis" in window) window.speechSynthesis.cancel();
 }
 
@@ -459,6 +494,35 @@ function startWalkTour() {
   camera.position.copy(walkTourCurve.getPointAt(0));
   controls.target.copy(walkTourCurve.getPointAt(0.02)).setY(2);
   showTourStop(0);
+}
+
+function placeTourCamera(progress) {
+  const walkPoint = walkTourCurve.getPointAt(progress);
+  const lookPoint = progress > 0.96
+    ? new THREE.Vector3(8, 4, -4)
+    : walkTourCurve.getPointAt(Math.min(progress + 0.025, 1));
+  camera.position.copy(walkPoint);
+  controls.target.set(lookPoint.x, 2, lookPoint.z);
+}
+
+function jumpToTourStop(index) {
+  walkTourActive = true;
+  walkTourPaused = true;
+  walkTourCompleted = false;
+  tourStopIndex = index;
+  tourSegmentElapsed = 0;
+  tourStopElapsed = 0;
+  tourHolding = true;
+  controls.enabled = false;
+  walkTourButton.textContent = "停止導覽";
+  walkTourButton.setAttribute("aria-pressed", "true");
+  tourGuide.hidden = false;
+  tourPauseButton.disabled = false;
+  tourPauseButton.textContent = "繼續";
+  tourPauseButton.setAttribute("aria-pressed", "true");
+  tourExitButton.textContent = "結束";
+  placeTourCamera(tourStops[index].progress);
+  showTourStop(index);
 }
 
 function setView(key) {
@@ -496,6 +560,9 @@ tourAudioButton.addEventListener("click", () => {
 });
 tourExitButton.addEventListener("click", () => {
   stopWalkTour();
+});
+tourMapStopButtons.forEach((button) => {
+  button.addEventListener("click", () => jumpToTourStop(Number(button.dataset.tourStop)));
 });
 document.querySelector("#toggle-labels").addEventListener("click", (event) => {
   labelGroup.visible = !labelGroup.visible;
@@ -547,12 +614,7 @@ function animate() {
       const startProgress = tourStops[tourStopIndex].progress;
       const endProgress = tourStops[tourStopIndex + 1].progress;
       const progress = THREE.MathUtils.lerp(startProgress, endProgress, easedProgress);
-      const walkPoint = walkTourCurve.getPointAt(progress);
-      const lookPoint = progress > 0.96
-        ? new THREE.Vector3(8, 4, -4)
-        : walkTourCurve.getPointAt(progress + 0.025);
-      camera.position.copy(walkPoint);
-      controls.target.set(lookPoint.x, 2, lookPoint.z);
+      placeTourCamera(progress);
       updateTourProgress(progress);
       if (segmentProgress >= 1) {
         tourStopIndex += 1;
@@ -567,6 +629,22 @@ function animate() {
   renderer.render(scene, camera);
   requestAnimationFrame(animate);
 }
+
+tourStops.forEach((stop, index) => {
+  const point = projectTourPoint(walkTourCurve.getPointAt(stop.progress));
+  const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+  circle.setAttribute("class", "map-station-dot");
+  circle.setAttribute("cx", point.x.toFixed(1));
+  circle.setAttribute("cy", point.y.toFixed(1));
+  circle.setAttribute("r", "7");
+  const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
+  label.setAttribute("class", "map-station-number");
+  label.setAttribute("x", point.x.toFixed(1));
+  label.setAttribute("y", point.y.toFixed(1));
+  label.textContent = String(index + 1);
+  tourMapStations.append(circle, label);
+});
+updateTourMap(0, "點選站點前往");
 
 animate();
 
