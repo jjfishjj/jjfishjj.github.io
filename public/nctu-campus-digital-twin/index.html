@@ -30,6 +30,28 @@
             <span>巡邏機器人 1</span>
           </div>
         </div>
+        <section class="tour-map" aria-label="互動導覽地圖">
+          <div class="tour-map-head">
+            <h2>導覽地圖</h2>
+            <span id="tour-map-status">點選站點前往</span>
+          </div>
+          <svg id="tour-map-svg" viewBox="0 0 260 180" role="img" aria-label="北大門至浩然圖書館的導覽路線與目前位置">
+            <path class="map-campus" d="M16 24 L218 18 L246 68 L226 164 L54 170 L12 126 Z" />
+            <path class="map-road" d="M238 87 C180 84 124 76 68 91 C55 112 69 139 88 160" />
+            <ellipse class="map-lake" cx="82" cy="49" rx="25" ry="13" />
+            <rect class="map-building" x="41" y="70" width="34" height="24" rx="2" />
+            <rect class="map-building map-library" x="52" y="141" width="47" height="25" rx="2" />
+            <polyline id="tour-map-route" points="" />
+            <g id="tour-map-stations" aria-hidden="true"></g>
+            <circle id="tour-map-position" cx="228" cy="86" r="6" />
+          </svg>
+          <div class="tour-map-stops" aria-label="直接前往導覽站點">
+            <button type="button" data-tour-stop="0" aria-pressed="true">北大門</button>
+            <button type="button" data-tour-stop="1" aria-pressed="false">竹湖</button>
+            <button type="button" data-tour-stop="2" aria-pressed="false">行政大樓</button>
+            <button type="button" data-tour-stop="3" aria-pressed="false">浩然圖書館</button>
+          </div>
+        </section>
         <section id="tour-guide" class="tour-guide" aria-live="polite" hidden>
           <div class="tour-guide-head">
             <div>
