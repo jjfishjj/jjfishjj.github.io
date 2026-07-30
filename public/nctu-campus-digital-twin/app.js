@@ -398,7 +398,6 @@ let tourSegmentDurations = currentRoute.durations;
 let walkTourCurve = createTourCurve(currentRoute.points);
 let walkTourActive = false;
 let walkTourPaused = false;
-let walkTourCompleted = false;
 let tourAudioEnabled = true;
 let tourStopIndex = 0;
 let tourSegmentElapsed = 0;
@@ -506,7 +505,6 @@ function showTourStop(index) {
 function stopWalkTour(hideGuide = true) {
   walkTourActive = false;
   walkTourPaused = false;
-  walkTourCompleted = false;
   controls.enabled = true;
   walkTourButton.textContent = "步行導覽";
   walkTourButton.setAttribute("aria-pressed", "false");
@@ -519,7 +517,6 @@ function stopWalkTour(hideGuide = true) {
 
 function completeWalkTour() {
   walkTourActive = false;
-  walkTourCompleted = true;
   controls.enabled = true;
   walkTourButton.textContent = "重新導覽";
   walkTourButton.setAttribute("aria-pressed", "false");
@@ -531,7 +528,6 @@ function completeWalkTour() {
 function startWalkTour() {
   walkTourActive = true;
   walkTourPaused = false;
-  walkTourCompleted = false;
   tourStopIndex = 0;
   tourSegmentElapsed = 0;
   tourStopElapsed = 0;
@@ -560,7 +556,6 @@ function placeTourCamera(progress) {
 function jumpToTourStop(index) {
   walkTourActive = true;
   walkTourPaused = true;
-  walkTourCompleted = false;
   tourStopIndex = index;
   tourSegmentElapsed = 0;
   tourStopElapsed = 0;

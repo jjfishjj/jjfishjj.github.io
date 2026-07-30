@@ -2,6 +2,39 @@ import { useState, useMemo } from 'react'
 import './App.css'
 import { SKILLS, CATS, PROJECTS } from './skills'
 
+const CERTIFICATES = [
+  {
+    title: '透過 Jetson Nano 開發人工智慧應用',
+    date: '2026.04.08',
+    id: 'X7_8YnbdS1GKyHq0AQiJOw',
+    pdf: '/certificates/nvidia-jetson-nano-ai-applications-2026-04-08.pdf',
+  },
+  {
+    title: '深度學習基礎理論與實踐',
+    date: '2026.04.09',
+    id: '31eGXbB3QsqYNE16bf2kbw',
+    pdf: '/certificates/nvidia-deep-learning-fundamentals-2026-04-09.pdf',
+  },
+  {
+    title: '快速開發基於大型語言模型（LLM）的應用程式',
+    date: '2026.04.23',
+    id: 'BwdpSPNNRsOxUDhEZwSHmA',
+    pdf: '/certificates/nvidia-rapid-llm-application-development-2026-04-23.pdf',
+  },
+  {
+    title: '使用提示工程開發大型語言模型（LLM）應用程式',
+    date: '2026.05.07',
+    id: 'qPbpRP6xRVq6AWgeT78C4w',
+    pdf: '/certificates/nvidia-prompt-engineering-llm-applications-2026-05-07.pdf',
+  },
+  {
+    title: '建造以 Transformer 為基礎的自然語言處理應用',
+    date: '2026.06.11',
+    id: 'GJH8CNKhRiWig1f5WvXa6A',
+    pdf: '/certificates/nvidia-transformer-nlp-applications-2026-06-11.pdf',
+  },
+]
+
 function CopyButton({ text }) {
   const [copied, setCopied] = useState(false)
   return (
@@ -50,6 +83,7 @@ export default function App() {
           github.com/nvidia/skills ↗
         </a>
         <div className="hero-actions">
+          <a className="profile-link" href="/projects/">專案總覽</a>
           <a className="profile-link" href="/linkedin/">經歷儀表板</a>
           <a className="profile-link" href="/ai-prompt-game-tutorial/">AI 遊戲教學</a>
           <a className="profile-link" href="/lectures/">語言講座</a>
@@ -118,8 +152,38 @@ export default function App() {
           </div>
         )}
 
+        <section className="certificates">
+          <div className="section-heading">
+            <div>
+              <span className="section-kicker">NVIDIA DEEP LEARNING INSTITUTE</span>
+              <h2>NVIDIA 專業認證</h2>
+            </div>
+            <span className="cert-count">{CERTIFICATES.length} 張證書</span>
+          </div>
+          <div className="cert-grid">
+            {CERTIFICATES.map((certificate) => (
+              <article key={certificate.id} className="cert-card">
+                <div className="cert-mark" aria-hidden="true">NVIDIA</div>
+                <time className="cert-date" dateTime={certificate.date.replaceAll('.', '-')}>{certificate.date}</time>
+                <h3>{certificate.title}</h3>
+                <p>Certificate of Competency</p>
+                <div className="cert-actions">
+                  <a href={certificate.pdf} target="_blank" rel="noreferrer">查看證書 PDF ↗</a>
+                  <a
+                    href={`https://learn.nvidia.com/certificates?id=${certificate.id}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    NVIDIA 官方驗證 ↗
+                  </a>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
         <section className="projects">
-          <h2>我的 NVIDIA 相關作品</h2>
+          <h2>我的精選作品入口</h2>
           <div className="proj-grid">
             {PROJECTS.map((p) => (
               <a key={p.url} className="proj-card" href={p.url} target="_blank" rel="noreferrer">
@@ -144,6 +208,8 @@ export default function App() {
         <p>
           Built by{' '}
           <a href="https://github.com/jjfishjj" target="_blank" rel="noreferrer">@jjfishjj</a>
+          {' · '}
+          <a href="/projects/">Projects</a>
           {' · '}
           <a href="/linkedin/">Professional Profile</a>
           {' · '}

@@ -308,6 +308,13 @@ export const CATS = [
 // 我的相關作品
 export const PROJECTS = [
   {
+    icon: '📁',
+    title: 'projects portfolio',
+    desc: '依 AI/NVIDIA、3D/遊戲、語言學習、資料儀表板、產品原型、研究硬體分類的個人專案總覽',
+    tags: ['Project Index', 'Portfolio', 'GitHub Pages', 'Category Pages'],
+    url: '/projects/',
+  },
+  {
     icon: '🧭',
     title: 'nvidia-agent-skill-labs',
     desc: '55 個 NVIDIA Agent Skills 專案索引頁 + 8 個精選延伸專案 README 作品集地圖',
