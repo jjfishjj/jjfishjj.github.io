@@ -241,14 +241,20 @@ function updateLandmarkPointer(event) {
 }
 
 canvas.addEventListener("pointerdown", (event) => {
+  if (freeWalkActive) return;
   pointerStart = { x: event.clientX, y: event.clientY };
 });
 
 canvas.addEventListener("pointermove", (event) => {
+  if (freeWalkActive) {
+    canvas.style.cursor = "crosshair";
+    return;
+  }
   canvas.style.cursor = updateLandmarkPointer(event) ? "pointer" : "grab";
 });
 
 canvas.addEventListener("pointerup", (event) => {
+  if (freeWalkActive) return;
   if (!pointerStart || Math.hypot(event.clientX - pointerStart.x, event.clientY - pointerStart.y) > 5) {
     pointerStart = null;
     return;
@@ -390,19 +396,16 @@ const tourMapStops = document.querySelector("#tour-map-stops");
 const tourStationLabels = document.querySelector("#tour-station-labels");
 const tourRouteSelect = document.querySelector("#tour-route-select");
 const tourMapSvg = document.querySelector("#tour-map-svg");
-const tourStopDuration = 3.5;
-let currentRouteKey = "core";
-let currentRoute = tourRoutes[currentRouteKey];
-let tourStops = currentRoute.stops;
-let tourSegmentDurations = currentRoute.durations;
-let walkTourCurve = createTourCurve(currentRoute.points);
-let walkTourActive = false;
-let walkTourPaused = false;
-let tourAudioEnabled = true;
-let tourStopIndex = 0;
-let tourSegmentElapsed = 0;
-let tourStopElapsed = 0;
-let tourHolding = true;
+const navNextStop = document.querySelector("#nav-next-stop");
+const navDistance = document.querySelector("#nav-distance");
+const navTime = document.querySelector("#nav-time");
+const navTurn = document.querySelector("#nav-turn");
+const freeWalkButton = document.querySelector("#free-walk");
+const freeWalkControls = document.querySelector("#free-walk-controls");
+const tourStopDuration =…198 tokens truncated…
+  lookLeft: false,
+  lookRight: false
+};
 
 function createTourCurve(points) {
   return new THREE.CatmullRomCurve3(points.map((point) => new THREE.Vector3(...point)), false, "catmullrom", 0.45);
@@ -413,6 +416,68 @@ function projectTourPoint(point) {
     x: 20 + (point.x + 66) * (220 / 148),
     y: 16 + (51 - point.z) * (148 / 105)
   };
+}
+
+function setNavigationReadout(stopTitle, distanceMeters, direction) {
+  navNextStop.textContent = stopTitle;
+  navDistance.textContent = distanceMeters < 10 ? `${Math.round(distanceMeters)} m` : `${Math.round(distanceMeters / 10) * 10} m`;
+  navTime.textContent = distanceMeters < 10 ? "已抵達" : `${Math.max(1, Math.ceil(distanceMeters / walkingMetersPerMinute))} 分`;
+  navTurn.textContent = distanceMeters < 10 ? "已抵達" : direction;
+}
+
+function directionFromAngle(angleRadians) {
+  const angle = THREE.MathUtils.radToDeg(angleRadians);
+  if (Math.abs(angle) > 150) return "迴轉";
+  if (angle > 15) return "向右";
+  if (angle < -15) return "向左";
+  return "直行";
+}
+
+function routeTurnDirection(progress) {
+  const currentTangent = walkTourCurve.getTangentAt(Math.min(progress, 0.995)).setY(0).normalize();
+  const futureTangent = walkTourCurve.getTangentAt(Math.min(progress + 0.055, 0.999)).setY(0).normalize();
+  const angle = Math.atan2(
+    currentTangent.x * futureTangent.z - currentTangent.z * futureTangent.x,
+    currentTangent.dot(futureTangent)
+  );
+  return directionFromAngle(angle);
+}
+
+function updateTourNavigation(progress) {
+  const targetIndex = tourStopIndex >= tourStops.length - 1
+    ? tourStops.length - 1
+    : tourStopIndex + 1;
+  const targetStop = tourStops[targetIndex];
+  const remainingProgress = Math.max(0, targetStop.progress - progress);
+  const distanceMeters = walkTourCurve.getLength() * remainingProgress * metersPerUnit;
+  setNavigationReadout(targetStop.title, distanceMeters, routeTurnDirection(progress));
+}
+
+function updateFreeWalkNavigation() {
+  const targetStop = tourStops[freeWalkTargetIndex];
+  const targetPoint = walkTourCurve.getPointAt(targetStop.progress);
+  const toTarget = targetPoint.clone().sub(camera.position).setY(0);
+  let distanceMeters = toTarget.length() * metersPerUnit;
+
+  if (distanceMeters < 10 && freeWalkTargetIndex < tourStops.length - 1) {
+    freeWalkTargetIndex += 1;
+    selectTourMapStop(freeWalkTargetIndex);
+    return updateFreeWalkNavigation();
+  }
+
+  const forward = new THREE.Vector3();
+  camera.getWorldDirection(forward);
+  forward.setY(0).normalize();
+  const targetDirection = toTarget.lengthSq() > 0 ? toTarget.normalize() : forward;
+  const angle = Math.atan2(
+    forward.x * targetDirection.z - forward.z * targetDirection.x,
+    forward.dot(targetDirection)
+  );
+  const mapPoint = projectTourPoint(camera.position);
+  tourMapPosition.setAttribute("cx", mapPoint.x.toFixed(1));
+  tourMapPosition.setAttribute("cy", mapPoint.y.toFixed(1));
+  tourMapStatus.textContent = `自由行走：${targetStop.title}`;
+  setNavigationReadout(targetStop.title, distanceMeters, directionFromAngle(angle));
 }
 
 function updateTourMap(progress, status) {
@@ -466,15 +531,19 @@ function renderTourRoute() {
     tourStationLabels.append(stationLabel);
   });
   updateTourMap(0, `已選：${currentRoute.label}`);
+  tourCurrentProgress = 0;
+  updateTourNavigation(0);
 }
 
 function updateTourProgress(progress) {
+  tourCurrentProgress = progress;
   const percent = Math.round(progress * 100);
   tourProgressFill.style.width = `${percent}%`;
   tourPercent.textContent = `${percent}%`;
   tourProgress.setAttribute("aria-valuenow", String(percent));
   const nextStop = tourStops[Math.min(tourStopIndex + 1, tourStops.length - 1)];
   updateTourMap(progress, tourHolding ? `停留：${tourStops[tourStopIndex].title}` : `前往：${nextStop.title}`);
+  updateTourNavigation(progress);
 }
 
 function speakTourStop(index) {
@@ -505,6 +574,7 @@ function showTourStop(index) {
 function stopWalkTour(hideGuide = true) {
   walkTourActive = false;
   walkTourPaused = false;
+  walkTourCompleted = false;
   controls.enabled = true;
   walkTourButton.textContent = "步行導覽";
   walkTourButton.setAttribute("aria-pressed", "false");
@@ -517,6 +587,7 @@ function stopWalkTour(hideGuide = true) {
 
 function completeWalkTour() {
   walkTourActive = false;
+  walkTourCompleted = true;
   controls.enabled = true;
   walkTourButton.textContent = "重新導覽";
   walkTourButton.setAttribute("aria-pressed", "false");
@@ -526,8 +597,10 @@ function completeWalkTour() {
 }
 
 function startWalkTour() {
+  stopFreeWalk();
   walkTourActive = true;
   walkTourPaused = false;
+  walkTourCompleted = false;
   tourStopIndex = 0;
   tourSegmentElapsed = 0;
   tourStopElapsed = 0;
@@ -553,9 +626,113 @@ function placeTourCamera(progress) {
   controls.target.set(lookPoint.x, 2, lookPoint.z);
 }
 
+function clearFreeWalkMovement() {
+  Object.keys(freeWalkMovement).forEach((key) => {
+    freeWalkMovement[key] = false;
+  });
+  [...freeWalkControls.querySelectorAll("button")].forEach((button) => {
+    button.setAttribute("aria-pressed", "false");
+  });
+}
+
+function syncFreeWalkRotation() {
+  const direction = new THREE.Vector3();
+  camera.getWorldDirection(direction);
+  freeWalkPitch = Math.asin(THREE.MathUtils.clamp(direction.y, -1, 1));
+  freeWalkYaw = Math.atan2(-direction.x, -direction.z);
+  camera.rotation.order = "YXZ";
+  camera.rotation.set(freeWalkPitch, freeWalkYaw, 0);
+}
+
+function freeWalkPositionAllowed(position) {
+  if (position.x < -66 || position.x > 84 || position.z < -55 || position.z > 53) return false;
+  const lakeOffsetX = (position.x - 46) / 11;
+  const lakeOffsetZ = (position.z - 31) / 7;
+  if (lakeOffsetX * lakeOffsetX + lakeOffsetZ * lakeOffsetZ < 1) return false;
+  return !buildings.some(([, size, buildingPosition]) => (
+    Math.abs(position.x - buildingPosition[0]) < size[0] / 2 + 0.8
+    && Math.abs(position.z - buildingPosition[2]) < size[2] / 2 + 0.8
+  ));
+}
+
+function startFreeWalk() {
+  stopWalkTour();
+  freeWalkActive = true;
+  controls.enabled = false;
+  freeWalkButton.textContent = "結束行走";
+  freeWalkButton.setAttribute("aria-pressed", "true");
+  freeWalkControls.hidden = false;
+  detailPanel.hidden = true;
+
+  if (camera.position.y > 12 || !freeWalkPositionAllowed(camera.position)) {
+    const startPoint = walkTourCurve.getPointAt(tourCurrentProgress);
+    const lookPoint = walkTourCurve.getPointAt(Math.min(tourCurrentProgress + 0.025, 1));
+    camera.position.copy(startPoint).setY(4.8);
+    camera.lookAt(lookPoint.x, 4.2, lookPoint.z);
+  } else {
+    camera.position.y = 4.8;
+  }
+
+  syncFreeWalkRotation();
+  const upcomingIndex = tourStops.findIndex((stop) => stop.progress > tourCurrentProgress + 0.01);
+  freeWalkTargetIndex = upcomingIndex === -1 ? tourStops.length - 1 : upcomingIndex;
+  selectTourMapStop(freeWalkTargetIndex);
+  updateFreeWalkNavigation();
+}
+
+function stopFreeWalk() {
+  if (!freeWalkActive) return;
+  freeWalkActive = false;
+  freeWalkDragging = false;
+  freeWalkLastPointer = null;
+  clearFreeWalkMovement();
+  freeWalkControls.hidden = true;
+  freeWalkButton.textContent = "自由行走";
+  freeWalkButton.setAttribute("aria-pressed", "false");
+  canvas.style.cursor = "grab";
+  const forward = new THREE.Vector3();
+  camera.getWorldDirection(forward);
+  controls.target.copy(camera.position).addScaledVector(forward, 14);
+  controls.enabled = true;
+  controls.update();
+}
+
+function updateFreeWalk(delta) {
+  if (!freeWalkActive) return;
+  const rotationSpeed = 1.65;
+  if (freeWalkMovement.lookLeft) freeWalkYaw += rotationSpeed * delta;
+  if (freeWalkMovement.lookRight) freeWalkYaw -= rotationSpeed * delta;
+  camera.rotation.set(freeWalkPitch, freeWalkYaw, 0);
+
+  const forward = new THREE.Vector3();
+  camera.getWorldDirection(forward);
+  forward.setY(0).normalize();
+  const right = new THREE.Vector3(-forward.z, 0, forward.x);
+  const movement = new THREE.Vector3();
+  if (freeWalkMovement.forward) movement.add(forward);
+  if (freeWalkMovement.backward) movement.sub(forward);
+  if (freeWalkMovement.right) movement.add(right);
+  if (freeWalkMovement.left) movement.sub(right);
+
+  if (movement.lengthSq() > 0) {
+    movement.normalize().multiplyScalar(7 * delta);
+    const xCandidate = camera.position.clone();
+    xCandidate.x += movement.x;
+    xCandidate.y = 4.8;
+    if (freeWalkPositionAllowed(xCandidate)) camera.position.copy(xCandidate);
+    const zCandidate = camera.position.clone();
+    zCandidate.z += movement.z;
+    zCandidate.y = 4.8;
+    if (freeWalkPositionAllowed(zCandidate)) camera.position.copy(zCandidate);
+  }
+  updateFreeWalkNavigation();
+}
+
 function jumpToTourStop(index) {
+  stopFreeWalk();
   walkTourActive = true;
   walkTourPaused = true;
+  walkTourCompleted = false;
   tourStopIndex = index;
   tourSegmentElapsed = 0;
   tourStopElapsed = 0;
@@ -573,6 +750,7 @@ function jumpToTourStop(index) {
 }
 
 function switchTourRoute(key) {
+  stopFreeWalk();
   stopWalkTour();
   currentRouteKey = key;
   currentRoute = tourRoutes[currentRouteKey];
@@ -588,6 +766,7 @@ function switchTourRoute(key) {
 }
 
 function setView(key) {
+  stopFreeWalk();
   stopWalkTour();
   camera.position.set(...views[key].camera);
   controls.target.set(...views[key].target);
@@ -603,6 +782,13 @@ walkTourButton.addEventListener("click", () => {
     stopWalkTour();
   } else {
     startWalkTour();
+  }
+});
+freeWalkButton.addEventListener("click", () => {
+  if (freeWalkActive) {
+    stopFreeWalk();
+  } else {
+    startFreeWalk();
   }
 });
 tourPauseButton.addEventListener("click", () => {
@@ -628,6 +814,72 @@ tourMapStops.addEventListener("click", (event) => {
   if (button) jumpToTourStop(Number(button.dataset.tourStop));
 });
 tourRouteSelect.addEventListener("change", () => switchTourRoute(tourRouteSelect.value));
+
+const freeWalkKeyMap = {
+  KeyW: "forward",
+  ArrowUp: "forward",
+  KeyS: "backward",
+  ArrowDown: "backward",
+  KeyA: "left",
+  KeyD: "right",
+  ArrowLeft: "lookLeft",
+  ArrowRight: "lookRight"
+};
+
+window.addEventListener("keydown", (event) => {
+  if (!freeWalkActive || !freeWalkKeyMap[event.code]) return;
+  freeWalkMovement[freeWalkKeyMap[event.code]] = true;
+  if (!event.repeat) updateFreeWalk(0.08);
+  event.preventDefault();
+});
+
+window.addEventListener("keyup", (event) => {
+  if (!freeWalkKeyMap[event.code]) return;
+  freeWalkMovement[freeWalkKeyMap[event.code]] = false;
+});
+
+window.addEventListener("blur", clearFreeWalkMovement);
+
+[...freeWalkControls.querySelectorAll("[data-move], [data-look]")].forEach((button) => {
+  const movementKey = button.dataset.move || (button.dataset.look === "left" ? "lookLeft" : "lookRight");
+  const setPressed = (pressed) => {
+    freeWalkMovement[movementKey] = pressed;
+    button.setAttribute("aria-pressed", String(pressed));
+  };
+  button.addEventListener("pointerdown", (event) => {
+    event.preventDefault();
+    button.setPointerCapture(event.pointerId);
+    setPressed(true);
+    updateFreeWalk(0.08);
+  });
+  button.addEventListener("pointerup", () => setPressed(false));
+  button.addEventListener("pointercancel", () => setPressed(false));
+  button.addEventListener("lostpointercapture", () => setPressed(false));
+});
+
+canvas.addEventListener("pointerdown", (event) => {
+  if (!freeWalkActive || event.button !== 0) return;
+  freeWalkDragging = true;
+  freeWalkLastPointer = { x: event.clientX, y: event.clientY };
+  canvas.setPointerCapture(event.pointerId);
+});
+
+canvas.addEventListener("pointermove", (event) => {
+  if (!freeWalkActive || !freeWalkDragging || !freeWalkLastPointer) return;
+  const deltaX = event.clientX - freeWalkLastPointer.x;
+  const deltaY = event.clientY - freeWalkLastPointer.y;
+  freeWalkYaw -= deltaX * 0.004;
+  freeWalkPitch = THREE.MathUtils.clamp(freeWalkPitch - deltaY * 0.003, -1.15, 1.15);
+  camera.rotation.set(freeWalkPitch, freeWalkYaw, 0);
+  freeWalkLastPointer = { x: event.clientX, y: event.clientY };
+});
+
+const stopFreeWalkLook = () => {
+  freeWalkDragging = false;
+  freeWalkLastPointer = null;
+};
+canvas.addEventListener("pointerup", stopFreeWalkLook);
+canvas.addEventListener("pointercancel", stopFreeWalkLook);
 document.querySelector("#toggle-labels").addEventListener("click", (event) => {
   labelGroup.visible = !labelGroup.visible;
   event.currentTarget.textContent = labelGroup.visible ? "地標開啟" : "地標關閉";
@@ -689,7 +941,9 @@ function animate() {
     }
   }
 
-  controls.update();
+  updateFreeWalk(delta);
+
+  if (!freeWalkActive) controls.update();
   renderer.render(scene, camera);
   requestAnimationFrame(animate);
 }
