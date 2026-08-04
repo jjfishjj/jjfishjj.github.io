@@ -1,0 +1,929 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Data Analytics Visualization Project | Kuo Jun Bin / Jerome</title>
+    <meta
+      name="description"
+      content="Jerome Kuo 的數據分析專案頁，展示遊戲營運、AI workflow、學習營運與產品決策的可視化分析方法。"
+    />
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #080b10;
+        --panel: #111923;
+        --panel-2: #172231;
+        --line: rgba(255, 255, 255, 0.13);
+        --text: #eef4f8;
+        --muted: #9aa8b5;
+        --green: #76b900;
+        --cyan: #4fc3ff;
+        --gold: #f0bc3c;
+        --rose: #ff7a9f;
+        --ink: #071006;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        min-width: 320px;
+        font-family: Inter, "Noto Sans TC", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", sans-serif;
+        background:
+          linear-gradient(135deg, rgba(8, 11, 16, 0.96), rgba(12, 18, 26, 0.95)),
+          repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.035) 0 1px, transparent 1px 96px);
+        color: var(--text);
+      }
+
+      a {
+        color: inherit;
+      }
+
+      .shell {
+        width: min(1180px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        border-bottom: 1px solid var(--line);
+        background: rgba(8, 11, 16, 0.9);
+        backdrop-filter: blur(16px);
+      }
+
+      .topbar-inner {
+        min-height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .brand,
+      .nav a,
+      .button,
+      .link-card {
+        text-decoration: none;
+      }
+
+      .brand {
+        font-weight: 900;
+      }
+
+      .brand span {
+        color: var(--green);
+      }
+
+      .nav {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 8px;
+      }
+
+      .nav a,
+      .button {
+        min-height: 38px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid transparent;
+        border-radius: 8px;
+        padding: 0 13px;
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 800;
+      }
+
+      .nav a:hover,
+      .button.secondary:hover {
+        color: var(--text);
+        border-color: var(--line);
+        background: rgba(255, 255, 255, 0.05);
+      }
+
+      .button.primary {
+        color: var(--ink);
+        background: var(--green);
+      }
+
+      .button.secondary {
+        color: var(--text);
+        border-color: var(--line);
+        background: rgba(255, 255, 255, 0.04);
+      }
+
+      main {
+        padding-bottom: 64px;
+      }
+
+      .hero {
+        padding: 78px 0 36px;
+      }
+
+      .hero-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
+        gap: 28px;
+        align-items: stretch;
+      }
+
+      .eyebrow {
+        width: fit-content;
+        margin-bottom: 16px;
+        border: 1px solid rgba(118, 185, 0, 0.32);
+        border-radius: 999px;
+        padding: 6px 10px;
+        color: var(--green);
+        background: rgba(118, 185, 0, 0.1);
+        font-size: 12px;
+        font-weight: 900;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin-top: 0;
+      }
+
+      h1 {
+        max-width: 780px;
+        margin-bottom: 18px;
+        font-size: clamp(38px, 6vw, 68px);
+        line-height: 0.98;
+        letter-spacing: 0;
+      }
+
+      .lead {
+        max-width: 760px;
+        margin-bottom: 24px;
+        color: var(--muted);
+        font-size: clamp(16px, 2vw, 20px);
+        line-height: 1.75;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .panel,
+      .kpi,
+      .chart-panel,
+      .method-card,
+      .scenario-card,
+      .link-card {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: rgba(17, 25, 35, 0.86);
+      }
+
+      .panel {
+        padding: 22px;
+      }
+
+      .panel h2 {
+        margin-bottom: 10px;
+        font-size: 24px;
+      }
+
+      .panel p,
+      .muted {
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      .stack {
+        display: grid;
+        gap: 10px;
+        margin-top: 18px;
+      }
+
+      .scenario-card {
+        display: grid;
+        grid-template-columns: 92px 1fr;
+        gap: 12px;
+        align-items: center;
+        padding: 12px;
+      }
+
+      .scenario-card strong {
+        color: var(--green);
+        font-size: 13px;
+      }
+
+      .scenario-card span {
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.55;
+      }
+
+      section {
+        padding: 34px 0;
+      }
+
+      .section-head {
+        display: grid;
+        grid-template-columns: 1fr minmax(260px, 430px);
+        gap: 24px;
+        align-items: end;
+        margin-bottom: 18px;
+      }
+
+      h2 {
+        margin-bottom: 0;
+        font-size: clamp(27px, 4vw, 42px);
+        letter-spacing: 0;
+      }
+
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 16px;
+      }
+
+      .control-btn {
+        min-height: 38px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 0 12px;
+        color: var(--text);
+        background: rgba(255, 255, 255, 0.04);
+        font: inherit;
+        font-size: 13px;
+        font-weight: 850;
+        cursor: pointer;
+      }
+
+      .control-btn[aria-pressed="true"] {
+        border-color: rgba(118, 185, 0, 0.62);
+        color: var(--ink);
+        background: var(--green);
+      }
+
+      .kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .kpi {
+        min-height: 132px;
+        padding: 18px;
+      }
+
+      .kpi span {
+        display: block;
+        margin-bottom: 12px;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.45;
+      }
+
+      .kpi strong {
+        display: block;
+        color: var(--green);
+        font-size: clamp(28px, 4vw, 42px);
+        line-height: 1;
+      }
+
+      .kpi small {
+        display: block;
+        margin-top: 10px;
+        color: var(--muted);
+        line-height: 1.45;
+      }
+
+      .dashboard-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.15fr) minmax(300px, 0.85fr);
+        gap: 14px;
+      }
+
+      .chart-panel {
+        padding: 20px;
+      }
+
+      .chart-panel h3 {
+        margin-bottom: 8px;
+        font-size: 19px;
+      }
+
+      .chart-panel p {
+        margin-bottom: 14px;
+        color: var(--muted);
+        line-height: 1.65;
+      }
+
+      canvas {
+        display: block;
+        width: 100%;
+        height: 300px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.035);
+      }
+
+      .bar-list {
+        display: grid;
+        gap: 13px;
+      }
+
+      .bar-row {
+        display: grid;
+        grid-template-columns: 118px 1fr 44px;
+        gap: 12px;
+        align-items: center;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .track {
+        height: 12px;
+        overflow: hidden;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.08);
+      }
+
+      .fill {
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(90deg, var(--green), var(--cyan));
+      }
+
+      .matrix {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .matrix-cell {
+        min-height: 86px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 12px;
+        background: rgba(255, 255, 255, 0.04);
+      }
+
+      .matrix-cell strong {
+        color: var(--text);
+        font-size: 14px;
+      }
+
+      .matrix-cell span {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .matrix-cell b {
+        color: var(--gold);
+        font-size: 22px;
+      }
+
+      .method-grid,
+      .link-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .method-card,
+      .link-card {
+        padding: 18px;
+      }
+
+      .method-card h3,
+      .link-card h3 {
+        margin-bottom: 9px;
+        font-size: 18px;
+      }
+
+      .method-card p,
+      .link-card p {
+        color: var(--muted);
+        line-height: 1.65;
+      }
+
+      .tag-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+        margin-top: 14px;
+      }
+
+      .tag {
+        border: 1px solid rgba(79, 195, 255, 0.26);
+        border-radius: 999px;
+        padding: 4px 8px;
+        color: #b9e9ff;
+        background: rgba(79, 195, 255, 0.08);
+        font-size: 12px;
+        font-weight: 750;
+      }
+
+      .workflow {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .step {
+        position: relative;
+        min-height: 132px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 16px;
+        background: linear-gradient(180deg, rgba(23, 34, 49, 0.92), rgba(15, 22, 32, 0.92));
+      }
+
+      .step strong {
+        display: block;
+        margin-bottom: 8px;
+        color: var(--green);
+      }
+
+      .step span {
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.6;
+      }
+
+      footer {
+        border-top: 1px solid var(--line);
+        padding: 30px 0;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      @media (max-width: 900px) {
+        .hero-grid,
+        .section-head,
+        .dashboard-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .kpi-grid,
+        .method-grid,
+        .link-grid,
+        .workflow {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 580px) {
+        .topbar-inner {
+          align-items: flex-start;
+          flex-direction: column;
+          padding: 14px 0;
+        }
+
+        .hero {
+          padding-top: 48px;
+        }
+
+        .kpi-grid,
+        .method-grid,
+        .link-grid,
+        .workflow,
+        .matrix {
+          grid-template-columns: 1fr;
+        }
+
+        .bar-row {
+          grid-template-columns: 1fr;
+          gap: 6px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="shell topbar-inner">
+        <a class="brand" href="/">Kuo Jun Bin <span>/ Analytics</span></a>
+        <nav class="nav" aria-label="主要連結">
+          <a href="/">首頁</a>
+          <a href="/linkedin/">經歷儀表板</a>
+          <a href="/projects/data-dashboard/">資料專案</a>
+          <a href="https://github.com/jjfishjj" target="_blank" rel="noreferrer">GitHub</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="shell hero-grid">
+          <div>
+            <div class="eyebrow">Data Analytics Project</div>
+            <h1>我的數據分析專案與可視化決策展示。</h1>
+            <p class="lead">
+              我以遊戲營運、AI workflow、學習營運與產品決策為場景，將資料清理、指標設計、分群分析、
+              漏斗追蹤與可視化溝通整理成一個可瀏覽的 dashboard demo。
+            </p>
+            <div class="actions">
+              <a class="button primary" href="#dashboard">查看可視化展示</a>
+              <a class="button secondary" href="/projects/data-dashboard/">回資料專案分類</a>
+            </div>
+          </div>
+
+          <aside class="panel">
+            <h2>分析定位</h2>
+            <p>
+              這份頁面展示我如何把產品、遊戲與 AI 專案轉成可追蹤的數據模型，讓團隊能從使用者行為、
+              成本效率、內容表現與成長策略中找到下一步決策。
+            </p>
+            <div class="stack">
+              <div class="scenario-card"><strong>Game Ops</strong><span>留存、轉換、活動任務、RFM 與玩家分群。</span></div>
+              <div class="scenario-card"><strong>AI Flow</strong><span>AI 工具導入、影片/圖片 workflow、效率與成本追蹤。</span></div>
+              <div class="scenario-card"><strong>Learning</strong><span>語言學習進度、練習頻率、完成率與課程迭代。</span></div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section id="dashboard">
+        <div class="shell">
+          <div class="section-head">
+            <div>
+              <div class="eyebrow">Interactive Dashboard</div>
+              <h2>情境化數據展示</h2>
+            </div>
+            <p>
+              切換不同分析情境後，KPI、趨勢線與分群矩陣會同步更新。這是作品集示範資料，
+              用來呈現分析架構、視覺化能力與產品決策敘事。
+            </p>
+          </div>
+
+          <div class="controls" aria-label="分析情境切換">
+            <button class="control-btn" type="button" data-scenario="game" aria-pressed="true">Game Analytics</button>
+            <button class="control-btn" type="button" data-scenario="ai">AI Workflow</button>
+            <button class="control-btn" type="button" data-scenario="learning">LearningOps</button>
+          </div>
+
+          <div class="kpi-grid" id="kpiGrid"></div>
+
+          <div class="dashboard-grid" style="margin-top: 14px">
+            <article class="chart-panel">
+              <h3 id="trendTitle">Weekly retention and conversion trend</h3>
+              <p id="trendCopy"></p>
+              <canvas id="trendCanvas" width="900" height="360" aria-label="趨勢折線圖"></canvas>
+            </article>
+
+            <article class="chart-panel">
+              <h3 id="funnelTitle">Conversion funnel</h3>
+              <p id="funnelCopy"></p>
+              <div class="bar-list" id="funnelList"></div>
+            </article>
+          </div>
+
+          <div class="dashboard-grid" style="margin-top: 14px">
+            <article class="chart-panel">
+              <h3>RFM / segment matrix</h3>
+              <p>用高價值、成長、回流與沉睡族群拆解行動優先順序，讓活動、內容與溝通策略可以更準確。</p>
+              <div class="matrix" id="matrixGrid"></div>
+            </article>
+
+            <article class="chart-panel">
+              <h3>Decision notes</h3>
+              <p id="decisionCopy"></p>
+              <div class="tag-row" id="decisionTags"></div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="shell">
+          <div class="section-head">
+            <div>
+              <div class="eyebrow">Method</div>
+              <h2>分析方法與交付形式</h2>
+            </div>
+            <p>
+              我重視的是「資料能不能變成決策」，因此從資料表結構、事件命名、指標層級到 dashboard 版面，
+              都會一起考慮可讀性、可追蹤性與跨團隊溝通。
+            </p>
+          </div>
+
+          <div class="method-grid">
+            <article class="method-card">
+              <h3>資料結構釐清</h3>
+              <p>整理後台資料表、事件欄位、使用者 ID、時間戳與 funnel step，降低後續分析誤差。</p>
+              <div class="tag-row"><span class="tag">SQL Schema</span><span class="tag">Event Taxonomy</span></div>
+            </article>
+            <article class="method-card">
+              <h3>行為分析模型</h3>
+              <p>建立 retention、cohort、RFM、feature usage 與內容表現模型，觀察使用者行為結構。</p>
+              <div class="tag-row"><span class="tag">RFM</span><span class="tag">Cohort</span><span class="tag">Retention</span></div>
+            </article>
+            <article class="method-card">
+              <h3>AI 輔助工作流</h3>
+              <p>將 AI 導入資料摘要、GA 分析、影片修改、素材生成與報表整理，追蹤效率與品質變化。</p>
+              <div class="tag-row"><span class="tag">GA4</span><span class="tag">AI Summary</span><span class="tag">Workflow</span></div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="shell">
+          <div class="section-head">
+            <div>
+              <div class="eyebrow">Workflow</div>
+              <h2>從資料到決策的流程</h2>
+            </div>
+            <p>
+              這套流程適合遊戲營運、AI 產品提案、語言學習平台與內部數據專案，也能接到 GitHub README、
+              LinkedIn Featured 或簡報展示。
+            </p>
+          </div>
+
+          <div class="workflow">
+            <div class="step"><strong>01 Define</strong><span>確認目標、使用者、關鍵行為與決策問題。</span></div>
+            <div class="step"><strong>02 Collect</strong><span>盤點資料來源、事件、表格與缺漏欄位。</span></div>
+            <div class="step"><strong>03 Model</strong><span>建立 KPI、分群、漏斗、cohort 與成本模型。</span></div>
+            <div class="step"><strong>04 Visualize</strong><span>用圖表與敘事把資料轉為能讀懂的結論。</span></div>
+            <div class="step"><strong>05 Iterate</strong><span>依據營運結果回收資料，修正策略與產品節奏。</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="shell">
+          <div class="section-head">
+            <div>
+              <div class="eyebrow">Project Links</div>
+              <h2>相關作品與延伸</h2>
+            </div>
+            <p>這些入口可以搭配 LinkedIn Featured 使用，讓訪客從履歷、作品集、GitHub 與 dashboard 之間快速跳轉。</p>
+          </div>
+
+          <div class="link-grid">
+            <a class="link-card" href="/linkedin/">
+              <h3>LinkedIn 經歷儀表板</h3>
+              <p>把履歷、AI、遊戲、數據、3D 與教學成果整合在同一個專業展示頁。</p>
+            </a>
+            <a class="link-card" href="/projects/data-dashboard/">
+              <h3>資料專案分類</h3>
+              <p>查看更多 data dashboard、成本分析、遊戲分析與 LearningOps 相關專案。</p>
+            </a>
+            <a class="link-card" href="https://github.com/jjfishjj" target="_blank" rel="noreferrer">
+              <h3>GitHub Portfolio</h3>
+              <p>從 repository 與 README 了解專案拆解、實作方向與技術整理能力。</p>
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="shell">© 2026 Kuo Jun Bin / Jerome · Data analytics visualization project.</div>
+    </footer>
+
+    <script>
+      const scenarios = {
+        game: {
+          title: "Weekly retention and conversion trend",
+          trendCopy: "以遊戲營運為例，追蹤留存、活動參與與付費轉換，協助判斷任務節奏與玩家分群策略。",
+          funnelTitle: "Player funnel",
+          funnelCopy: "從進入遊戲、完成教學、參與活動到付費轉換，找出流失最大的環節。",
+          color: "#76b900",
+          kpis: [
+            ["D7 Retention", "42%", "+8 pts after mission tuning"],
+            ["Event CVR", "18%", "+5 pts from segmented tasks"],
+            ["RFM Active", "63%", "high / growth users"],
+            ["Report Cycle", "1 day", "weekly dashboard refresh"],
+          ],
+          trend: [32, 34, 36, 37, 41, 42, 45],
+          secondary: [11, 12, 13, 14, 16, 18, 21],
+          funnel: [
+            ["Install / Enter", 100],
+            ["Tutorial Complete", 72],
+            ["First Mission", 55],
+            ["Event Join", 38],
+            ["Purchase / Return", 18],
+          ],
+          matrix: [
+            ["Champions", "recent + high value", 18],
+            ["Growth", "active + rising", 25],
+            ["Social", "high engagement", 20],
+            ["Trial", "new users", 17],
+            ["At Risk", "declining", 12],
+            ["Dormant", "reactivation", 8],
+          ],
+          decision:
+            "優先把活動任務拆成新手、成長與高價值玩家三條路徑，並把回流獎勵與內容推薦接到 RFM 分群。",
+          tags: ["Game Analytics", "RFM", "Retention", "Funnel"],
+        },
+        ai: {
+          title: "AI workflow efficiency trend",
+          trendCopy: "以 AI 導入工作流為例，追蹤素材生成、影片修改、報表摘要與人工審核時間的效率變化。",
+          funnelTitle: "AI workflow adoption",
+          funnelCopy: "從需求提出、prompt template、AI 產出、人工審核到可交付成果，衡量流程成熟度。",
+          color: "#4fc3ff",
+          kpis: [
+            ["Time Saved", "37%", "content workflow benchmark"],
+            ["Tool Coverage", "14", "paid AI tools monitored"],
+            ["Prompt Reuse", "68%", "templates reused by task type"],
+            ["QA Pass", "82%", "human review acceptance"],
+          ],
+          trend: [18, 24, 29, 31, 34, 37, 39],
+          secondary: [45, 51, 55, 59, 63, 68, 72],
+          funnel: [
+            ["Request Intake", 100],
+            ["Prompt Template", 84],
+            ["AI Draft", 76],
+            ["Human Review", 62],
+            ["Published Asset", 49],
+          ],
+          matrix: [
+            ["High ROI", "repeatable tasks", 24],
+            ["Creative", "image / video", 21],
+            ["Research", "summary / search", 18],
+            ["Ops", "report routine", 16],
+            ["Need QA", "risk review", 13],
+            ["Manual", "human only", 8],
+          ],
+          decision:
+            "把高頻任務先模板化，建立 prompt library、review checklist 與工具成本表，再逐步接到 GA4 與專案 dashboard。",
+          tags: ["AI Workflow", "GA4", "Prompt Library", "Cost Tracking"],
+        },
+        learning: {
+          title: "LearningOps progress trend",
+          trendCopy: "以語言學習產品為例，追蹤練習頻率、完成率、複習節奏與學習成果，用資料支持課程迭代。",
+          funnelTitle: "Learning funnel",
+          funnelCopy: "從進入課程、完成第一組練習、形成複習習慣到持續學習，觀察學習流失點。",
+          color: "#f0bc3c",
+          kpis: [
+            ["Weekly Practice", "5.2x", "average sessions"],
+            ["Completion", "71%", "module completion"],
+            ["Recall Lift", "24%", "after spaced review"],
+            ["Coach Notes", "36", "qualitative insights"],
+          ],
+          trend: [41, 45, 48, 52, 58, 63, 71],
+          secondary: [18, 20, 21, 23, 24, 27, 30],
+          funnel: [
+            ["Course Visit", 100],
+            ["First Practice", 81],
+            ["Chunk Review", 64],
+            ["Weekly Habit", 46],
+            ["Outcome Share", 28],
+          ],
+          matrix: [
+            ["Habit Builder", "steady practice", 22],
+            ["Fast Starter", "high first week", 19],
+            ["Deep Learner", "review heavy", 17],
+            ["Needs Cue", "low reminder", 18],
+            ["Paused", "break risk", 15],
+            ["Showcase", "share outcome", 9],
+          ],
+          decision:
+            "將語言天份訓練拆成卡牌任務、複習節奏與成果展示，讓學習行為可以被追蹤，也能回到課程設計。",
+          tags: ["LearningOps", "Spaced Review", "Language Learning", "Course Analytics"],
+        },
+      }
+
+      const kpiGrid = document.querySelector("#kpiGrid")
+      const trendCanvas = document.querySelector("#trendCanvas")
+      const trendTitle = document.querySelector("#trendTitle")
+      const trendCopy = document.querySelector("#trendCopy")
+      const funnelTitle = document.querySelector("#funnelTitle")
+      const funnelCopy = document.querySelector("#funnelCopy")
+      const funnelList = document.querySelector("#funnelList")
+      const matrixGrid = document.querySelector("#matrixGrid")
+      const decisionCopy = document.querySelector("#decisionCopy")
+      const decisionTags = document.querySelector("#decisionTags")
+      const buttons = Array.from(document.querySelectorAll(".control-btn"))
+
+      function drawTrend(data) {
+        const context = trendCanvas.getContext("2d")
+        const width = trendCanvas.width
+        const height = trendCanvas.height
+        const padding = 48
+        const allValues = [...data.trend, ...data.secondary]
+        const max = Math.max(...allValues) + 8
+        const min = Math.max(0, Math.min(...allValues) - 8)
+
+        context.clearRect(0, 0, width, height)
+        context.strokeStyle = "rgba(255,255,255,0.1)"
+        context.lineWidth = 1
+        context.fillStyle = "rgba(255,255,255,0.58)"
+        context.font = "13px Inter, sans-serif"
+
+        for (let i = 0; i < 5; i += 1) {
+          const y = padding + ((height - padding * 2) / 4) * i
+          context.beginPath()
+          context.moveTo(padding, y)
+          context.lineTo(width - padding, y)
+          context.stroke()
+        }
+
+        const plot = (values, color, label, offset) => {
+          context.beginPath()
+          values.forEach((value, index) => {
+            const x = padding + ((width - padding * 2) / (values.length - 1)) * index
+            const y = height - padding - ((value - min) / (max - min)) * (height - padding * 2)
+            if (index === 0) context.moveTo(x, y)
+            else context.lineTo(x, y)
+          })
+          context.strokeStyle = color
+          context.lineWidth = 4
+          context.lineJoin = "round"
+          context.lineCap = "round"
+          context.stroke()
+
+          values.forEach((value, index) => {
+            const x = padding + ((width - padding * 2) / (values.length - 1)) * index
+            const y = height - padding - ((value - min) / (max - min)) * (height - padding * 2)
+            context.fillStyle = "#080b10"
+            context.beginPath()
+            context.arc(x, y, 6, 0, Math.PI * 2)
+            context.fill()
+            context.strokeStyle = color
+            context.lineWidth = 3
+            context.stroke()
+          })
+
+          context.fillStyle = color
+          context.fillText(label, padding, 24 + offset)
+        }
+
+        plot(data.trend, data.color, "Primary KPI", 0)
+        plot(data.secondary, "#ff7a9f", "Secondary KPI", 22)
+
+        context.fillStyle = "rgba(255,255,255,0.55)"
+        ;["W1", "W2", "W3", "W4", "W5", "W6", "W7"].forEach((label, index) => {
+          const x = padding + ((width - padding * 2) / 6) * index
+          context.fillText(label, x - 8, height - 16)
+        })
+      }
+
+      function renderScenario(key) {
+        const data = scenarios[key]
+
+        buttons.forEach((button) => {
+          button.setAttribute("aria-pressed", String(button.dataset.scenario === key))
+        })
+
+        trendTitle.textContent = data.title
+        trendCopy.textContent = data.trendCopy
+        funnelTitle.textContent = data.funnelTitle
+        funnelCopy.textContent = data.funnelCopy
+        decisionCopy.textContent = data.decision
+
+        kpiGrid.innerHTML = data.kpis
+          .map(([label, value, note]) => `<div class="kpi"><span>${label}</span><strong>${value}</strong><small>${note}</small></div>`)
+          .join("")
+
+        funnelList.innerHTML = data.funnel
+          .map(
+            ([label, value]) => `
+              <div class="bar-row">
+                <span>${label}</span>
+                <div class="track"><div class="fill" style="width:${value}%; background:linear-gradient(90deg, ${data.color}, var(--cyan))"></div></div>
+                <strong>${value}%</strong>
+              </div>
+            `,
+          )
+          .join("")
+
+        matrixGrid.innerHTML = data.matrix
+          .map(
+            ([name, note, value]) => `
+              <div class="matrix-cell">
+                <strong>${name}</strong>
+                <span>${note}</span>
+                <b>${value}%</b>
+              </div>
+            `,
+          )
+          .join("")
+
+        decisionTags.innerHTML = data.tags.map((tag) => `<span class="tag">${tag}</span>`).join("")
+        drawTrend(data)
+      }
+
+      buttons.forEach((button) => {
+        button.addEventListener("click", () => renderScenario(button.dataset.scenario))
+      })
+
+      window.addEventListener("resize", () => renderScenario(document.querySelector(".control-btn[aria-pressed='true']").dataset.scenario))
+      renderScenario("game")
+    </script>
+  </body>
+</html>

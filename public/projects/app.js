@@ -185,6 +185,15 @@ const projects = [
     repo: "https://github.com/jjfishjj/jjfishjj.github.io",
   },
   {
+    title: "Data Analytics Visualization Project",
+    category: "data-dashboard",
+    type: "Interactive Dashboard",
+    description: "以遊戲營運、AI workflow 與 LearningOps 為情境，展示 KPI、漏斗、RFM 分群、趨勢圖與決策摘要。",
+    tags: ["Data Visualization", "RFM", "Funnel", "AI Workflow"],
+    demo: "/projects/data-analytics-visualization/",
+    repo: "https://github.com/jjfishjj/jjfishjj.github.io",
+  },
+  {
     title: "cudf-game-analytics-benchmark",
     category: "data-dashboard",
     type: "GitHub Repo",
