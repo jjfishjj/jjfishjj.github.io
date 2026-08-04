@@ -396,6 +396,145 @@
         font-size: 22px;
       }
 
+      .case-section {
+        border-top: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+        background:
+          linear-gradient(135deg, rgba(118, 185, 0, 0.08), transparent 34rem),
+          rgba(255, 255, 255, 0.02);
+      }
+
+      .case-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 0.95fr) minmax(320px, 1.05fr);
+        gap: 14px;
+        align-items: start;
+      }
+
+      .case-summary {
+        display: grid;
+        gap: 12px;
+      }
+
+      .case-card,
+      .case-table,
+      .heatmap,
+      .source-strip {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: rgba(17, 25, 35, 0.86);
+      }
+
+      .case-card {
+        padding: 18px;
+      }
+
+      .case-card h3 {
+        margin-bottom: 8px;
+        font-size: 18px;
+      }
+
+      .case-card p {
+        color: var(--muted);
+        line-height: 1.65;
+      }
+
+      .source-strip {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 1px;
+        overflow: hidden;
+        background: var(--line);
+      }
+
+      .source-strip div {
+        min-height: 96px;
+        padding: 14px;
+        background: rgba(17, 25, 35, 0.96);
+      }
+
+      .source-strip strong {
+        display: block;
+        margin-bottom: 8px;
+        color: var(--green);
+        font-size: 13px;
+      }
+
+      .source-strip span {
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.5;
+      }
+
+      .heatmap {
+        padding: 18px;
+      }
+
+      .heatmap-grid {
+        display: grid;
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        gap: 8px;
+        margin-top: 14px;
+      }
+
+      .heatmap-cell {
+        min-height: 64px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 8px;
+        padding: 9px;
+        background: rgba(118, 185, 0, var(--level));
+      }
+
+      .heatmap-cell strong {
+        color: var(--text);
+        font-size: 12px;
+      }
+
+      .heatmap-cell span {
+        color: rgba(238, 244, 248, 0.78);
+        font-size: 11px;
+      }
+
+      .case-table {
+        width: 100%;
+        border-collapse: collapse;
+        overflow: hidden;
+      }
+
+      .case-table th,
+      .case-table td {
+        border-bottom: 1px solid var(--line);
+        padding: 14px;
+        text-align: left;
+        vertical-align: top;
+      }
+
+      .case-table th {
+        color: var(--green);
+        background: rgba(118, 185, 0, 0.08);
+        font-size: 13px;
+      }
+
+      .case-table td {
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.6;
+      }
+
+      .case-table tr:last-child td {
+        border-bottom: 0;
+      }
+
+      .case-note {
+        margin-top: 12px;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.6;
+      }
+
       .method-grid,
       .link-grid {
         display: grid;
@@ -478,6 +617,11 @@
           grid-template-columns: 1fr;
         }
 
+        .case-grid,
+        .source-strip {
+          grid-template-columns: 1fr;
+        }
+
         .kpi-grid,
         .method-grid,
         .link-grid,
@@ -501,7 +645,8 @@
         .method-grid,
         .link-grid,
         .workflow,
-        .matrix {
+        .matrix,
+        .heatmap-grid {
           grid-template-columns: 1fr;
         }
 
@@ -537,6 +682,7 @@
             </p>
             <div class="actions">
               <a class="button primary" href="#dashboard">查看可視化展示</a>
+              <a class="button secondary" href="#case-study">Gamania / Prasia 數據專區</a>
               <a class="button secondary" href="/projects/data-dashboard/">回資料專案分類</a>
             </div>
           </div>
@@ -603,6 +749,124 @@
               <p id="decisionCopy"></p>
               <div class="tag-row" id="decisionTags"></div>
             </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="case-section" id="case-study">
+        <div class="shell">
+          <div class="section-head">
+            <div>
+              <div class="eyebrow">Gamania / Prasia Case Study</div>
+              <h2>遊戲營運與 AI 工作流數據分析專區</h2>
+            </div>
+            <p>
+              這個專區以公開作品集形式呈現我的分析方法：將遊戲行為、活動任務、素材製作與 AI 工具導入整理成可追蹤、
+              可視覺化、可討論的決策畫面。內容使用示範資料，不揭露公司內部數字。
+            </p>
+          </div>
+
+          <div class="source-strip" aria-label="資料來源與分析素材">
+            <div><strong>Game Event</strong><span>登入、任務、活動、社群互動、回流與轉換行為。</span></div>
+            <div><strong>GA4 / Web</strong><span>頁面流量、來源渠道、事件觸發、素材頁與轉換路徑。</span></div>
+            <div><strong>AI Workflow</strong><span>Prompt template、圖片影片修改、摘要產出與人工審核狀態。</span></div>
+            <div><strong>Ops Report</strong><span>每週 KPI、活動節奏、內容表現、成本與下一步建議。</span></div>
+          </div>
+
+          <div class="case-grid" style="margin-top: 14px">
+            <div class="case-summary">
+              <article class="case-card">
+                <h3>Prasia 類遊戲營運分析</h3>
+                <p>
+                  我會先把玩家旅程拆成 install / tutorial / mission / event / return / purchase，
+                  再用 funnel、retention、RFM 與 cohort 看出活動節奏、任務設計與回流內容的改善空間。
+                </p>
+                <div class="tag-row">
+                  <span class="tag">Player Funnel</span>
+                  <span class="tag">RFM Segments</span>
+                  <span class="tag">Retention</span>
+                  <span class="tag">Live Ops</span>
+                </div>
+              </article>
+
+              <article class="case-card">
+                <h3>AI 素材與影片工作流分析</h3>
+                <p>
+                  我將 Midjourney、Runway、Kling、Veo、Claude、ChatGPT 等工具視為 production workflow 的一部分，
+                  追蹤輸入需求、AI 產出、人工修改、審核通過與交付時間，讓 AI 導入能被量化。
+                </p>
+                <div class="tag-row">
+                  <span class="tag">AI Tools</span>
+                  <span class="tag">Asset Pipeline</span>
+                  <span class="tag">Video Workflow</span>
+                  <span class="tag">QA Review</span>
+                </div>
+              </article>
+
+              <article class="case-card">
+                <h3>管理者可讀的 dashboard 交付</h3>
+                <p>
+                  我重視 dashboard 的決策語言：圖表不只呈現數字，也要讓 PM、設計、行銷與主管能快速知道問題、
+                  機會、風險與下一步行動。
+                </p>
+                <div class="tag-row">
+                  <span class="tag">Executive View</span>
+                  <span class="tag">Decision Notes</span>
+                  <span class="tag">KPI Storytelling</span>
+                </div>
+              </article>
+            </div>
+
+            <div>
+              <article class="heatmap">
+                <h3>Weekly activity heatmap</h3>
+                <p class="muted">示範遊戲活動或 AI workflow 在一週內的任務密度、素材產出與使用者互動狀態。</p>
+                <div class="heatmap-grid" aria-label="每週活動熱度圖">
+                  <div class="heatmap-cell" style="--level: 0.18"><strong>Mon</strong><span>Planning</span></div>
+                  <div class="heatmap-cell" style="--level: 0.32"><strong>Tue</strong><span>Prompt</span></div>
+                  <div class="heatmap-cell" style="--level: 0.46"><strong>Wed</strong><span>Asset</span></div>
+                  <div class="heatmap-cell" style="--level: 0.62"><strong>Thu</strong><span>Review</span></div>
+                  <div class="heatmap-cell" style="--level: 0.72"><strong>Fri</strong><span>Launch</span></div>
+                  <div class="heatmap-cell" style="--level: 0.38"><strong>Sat</strong><span>Event</span></div>
+                  <div class="heatmap-cell" style="--level: 0.24"><strong>Sun</strong><span>Report</span></div>
+                </div>
+              </article>
+
+              <table class="case-table" style="margin-top: 14px">
+                <thead>
+                  <tr>
+                    <th>分析模組</th>
+                    <th>觀察問題</th>
+                    <th>可交付成果</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>後台資料表釐清</td>
+                    <td>事件欄位、玩家 ID、任務狀態與時間序列是否能串起來。</td>
+                    <td>資料字典、事件命名規則、SQL query checklist。</td>
+                  </tr>
+                  <tr>
+                    <td>玩家行為分群</td>
+                    <td>高價值玩家、回流玩家、沉睡玩家與新手玩家需要不同營運策略。</td>
+                    <td>RFM matrix、cohort table、活動任務分群建議。</td>
+                  </tr>
+                  <tr>
+                    <td>AI 工作流導入</td>
+                    <td>哪些素材、影片、摘要與報表任務適合模板化與自動化。</td>
+                    <td>AI tool usage log、prompt library、成本與效率 dashboard。</td>
+                  </tr>
+                  <tr>
+                    <td>管理層視覺化</td>
+                    <td>資料如何從 technical analysis 轉成 PM / marketing / executive 可讀結論。</td>
+                    <td>KPI dashboard、decision notes、週報與簡報圖表。</td>
+                  </tr>
+                </tbody>
+              </table>
+              <p class="case-note">
+                Note: 這個專區使用作品集示範資料與公開可描述的方法論，重點呈現分析架構與交付能力。
+              </p>
+            </div>
           </div>
         </div>
       </section>
