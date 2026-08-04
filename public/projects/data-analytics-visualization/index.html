@@ -547,6 +547,64 @@
         padding: 18px;
       }
 
+      .case-material-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .case-material {
+        min-height: 260px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 18px;
+        background: linear-gradient(180deg, rgba(23, 34, 49, 0.92), rgba(15, 22, 32, 0.92));
+        text-decoration: none;
+      }
+
+      .case-material:hover {
+        border-color: rgba(118, 185, 0, 0.58);
+        background: linear-gradient(180deg, rgba(30, 44, 60, 0.94), rgba(17, 25, 35, 0.94));
+      }
+
+      .case-material .label {
+        width: fit-content;
+        margin-bottom: 12px;
+        border-radius: 999px;
+        padding: 5px 9px;
+        color: var(--ink);
+        background: var(--green);
+        font-size: 12px;
+        font-weight: 900;
+      }
+
+      .case-material h3 {
+        margin-bottom: 10px;
+        font-size: 20px;
+      }
+
+      .case-material p {
+        color: var(--muted);
+        line-height: 1.65;
+      }
+
+      .case-material .open-link {
+        display: inline-flex;
+        align-items: center;
+        width: fit-content;
+        min-height: 34px;
+        margin-top: 14px;
+        border: 1px solid rgba(118, 185, 0, 0.3);
+        border-radius: 8px;
+        padding: 0 10px;
+        color: var(--green);
+        font-size: 12px;
+        font-weight: 850;
+      }
+
       .method-card h3,
       .link-card h3 {
         margin-bottom: 9px;
@@ -623,6 +681,7 @@
         }
 
         .kpi-grid,
+        .case-material-grid,
         .method-grid,
         .link-grid,
         .workflow {
@@ -642,6 +701,7 @@
         }
 
         .kpi-grid,
+        .case-material-grid,
         .method-grid,
         .link-grid,
         .workflow,
@@ -683,6 +743,7 @@
             <div class="actions">
               <a class="button primary" href="#dashboard">查看可視化展示</a>
               <a class="button secondary" href="#case-study">Gamania / Prasia 數據專區</a>
+              <a class="button secondary" href="#case-materials">查看案例材料</a>
               <a class="button secondary" href="/projects/data-dashboard/">回資料專案分類</a>
             </div>
           </div>
@@ -867,6 +928,89 @@
                 Note: 這個專區使用作品集示範資料與公開可描述的方法論，重點呈現分析架構與交付能力。
               </p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="case-materials">
+        <div class="shell">
+          <div class="section-head">
+            <div>
+              <div class="eyebrow">Case Materials</div>
+              <h2>資料分析案例材料</h2>
+            </div>
+            <p>
+              這些 Google Slides 補充我過去整理的資料分析案例，涵蓋價格預測、顧客分群、紅酒品質、
+              玩家分群與指標統計視覺化，可作為 LinkedIn Featured 或作品集延伸閱讀。
+            </p>
+          </div>
+
+          <div class="case-material-grid">
+            <a
+              class="case-material"
+              href="https://docs.google.com/presentation/d/1J_GrPf231KMtpHS5OqF0BmG9-4IC0X5CXx8DFTL9fsI/edit?slide=id.p1#slide=id.p1"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <div>
+                <div class="label">Regression / Clustering</div>
+                <h3>汽車售價預測、顧客分群、紅酒品質與玩家分群</h3>
+                <p>
+                  綜合型資料分析案例，展示預測模型、品質評估、客群拆解與玩家行為分群的分析脈絡。
+                </p>
+                <div class="tag-row">
+                  <span class="tag">Car Price</span>
+                  <span class="tag">Customer Segments</span>
+                  <span class="tag">Wine Quality</span>
+                  <span class="tag">Player Segments</span>
+                </div>
+              </div>
+              <span class="open-link">Open Google Slides</span>
+            </a>
+
+            <a
+              class="case-material"
+              href="https://docs.google.com/presentation/d/19CyqZB1NevhEMFrqEoMxhHYr8JT5unzC_pWLSCiTMhI/edit?slide=id.p1#slide=id.p1"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <div>
+                <div class="label">Game Analytics</div>
+                <h3>PSM 遊戲玩家分群</h3>
+                <p>
+                  聚焦遊戲玩家分群，適合連結到 RFM、cohort、活動參與、留存與玩家營運策略。
+                </p>
+                <div class="tag-row">
+                  <span class="tag">PSM</span>
+                  <span class="tag">Game Users</span>
+                  <span class="tag">Segmentation</span>
+                  <span class="tag">Live Ops</span>
+                </div>
+              </div>
+              <span class="open-link">Open Google Slides</span>
+            </a>
+
+            <a
+              class="case-material"
+              href="https://docs.google.com/presentation/d/1NjK-Z70xssg-apLTitUtBNFCRFYYzRfXFN6szjUjNC8/edit?slide=id.g3f65067da95_2_2#slide=id.g3f65067da95_2_2"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <div>
+                <div class="label">KPI Visualization</div>
+                <h3>數據指標統計視覺化</h3>
+                <p>
+                  展示指標統計、資料摘要與視覺化表達方式，可延伸成 dashboard、週報與管理層簡報。
+                </p>
+                <div class="tag-row">
+                  <span class="tag">KPI</span>
+                  <span class="tag">Statistics</span>
+                  <span class="tag">Dashboard</span>
+                  <span class="tag">Data Storytelling</span>
+                </div>
+              </div>
+              <span class="open-link">Open Google Slides</span>
+            </a>
           </div>
         </div>
       </section>
