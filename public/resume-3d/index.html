@@ -99,7 +99,7 @@
         gap: 8px;
       }
 
-      .nav a, .button, .node-button {
+      .nav a, .button, .node-button, .lang-button {
         min-height: 40px;
         display: inline-flex;
         align-items: center;
@@ -116,10 +116,25 @@
         cursor: pointer;
       }
 
-      .nav a:hover, .button.secondary:hover, .node-button:hover, .node-button.active {
+      .nav a:hover, .button.secondary:hover, .node-button:hover, .node-button.active, .lang-button:hover, .lang-button.active {
         color: var(--text);
         border-color: var(--line);
         background: rgba(255, 255, 255, 0.06);
+      }
+
+      .language-switcher {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-bottom: 18px;
+      }
+
+      .lang-button {
+        min-height: 34px;
+        padding: 0 10px;
+        font-size: 12px;
+        border-color: rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.04);
       }
 
       .button.primary {
@@ -472,21 +487,27 @@
         <div class="fallback-3d" id="fallback3d"></div>
         <div class="shell hero-grid">
           <div>
-            <div class="kicker">3D VISUAL RESUME / AI x GPU x GAME x SEMICONDUCTOR</div>
-            <h1>我把履歷做成一座可以旋轉的 3D 職涯星圖。</h1>
-            <p class="lead">
-              這個頁面把我的半導體材料、硬體供應鏈、Web3 遊戲、AI 影音產品、Gamania 數據分析、
+            <div class="language-switcher" aria-label="Language selector">
+              <button class="lang-button" type="button" data-lang="zh">繁中</button>
+              <button class="lang-button" type="button" data-lang="en">English</button>
+              <button class="lang-button" type="button" data-lang="es">Español</button>
+              <button class="lang-button" type="button" data-lang="fr">Français</button>
+            </div>
+            <div class="kicker" id="heroKicker">3D VISUAL RESUME / AI x GPU x GAME x SEMICONDUCTOR</div>
+            <h1 id="heroTitle">我的履歷是一座可以旋轉探索的 3D 職涯星圖。</h1>
+            <p class="lead" id="heroLead">
+              這個互動頁整合我的半導體材料、硬體供應鏈、Web3 遊戲、AI 影音產品、Gamania 數據分析、
               NVIDIA / Google 認證與 GitHub 作品集，整理成可互動的 3D 節點。
             </p>
             <div class="actions">
-              <a class="button primary" href="#portfolio">查看作品入口</a>
-              <a class="button secondary" href="/resume-footprint-map/">切換 2D 足跡地圖</a>
+              <a class="button primary" id="primaryCta" href="#portfolio">查看作品入口</a>
+              <a class="button secondary" id="secondaryCta" href="/resume-footprint-map/">切換 2D 足跡地圖</a>
             </div>
             <div class="signal-row" aria-label="履歷摘要">
-              <div class="signal"><strong>GPU</strong><span>NVIDIA / OpenUSD / Omniverse</span></div>
-              <div class="signal"><strong>AI</strong><span>LLM、影像影片、產品工作流</span></div>
-              <div class="signal"><strong>Game</strong><span>Web3、NFT、Prasia、用戶行為</span></div>
-              <div class="signal"><strong>IC</strong><span>半導體材料與硬體供應鏈</span></div>
+              <div class="signal"><strong id="signal0Title">GPU</strong><span id="signal0Body">NVIDIA / OpenUSD / Omniverse</span></div>
+              <div class="signal"><strong id="signal1Title">AI</strong><span id="signal1Body">LLM、影像影片、產品工作流</span></div>
+              <div class="signal"><strong id="signal2Title">Game</strong><span id="signal2Body">Web3、NFT、Prasia、用戶行為</span></div>
+              <div class="signal"><strong id="signal3Title">IC</strong><span id="signal3Body">半導體材料與硬體供應鏈</span></div>
             </div>
           </div>
 
@@ -502,7 +523,7 @@
               <span class="tag">sensor materials</span>
             </div>
             <div class="node-list" id="nodeList"></div>
-            <p class="note">可拖曳旋轉 3D 場景，點選球體或下方節點切換經歷。</p>
+            <p class="note" id="nodeNote">可拖曳旋轉 3D 場景，點選球體或下方節點切換經歷。</p>
           </aside>
         </div>
       </section>
@@ -511,25 +532,25 @@
         <div class="shell">
           <div class="section-head">
             <div>
-              <h2>3D 履歷讀法</h2>
-              <p>我把經歷拆成三層：底層是材料與硬體，中層是遊戲與數據，上層是 AI、NVIDIA、OpenUSD 與作品集。</p>
+              <h2 id="layersTitle">3D 履歷讀法</h2>
+              <p id="layersLead">我的經歷分成三層：底層是材料與硬體，中層是遊戲與數據，上層是 AI、NVIDIA、OpenUSD 與作品集。</p>
             </div>
           </div>
           <div class="cards">
             <article class="card">
-              <small>LAYER 01</small>
-              <h3>Hardware Foundation</h3>
-              <p>半導體薄膜、電子零組件、CPU / GPU / 主機板供應鏈，讓我能用硬體限制理解 AI 效能與成本。</p>
+              <small id="layer0Label">LAYER 01</small>
+              <h3 id="layer0Title">Hardware Foundation</h3>
+              <p id="layer0Body">半導體薄膜、電子零組件、CPU / GPU / 主機板供應鏈，讓我能用硬體限制理解 AI 效能與成本。</p>
             </article>
             <article class="card">
-              <small>LAYER 02</small>
-              <h3>Game + Data Systems</h3>
-              <p>METASENS、Gamania、Prasia、NFT / Token 與用戶行為分析，建立我對遊戲產品、社群與資料後台的判斷。</p>
+              <small id="layer1Label">LAYER 02</small>
+              <h3 id="layer1Title">Game + Data Systems</h3>
+              <p id="layer1Body">METASENS、Gamania、Prasia、NFT / Token 與用戶行為分析，建立我對遊戲產品、社群與資料後台的判斷。</p>
             </article>
             <article class="card">
-              <small>LAYER 03</small>
-              <h3>AI Product Portfolio</h3>
-              <p>A.V. Mapping、NVIDIA DLI、OpenUSD、Omniverse、AI prompt game tutorial 與 GitHub 作品，把學習轉成可展示的實作。</p>
+              <small id="layer2Label">LAYER 03</small>
+              <h3 id="layer2Title">AI Product Portfolio</h3>
+              <p id="layer2Body">A.V. Mapping、NVIDIA DLI、OpenUSD、Omniverse、AI prompt game tutorial 與 GitHub 作品，呈現可展示的 AI 實作能力。</p>
             </article>
           </div>
         </div>
@@ -539,30 +560,30 @@
         <div class="shell">
           <div class="section-head">
             <div>
-              <h2>作品入口</h2>
-              <p>這些頁面可以一起放在 LinkedIn Featured，讓觀看者從不同角度理解我的履歷。</p>
+              <h2 id="portfolioTitle">作品入口</h2>
+              <p id="portfolioLead">這些頁面可以一起放在 LinkedIn Featured，讓觀看者從不同角度理解我的履歷。</p>
             </div>
           </div>
           <div class="resource-grid">
             <a class="resource" href="/resume-footprint-map/">
               <small>01 / MAP</small>
-              <strong>履歷足跡地圖</strong>
-              <span>城市、產業與經歷的 2D 路線版。</span>
+              <strong id="resource0Title">履歷足跡地圖</strong>
+              <span id="resource0Body">城市、產業與經歷的 2D 路線版。</span>
             </a>
             <a class="resource" href="/nvidia-agent-skill-labs/">
               <small>02 / NVIDIA</small>
-              <strong>55 Skill Labs</strong>
-              <span>NVIDIA Agent Skills + 8 個精選 README。</span>
+              <strong id="resource1Title">55 Skill Labs</strong>
+              <span id="resource1Body">NVIDIA Agent Skills + 8 個精選 README。</span>
             </a>
             <a class="resource" href="/ai-prompt-game-tutorial/">
               <small>03 / TEACHING</small>
-              <strong>AI Prompt Game</strong>
-              <span>AI prompt、遊戲企劃、素材生成與原型教學。</span>
+              <strong id="resource2Title">AI Prompt Game</strong>
+              <span id="resource2Body">AI prompt、遊戲企劃、素材生成與原型教學。</span>
             </a>
             <a class="resource" href="https://jeromekuo.lovable.app/" target="_blank" rel="noreferrer">
               <small>04 / SITE</small>
-              <strong>個人網站</strong>
-              <span>語言學習、AI 方法、作品與講座入口。</span>
+              <strong id="resource3Title">個人網站</strong>
+              <span id="resource3Body">語言學習、AI 方法、作品與講座入口。</span>
             </a>
           </div>
         </div>
@@ -570,84 +591,227 @@
     </main>
 
     <footer>
-      <div class="shell">Jerome Kuo 3D Visual Resume / Built for portfolio, LinkedIn Featured, and interactive career storytelling.</div>
+      <div class="shell" id="footerText">Jerome Kuo 3D Visual Resume / Built for portfolio, LinkedIn Featured, and interactive career storytelling.</div>
     </footer>
 
     <script type="module">
-      const nodes = [
+      const nodeGeometry = [
         {
           id: "semiconductor",
-          meta: "2009-2011 / HSINCHU",
-          title: "半導體材料與感測研究",
-          body: "從 TiO2 薄膜、XANES、XRD、ESCA 與磁性分析出發，建立理解晶片材料、薄膜製程、感測元件與 power efficiency 的底層語言。",
-          tags: ["TiO2 thin film", "XRD / XANES / ESCA", "sensor materials"],
           color: "#46d6ff",
           position: [-4.7, -0.4, 0.8],
         },
         {
           id: "hardware",
-          meta: "2014-2018 / SHENZHEN",
-          title: "電子零組件與硬體供應鏈",
-          body: "我接觸晶圓元件、CPU、GPU、主機板與採購協調，理解硬體產品從規格、成本、交期到品質控管的運作節奏。",
-          tags: ["CPU / GPU", "motherboard", "procurement"],
           color: "#f4c542",
           position: [-3.1, 1.7, -1.5],
         },
         {
           id: "imperium",
-          meta: "2018-2023 / HONG KONG + SHENZHEN",
-          title: "Imperium Technology / Data Analyst",
-          body: "透過 Google Analytics、RFM、retention、tagging、市場研究與競品分析，把資料轉成商業決策與產品規劃可以使用的語言。",
-          tags: ["Google Analytics", "RFM", "market analysis"],
           color: "#9a8cff",
           position: [-1.4, -1.6, 2.4],
         },
         {
           id: "metasens",
-          meta: "2020-2023 / TAIPEI",
-          title: "METASENS / Web3 Game Project",
-          body: "參與 Imperium 集團台灣子公司項目，串接 NFT、Token、MetaSnake、社群任務、遊戲化設計與後台數據分析。",
-          tags: ["NFT", "Token", "gamification"],
           color: "#ff7aa7",
           position: [0.7, 1.2, -2.7],
         },
         {
           id: "avmapping",
-          meta: "2023-2024 / TAIPEI + BERLIN",
-          title: "A.V. Mapping / AI Product PM",
-          body: "負責 AI video / music matching 產品規劃、創作者場景、活動舉辦、AI Pals 與 go-to-market material，並參與 Berlin Film Festival 與 iF Design Award 國際曝光。",
-          tags: ["AI video", "product planning", "Berlinale"],
           color: "#76b900",
           position: [2.6, -0.9, 2.0],
         },
         {
           id: "gamania",
-          meta: "2024-NOW / TAIPEI",
-          title: "Gamania / AI + Game Data",
-          body: "整合 AI 到 Google Analytics 數據分析、影片修改、圖片生成、遊戲素材、小遊戲原型、Prasia 與 AI workshop 工作流。",
-          tags: ["game analytics", "AI workflow", "Prasia"],
           color: "#46d6ff",
           position: [3.8, 1.4, -0.7],
         },
         {
           id: "nvidia",
-          meta: "2025-2026 / NVIDIA + GOOGLE",
-          title: "NVIDIA / OpenUSD / Omniverse",
-          body: "把 NVIDIA DLI、OpenUSD、Omniverse、Physical AI、Google 認證與 55 個 Agent Skill Labs 整合為公開作品集與學習路線。",
-          tags: ["OpenUSD", "Omniverse", "NVIDIA DLI"],
           color: "#76b900",
           position: [0.8, 2.9, 1.2],
         },
         {
           id: "portfolio",
-          meta: "PUBLIC PORTFOLIO",
-          title: "GitHub / Teaching / 3D Resume",
-          body: "把履歷、AI prompt game tutorial、語言學習、NVIDIA Skill Labs 與互動網頁整合成可展示、可點擊、可延伸的作品集。",
-          tags: ["GitHub", "teaching", "interactive resume"],
           color: "#f4c542",
           position: [0.0, -2.8, -1.0],
         },
       ];
+
+      const copy = {
+        zh: {
+          htmlLang: "zh-Hant",
+          title: "Jerome Kuo | 多語系 3D 視覺履歷",
+          heroKicker: "3D VISUAL RESUME / AI x GPU x GAME x SEMICONDUCTOR",
+          heroTitle: "我的履歷是一座可以旋轉探索的 3D 職涯星圖。",
+          heroLead: "這個互動頁整合我的半導體材料、硬體供應鏈、Web3 遊戲、AI 影音產品、Gamania 數據分析、NVIDIA / Google 認證與 GitHub 作品集，形成可互動的 3D 節點。",
+          primaryCta: "查看作品入口",
+          secondaryCta: "切換 2D 足跡地圖",
+          signals: [
+            ["GPU", "NVIDIA / OpenUSD / Omniverse"],
+            ["AI", "LLM、影像影片、產品工作流"],
+            ["Game", "Web3、NFT、Prasia、用戶行為"],
+            ["IC", "半導體材料與硬體供應鏈"],
+          ],
+          nodeNote: "可拖曳旋轉 3D 場景，點選球體或下方節點切換經歷。",
+          layersTitle: "3D 履歷讀法",
+          layersLead: "我的經歷分成三層：底層是材料與硬體，中層是遊戲與數據，上層是 AI、NVIDIA、OpenUSD 與作品集。",
+          layers: [
+            ["LAYER 01", "Hardware Foundation", "半導體薄膜、電子零組件、CPU / GPU / 主機板供應鏈，讓我能用硬體限制理解 AI 效能與成本。"],
+            ["LAYER 02", "Game + Data Systems", "METASENS、Gamania、Prasia、NFT / Token 與用戶行為分析，建立我對遊戲產品、社群與資料後台的判斷。"],
+            ["LAYER 03", "AI Product Portfolio", "A.V. Mapping、NVIDIA DLI、OpenUSD、Omniverse、AI prompt game tutorial 與 GitHub 作品，呈現可展示的 AI 實作能力。"],
+          ],
+          portfolioTitle: "作品入口",
+          portfolioLead: "這些頁面可以一起放在 LinkedIn Featured，讓觀看者從不同角度理解我的履歷。",
+          resources: [
+            ["履歷足跡地圖", "城市、產業與經歷的 2D 路線版。"],
+            ["55 Skill Labs", "NVIDIA Agent Skills + 8 個精選 README。"],
+            ["AI Prompt Game", "AI prompt、遊戲企劃、素材生成與原型教學。"],
+            ["個人網站", "語言學習、AI 方法、作品與講座入口。"],
+          ],
+          footer: "Jerome Kuo 多語系 3D 視覺履歷 / 適合放在作品集、LinkedIn Featured 與互動式職涯敘事。",
+          nodes: [
+            ["2009-2011 / HSINCHU", "半導體材料與感測研究", "從 TiO2 薄膜、XANES、XRD、ESCA 與磁性分析出發，建立理解晶片材料、薄膜製程、感測元件與 power efficiency 的底層語言。", ["TiO2 thin film", "XRD / XANES / ESCA", "sensor materials"]],
+            ["2014-2018 / SHENZHEN", "電子零組件與硬體供應鏈", "接觸晶圓元件、CPU、GPU、主機板與採購協調，理解硬體產品從規格、成本、交期到品質控管的運作節奏。", ["CPU / GPU", "motherboard", "procurement"]],
+            ["2018-2023 / HONG KONG + SHENZHEN", "Imperium Technology / 資料分析師", "透過 Google Analytics、RFM、retention、tagging、市場研究與競品分析，把資料轉成商業決策與產品規劃可以使用的語言。", ["Google Analytics", "RFM", "market analysis"]],
+            ["2020-2023 / TAIPEI", "METASENS / Web3 Game Project", "參與 Imperium 集團台灣子公司項目，串接 NFT、Token、MetaSnake、社群任務、遊戲化設計與後台數據分析。", ["NFT", "Token", "gamification"]],
+            ["2023-2024 / TAIPEI + BERLIN", "A.V. Mapping / AI Product PM", "負責 AI video / music matching 產品規劃、創作者場景、活動舉辦、AI Pals 與 go-to-market material，並參與 Berlin Film Festival 與 iF Design Award 國際曝光。", ["AI video", "product planning", "Berlinale"]],
+            ["2024-NOW / TAIPEI", "Gamania / AI + Game Data", "整合 AI 到 Google Analytics 數據分析、影片修改、圖片生成、遊戲素材、小遊戲原型、Prasia 與 AI workshop 工作流。", ["game analytics", "AI workflow", "Prasia"]],
+            ["2025-2026 / NVIDIA + GOOGLE", "NVIDIA / OpenUSD / Omniverse", "NVIDIA DLI、OpenUSD、Omniverse、Physical AI、Google 認證與 55 個 Agent Skill Labs，構成我的公開作品集與學習路線。", ["OpenUSD", "Omniverse", "NVIDIA DLI"]],
+            ["PUBLIC PORTFOLIO", "GitHub / Teaching / 3D Resume", "履歷、AI prompt game tutorial、語言學習、NVIDIA Skill Labs 與互動網頁，整合成可展示、可點擊、可延伸的作品集。", ["GitHub", "teaching", "interactive resume"]],
+          ],
+        },
+        en: {
+          htmlLang: "en",
+          title: "Jerome Kuo | Multilingual 3D Visual Resume",
+          heroKicker: "3D VISUAL RESUME / AI x GPU x GAME x SEMICONDUCTOR",
+          heroTitle: "A rotating 3D career constellation for AI, games, data, and hardware.",
+          heroLead: "This page turns my semiconductor research, hardware supply-chain exposure, Web3 game products, AI video/music platforms, Gamania analytics work, NVIDIA / Google certifications, and GitHub portfolio into an interactive 3D resume.",
+          primaryCta: "View Portfolio Links",
+          secondaryCta: "Switch to 2D Footprint Map",
+          signals: [
+            ["GPU", "NVIDIA / OpenUSD / Omniverse"],
+            ["AI", "LLMs, image/video, product workflows"],
+            ["Game", "Web3, NFT, Prasia, user behavior"],
+            ["IC", "Semiconductor materials and hardware supply chain"],
+          ],
+          nodeNote: "Drag to rotate the 3D scene. Select a sphere or node button to inspect each experience.",
+          layersTitle: "How To Read This 3D Resume",
+          layersLead: "The experience is organized into three layers: materials and hardware, games and data systems, then AI, NVIDIA, OpenUSD, and public portfolio work.",
+          layers: [
+            ["LAYER 01", "Hardware Foundation", "Thin-film semiconductor research, electronic components, and CPU / GPU / motherboard supply-chain exposure help me reason about AI performance and cost from hardware constraints."],
+            ["LAYER 02", "Game + Data Systems", "METASENS, Gamania, Prasia, NFT / token operations, and user behavior analytics shaped my product judgment for games, communities, and backend data."],
+            ["LAYER 03", "AI Product Portfolio", "A.V. Mapping, NVIDIA DLI, OpenUSD, Omniverse, AI prompt game tutorials, and GitHub projects convert learning into visible, clickable implementation."],
+          ],
+          portfolioTitle: "Portfolio Entrances",
+          portfolioLead: "These pages can be placed together in LinkedIn Featured so viewers can understand my background from several angles.",
+          resources: [
+            ["Resume Footprint Map", "A 2D route view across cities, industries, and career moves."],
+            ["55 Skill Labs", "NVIDIA Agent Skills plus 8 selected README project directions."],
+            ["AI Prompt Game", "Teaching material for AI prompts, game design, asset generation, and prototyping."],
+            ["Personal Website", "Language learning, AI methods, projects, and lecture entrances."],
+          ],
+          footer: "Jerome Kuo Multilingual 3D Visual Resume / Built for portfolio, LinkedIn Featured, and interactive career storytelling.",
+          nodes: [
+            ["2009-2011 / HSINCHU", "Semiconductor Materials and Sensing Research", "Started from TiO2 thin films, XANES, XRD, ESCA, and magnetic analysis to build a technical language for chip materials, thin-film processes, sensing devices, and power efficiency.", ["TiO2 thin film", "XRD / XANES / ESCA", "sensor materials"]],
+            ["2014-2018 / SHENZHEN", "Electronic Components and Hardware Supply Chain", "Worked around wafer-related components, CPUs, GPUs, motherboards, and procurement coordination, learning how specifications, cost, delivery, and quality control shape hardware products.", ["CPU / GPU", "motherboard", "procurement"]],
+            ["2018-2023 / HONG KONG + SHENZHEN", "Imperium Technology / Data Analyst", "Used Google Analytics, RFM, retention analysis, tagging, market research, and competitor analysis to turn data into business and product planning language.", ["Google Analytics", "RFM", "market analysis"]],
+            ["2020-2023 / TAIPEI", "METASENS / Web3 Game Project", "Worked on Imperium Group's Taiwan subsidiary project across NFT, token, MetaSnake, community missions, gamification design, and backend data analysis.", ["NFT", "Token", "gamification"]],
+            ["2023-2024 / TAIPEI + BERLIN", "A.V. Mapping / AI Product PM", "Planned AI video/music matching product features, creator scenarios, events, AI Pals, and go-to-market materials, supporting Berlin Film Festival and iF Design Award exposure.", ["AI video", "product planning", "Berlinale"]],
+            ["2024-NOW / TAIPEI", "Gamania / AI + Game Data", "Integrated AI into Google Analytics workflows, video revision, image generation, game assets, mini-game prototypes, Prasia, and AI workshop workflows.", ["game analytics", "AI workflow", "Prasia"]],
+            ["2025-2026 / NVIDIA + GOOGLE", "NVIDIA / OpenUSD / Omniverse", "Organized NVIDIA DLI, OpenUSD, Omniverse, Physical AI, Google certifications, and 55 Agent Skill Labs into a public portfolio and learning roadmap.", ["OpenUSD", "Omniverse", "NVIDIA DLI"]],
+            ["PUBLIC PORTFOLIO", "GitHub / Teaching / 3D Resume", "Connected the resume, AI prompt game tutorial, language learning, NVIDIA Skill Labs, and interactive web pages into an expandable public portfolio.", ["GitHub", "teaching", "interactive resume"]],
+          ],
+        },
+        es: {
+          htmlLang: "es",
+          title: "Jerome Kuo | Currículum Visual 3D Multilingüe",
+          heroKicker: "CV VISUAL 3D / AI x GPU x JUEGOS x SEMICONDUCTORES",
+          heroTitle: "Una constelación profesional 3D para IA, videojuegos, datos y hardware.",
+          heroLead: "Esta página convierte mi investigación en semiconductores, experiencia en cadena de suministro de hardware, productos Web3 y videojuegos, plataformas de IA para video/música, análisis de datos en Gamania, certificaciones NVIDIA / Google y proyectos de GitHub en un currículum interactivo 3D.",
+          primaryCta: "Ver portafolio",
+          secondaryCta: "Ver mapa 2D",
+          signals: [
+            ["GPU", "NVIDIA / OpenUSD / Omniverse"],
+            ["IA", "LLM, imagen/video, flujos de producto"],
+            ["Juego", "Web3, NFT, Prasia, comportamiento de usuarios"],
+            ["IC", "Materiales semiconductores y cadena de hardware"],
+          ],
+          nodeNote: "Arrastra para rotar la escena 3D. Selecciona una esfera o un nodo para leer cada experiencia.",
+          layersTitle: "Cómo leer este currículum 3D",
+          layersLead: "La experiencia se organiza en tres capas: materiales y hardware, juegos y sistemas de datos, y finalmente IA, NVIDIA, OpenUSD y portafolio público.",
+          layers: [
+            ["CAPA 01", "Base de hardware", "Investigación de películas delgadas, componentes electrónicos y cadena de suministro CPU / GPU / motherboard para entender rendimiento y costo de IA desde restricciones de hardware."],
+            ["CAPA 02", "Juegos + datos", "METASENS, Gamania, Prasia, NFT / token y analítica de usuarios construyen mi criterio sobre productos de juego, comunidades y datos backend."],
+            ["CAPA 03", "Portafolio de IA", "A.V. Mapping, NVIDIA DLI, OpenUSD, Omniverse, tutoriales de AI prompt game y proyectos GitHub transforman el aprendizaje en implementación visible."],
+          ],
+          portfolioTitle: "Entradas del portafolio",
+          portfolioLead: "Estas páginas pueden colocarse juntas en LinkedIn Featured para mostrar mi trayectoria desde varios ángulos.",
+          resources: [
+            ["Mapa de trayectoria", "Ruta 2D por ciudades, industrias y etapas profesionales."],
+            ["55 Skill Labs", "NVIDIA Agent Skills y 8 README seleccionados."],
+            ["AI Prompt Game", "Material docente sobre prompts, diseño de juegos, generación de assets y prototipos."],
+            ["Sitio personal", "Aprendizaje de idiomas, métodos de IA, proyectos y charlas."],
+          ],
+          footer: "Currículum Visual 3D Multilingüe de Jerome Kuo / Para portafolio, LinkedIn Featured y narrativa profesional interactiva.",
+          nodes: [
+            ["2009-2011 / HSINCHU", "Investigación de materiales semiconductores y sensores", "Base técnica en películas delgadas TiO2, XANES, XRD, ESCA y análisis magnético para comprender materiales de chip, procesos, sensores y eficiencia energética.", ["TiO2 thin film", "XRD / XANES / ESCA", "sensor materials"]],
+            ["2014-2018 / SHENZHEN", "Componentes electrónicos y cadena de hardware", "Experiencia con componentes relacionados con obleas, CPU, GPU, motherboards y compras, conectando especificación, costo, entrega y calidad.", ["CPU / GPU", "motherboard", "procurement"]],
+            ["2018-2023 / HONG KONG + SHENZHEN", "Imperium Technology / Analista de datos", "Uso de Google Analytics, RFM, retención, etiquetas, investigación de mercado y análisis competitivo para convertir datos en planificación de negocio y producto.", ["Google Analytics", "RFM", "market analysis"]],
+            ["2020-2023 / TAIPEI", "METASENS / Proyecto de juego Web3", "Proyecto de subsidiaria taiwanesa de Imperium Group con NFT, token, MetaSnake, misiones comunitarias, gamificación y análisis backend.", ["NFT", "Token", "gamification"]],
+            ["2023-2024 / TAIPEI + BERLIN", "A.V. Mapping / PM de producto IA", "Planificación de producto para matching IA de video/música, escenarios de creadores, eventos, AI Pals y materiales go-to-market, con exposición en Berlinale e iF Design Award.", ["AI video", "product planning", "Berlinale"]],
+            ["2024-AHORA / TAIPEI", "Gamania / IA + datos de juego", "Integración de IA en Google Analytics, revisión de video, generación visual, assets de juego, prototipos de mini-juegos, Prasia y workshops de IA.", ["game analytics", "AI workflow", "Prasia"]],
+            ["2025-2026 / NVIDIA + GOOGLE", "NVIDIA / OpenUSD / Omniverse", "Organización de NVIDIA DLI, OpenUSD, Omniverse, Physical AI, certificaciones Google y 55 Agent Skill Labs como portafolio público y ruta de aprendizaje.", ["OpenUSD", "Omniverse", "NVIDIA DLI"]],
+            ["PORTAFOLIO PÚBLICO", "GitHub / Enseñanza / CV 3D", "Conexión entre currículum, tutorial AI prompt game, aprendizaje de idiomas, NVIDIA Skill Labs y páginas web interactivas.", ["GitHub", "teaching", "interactive resume"]],
+          ],
+        },
+        fr: {
+          htmlLang: "fr",
+          title: "Jerome Kuo | CV Visuel 3D Multilingue",
+          heroKicker: "CV VISUEL 3D / IA x GPU x JEU x SEMICONDUCTEURS",
+          heroTitle: "Une constellation professionnelle 3D pour l'IA, le jeu, la data et le hardware.",
+          heroLead: "Cette page transforme mes expériences en matériaux semi-conducteurs, supply chain hardware, produits Web3 et jeux, plateformes IA vidéo/musique, analyse de données chez Gamania, certifications NVIDIA / Google et projets GitHub en CV interactif 3D.",
+          primaryCta: "Voir le portfolio",
+          secondaryCta: "Voir la carte 2D",
+          signals: [
+            ["GPU", "NVIDIA / OpenUSD / Omniverse"],
+            ["IA", "LLM, image/vidéo, workflows produit"],
+            ["Jeu", "Web3, NFT, Prasia, comportement utilisateur"],
+            ["IC", "Matériaux semi-conducteurs et supply chain hardware"],
+          ],
+          nodeNote: "Faites glisser pour faire tourner la scène 3D. Sélectionnez une sphère ou un noeud pour explorer chaque expérience.",
+          layersTitle: "Comment lire ce CV 3D",
+          layersLead: "Le parcours est organisé en trois couches : matériaux et hardware, jeux et systèmes data, puis IA, NVIDIA, OpenUSD et portfolio public.",
+          layers: [
+            ["COUCHE 01", "Base hardware", "Recherche en couches minces, composants électroniques et supply chain CPU / GPU / cartes mères pour comprendre performance et coût de l'IA via les contraintes matérielles."],
+            ["COUCHE 02", "Jeux + systèmes data", "METASENS, Gamania, Prasia, NFT / token et analyse utilisateur structurent mon jugement produit sur jeux, communautés et données backend."],
+            ["COUCHE 03", "Portfolio produit IA", "A.V. Mapping, NVIDIA DLI, OpenUSD, Omniverse, tutoriel AI prompt game et projets GitHub transforment l'apprentissage en réalisations visibles."],
+          ],
+          portfolioTitle: "Entrées du portfolio",
+          portfolioLead: "Ces pages peuvent être placées dans LinkedIn Featured pour montrer mon profil sous plusieurs angles.",
+          resources: [
+            ["Carte du parcours", "Vue 2D des villes, secteurs et étapes professionnelles."],
+            ["55 Skill Labs", "NVIDIA Agent Skills et 8 directions README sélectionnées."],
+            ["AI Prompt Game", "Support pédagogique pour prompts IA, game design, génération d'assets et prototypage."],
+            ["Site personnel", "Apprentissage des langues, méthodes IA, projets et conférences."],
+          ],
+          footer: "CV Visuel 3D Multilingue de Jerome Kuo / Conçu pour portfolio, LinkedIn Featured et narration professionnelle interactive.",
+          nodes: [
+            ["2009-2011 / HSINCHU", "Recherche matériaux semi-conducteurs et capteurs", "Base technique en films minces TiO2, XANES, XRD, ESCA et analyse magnétique pour comprendre matériaux de puce, procédés, capteurs et efficacité énergétique.", ["TiO2 thin film", "XRD / XANES / ESCA", "sensor materials"]],
+            ["2014-2018 / SHENZHEN", "Composants électroniques et supply chain hardware", "Expérience avec composants liés aux wafers, CPU, GPU, cartes mères et achats, reliant spécifications, coût, livraison et qualité.", ["CPU / GPU", "motherboard", "procurement"]],
+            ["2018-2023 / HONG KONG + SHENZHEN", "Imperium Technology / Data Analyst", "Utilisation de Google Analytics, RFM, rétention, tagging, études de marché et analyse concurrentielle pour transformer les données en langage business et produit.", ["Google Analytics", "RFM", "market analysis"]],
+            ["2020-2023 / TAIPEI", "METASENS / Projet jeu Web3", "Projet de filiale taïwanaise d'Imperium Group couvrant NFT, token, MetaSnake, missions communautaires, gamification et analyse backend.", ["NFT", "Token", "gamification"]],
+            ["2023-2024 / TAIPEI + BERLIN", "A.V. Mapping / PM produit IA", "Planification produit pour matching IA vidéo/musique, scénarios créateurs, événements, AI Pals et supports go-to-market, avec exposition Berlinale et iF Design Award.", ["AI video", "product planning", "Berlinale"]],
+            ["2024-AUJOURD'HUI / TAIPEI", "Gamania / IA + données de jeu", "Intégration de l'IA dans Google Analytics, révision vidéo, génération visuelle, assets de jeu, prototypes mini-jeux, Prasia et workshops IA.", ["game analytics", "AI workflow", "Prasia"]],
+            ["2025-2026 / NVIDIA + GOOGLE", "NVIDIA / OpenUSD / Omniverse", "Organisation de NVIDIA DLI, OpenUSD, Omniverse, Physical AI, certifications Google et 55 Agent Skill Labs en portfolio public et feuille de route d'apprentissage.", ["OpenUSD", "Omniverse", "NVIDIA DLI"]],
+            ["PORTFOLIO PUBLIC", "GitHub / Enseignement / CV 3D", "Connexion entre CV, tutoriel AI prompt game, apprentissage linguistique, NVIDIA Skill Labs et pages web interactives.", ["GitHub", "teaching", "interactive resume"]],
+          ],
+        },
+      };
+
+      let currentLang = new URLSearchParams(window.location.search).get("lang") || "zh";
+      if (!copy[currentLang]) currentLang = "zh";
+      let nodes = [];
 
       const nodeMeta = document.querySelector("#nodeMeta");
       const nodeTitle = document.querySelector("#nodeTitle");
@@ -655,27 +819,96 @@
       const nodeTags = document.querySelector("#nodeTags");
       const nodeList = document.querySelector("#nodeList");
       const fallback = document.querySelector("#fallback3d");
+      const langButtons = [...document.querySelectorAll(".lang-button")];
       let selectedIndex = 0;
       let selectNode = () => {};
 
+      function buildNodes(lang) {
+        return nodeGeometry.map((node, index) => {
+          const [meta, title, body, tags] = copy[lang].nodes[index];
+          return { ...node, meta, title, body, tags };
+        });
+      }
+
+      function setText(id, value) {
+        const element = document.querySelector(`#${id}`);
+        if (element) element.textContent = value;
+      }
+
       function renderNodePanel(index) {
-        selectedIndex = index;
-        const node = nodes[index];
+        selectedIndex = Math.max(0, Math.min(index, nodes.length - 1));
+        const node = nodes[selectedIndex];
+        if (!node) return;
         nodeMeta.textContent = node.meta;
         nodeTitle.textContent = node.title;
         nodeBody.textContent = node.body;
         nodeTags.innerHTML = node.tags.map((tag) => `<span class="tag">${tag}</span>`).join("");
         [...nodeList.querySelectorAll("button")].forEach((button, buttonIndex) => {
-          button.classList.toggle("active", buttonIndex === index);
+          button.classList.toggle("active", buttonIndex === selectedIndex);
         });
       }
 
-      nodeList.innerHTML = nodes.map((node, index) => `<button class="node-button${index === 0 ? " active" : ""}" data-index="${index}">${node.title}</button>`).join("");
+      function applyLanguage(lang, updateUrl = true) {
+        currentLang = copy[lang] ? lang : "zh";
+        const data = copy[currentLang];
+        nodes = buildNodes(currentLang);
+
+        document.documentElement.lang = data.htmlLang;
+        document.title = data.title;
+        setText("heroKicker", data.heroKicker);
+        setText("heroTitle", data.heroTitle);
+        setText("heroLead", data.heroLead);
+        setText("primaryCta", data.primaryCta);
+        setText("secondaryCta", data.secondaryCta);
+        data.signals.forEach(([title, body], index) => {
+          setText(`signal${index}Title`, title);
+          setText(`signal${index}Body`, body);
+        });
+        setText("nodeNote", data.nodeNote);
+        setText("layersTitle", data.layersTitle);
+        setText("layersLead", data.layersLead);
+        data.layers.forEach(([label, title, body], index) => {
+          setText(`layer${index}Label`, label);
+          setText(`layer${index}Title`, title);
+          setText(`layer${index}Body`, body);
+        });
+        setText("portfolioTitle", data.portfolioTitle);
+        setText("portfolioLead", data.portfolioLead);
+        data.resources.forEach(([title, body], index) => {
+          setText(`resource${index}Title`, title);
+          setText(`resource${index}Body`, body);
+        });
+        setText("footerText", data.footer);
+
+        langButtons.forEach((button) => {
+          const isActive = button.dataset.lang === currentLang;
+          button.classList.toggle("active", isActive);
+          button.setAttribute("aria-pressed", String(isActive));
+        });
+
+        nodeList.innerHTML = nodes
+          .map((node, index) => `<button class="node-button${index === selectedIndex ? " active" : ""}" data-index="${index}">${node.title}</button>`)
+          .join("");
+        renderNodePanel(selectedIndex);
+
+        if (updateUrl) {
+          const url = new URL(window.location.href);
+          url.searchParams.set("lang", currentLang);
+          window.history.replaceState({}, "", url);
+        }
+      }
+
+      langButtons.forEach((button) => {
+        button.addEventListener("click", () => applyLanguage(button.dataset.lang));
+      });
+
       nodeList.addEventListener("click", (event) => {
         const button = event.target.closest("button[data-index]");
         if (!button) return;
         selectNode(Number(button.dataset.index));
       });
+
+      applyLanguage(currentLang, false);
 
       try {
         const THREE = await import("https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js");
