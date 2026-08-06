@@ -1,3 +1,7 @@
+Exit code: 0
+Wall time: 5.4 seconds
+Total output lines: 1158
+Output:
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
@@ -169,6 +173,15 @@ for (const [name, size, position, material, rotation] of buildings) {
 }
 
 buildingMeshes.get("行政大樓").userData.landmark = "administration";
+for (const name of ["工程一館", "工程二館", "工程三館", "工程四館", "工程五館", "工程六館", "電子資訊研究大樓"]) {
+  buildingMeshes.get(name).userData.landmark = "engineering";
+}
+for (const name of ["學生宿舍九舍", "學生宿舍十舍", "學生宿舍十一舍", "學生宿舍十二舍", "學生宿舍十三舍", "竹軒女舍"]) {
+  buildingMeshes.get(name).userData.landmark = "residence";
+}
+buildingMeshes.get("綜合球館").userData.landmark = "sports";
+track.userData.landmark = "sports";
+athleticField.userData.landmark = "sports";
 
 box("北大門北柱", [1.8, 5.5, 3.2], [62, 2.75, 27.5], materials.landmark, 0);
 box("北大門南柱", [1.8, 5.5, 3.2], [62, 2.75, 16.5], materials.landmark, 0);
@@ -204,6 +217,27 @@ const landmarkData = {
     alt: "交通大學光復校區行政大樓歷史照片",
     description: "行政大樓位於竹湖更內側，是光復校區早期行政核心，與中正堂、圖書館共同構成北大門進校後的重要建築群。照片為 1981 年官方典藏。",
     source: "https://nctuhistory.lib.nycu.edu.tw/search_solution.aspx?search_mode=1&search_val=%E8%A1%8C%E6%94%BF%E5%A4%A7%E6%A8%93"
+  },
+  engineering: {
+    title: "工程館群",
+    image: "https://nctuhistory.lib.nycu.edu.tw/collectionImg/306-1969-0003-1860001.jpg",
+    alt: "交通大學光復校區工程一館落成啟用照片",
+    description: "工程一至六館集中在光復校區中央，是校園工程研究與教學的重要聚落。照片為工程一館 1980 年落成啟用的陽明交大官方典藏。",
+    source: "https://nctuhistory.lib.nycu.edu.tw/list_detail.aspx?cultID=8826&search_mode=1&search_val=%E5%B7%A5%E7%A8%8B%E4%B8%80%E9%A4%A8&url=4"
+  },
+  residence: {
+    title: "學生宿舍區",
+    image: "https://museum.lib.nycu.edu.tw/wp-content/uploads/2020/07/1984_0001-1024x685.jpg",
+    alt: "陽明交大光復校區學生第九宿舍照片",
+    description: "光復校區宿舍群分布於校園生活區。學生第九宿舍於 1984 年竣工啟用，之後陸續形成九至十三舍等宿舍聚落。照片來自陽明交大發展館典藏。",
+    source: "https://osa.nycu.edu.tw/osa/ch/app/data/view?id=3481&module=nycu0099&serno=9782c8cd-f0af-4d27-a63c-e61c81b13fdc"
+  },
+  sports: {
+    title: "田徑場與運動區",
+    image: "https://museum.lib.nycu.edu.tw/wp-content/uploads/2020/07/1982_0006-1024x685.jpg",
+    alt: "光復校區體育館與運動區照片",
+    description: "光復校區田徑場與游泳池於 1982 年竣工啟用，鄰近綜合球館及戶外球場，形成校園主要運動區。照片為陽明交大發展館典藏的體育館現況。",
+    source: "https://museum.lib.nycu.edu.tw/?page_id=936"
   }
 };
 
@@ -212,7 +246,14 @@ const detailTitle = document.querySelector("#detail-title");
 const detailImage = document.querySelector("#detail-image");
 const detailDescription = document.querySelector("#detail-description");
 const detailSource = document.querySelector("#detail-source");
-const interactiveLandmarks = [lake, buildingMeshes.get("行政大樓")];
+const interactiveLandmarks = [
+  lake,
+  track,
+  athleticField,
+  buildingMeshes.get("行政大樓"),
+  buildingMeshes.get("綜合球館"),
+  ...[...buildingMeshes.values()].filter((mesh) => ["engineering", "residence"].includes(mesh.userData.landmark))
+];
 
 function showLandmark(key) {
   const data = landmarkData[key];
@@ -345,7 +386,7 @@ const tourRoutes = {
     points: [[32, 6, -4], [25, 5, -2], [18, 5, 3], [7, 5, 6], [-5, 5, 8], [-16, 5, 10], [-24, 5, 10], [-18, 5, 6], [-9, 5, 0], [-2, 5, -7], [-1, 5, -13], [-7, 5, -5], [-18, 5, -3], [-29, 5, -3]],
     stops: [
       { title: "浩然圖書館", progress: 0, narration: "工程館群導覽從浩然圖書館東側出發，沿中央教學區道路往西進入主要工程館區。" },
-      { title: "工程一館", progress: 0.42, narration: "工程一館位於工程館群北側，周圍連接科學館群與校園中央道路，是工程教學區的重要入口。" },
+      { title: "工程一館", progress: 0.42, landmark: "engineering", narration: "工程一館位於工程館群北側，周圍連接科學館群與校園中央道路，是工程教學區的重要入口。" },
       { title: "工程二館", progress: 0.72, narration: "工程二館位於工程館群南側，與管理一館及工程三館共同形成中央偏南的教學區。" },
       { title: "工程六館", progress: 1, narration: "工程六館位於工程館群西南側。從此處可沿內環道路前往其他工程館與南側生活區。" }
     ],
@@ -357,103 +398,43 @@ const tourRoutes = {
     points: [[60, 5, 22], [55, 5, 28], [50, 5, 36], [42, 5, 46], [32, 5, 49], [26, 5, 49], [19, 5, 49], [12, 5, 49], [18, 5, 43], [20, 5, 30], [20, 5, 15], [18, 5, 0], [15, 5, -15], [8, 5, -28], [0, 5, -40], [-12, 5, -52]],
     stops: [
       { title: "北大門", progress: 0, narration: "宿舍生活區導覽從北大門內側出發，先沿東側道路前往校園北側的學生宿舍。" },
-      { title: "學生宿舍十一舍", progress: 0.22, narration: "十一舍位於校園東北側，鄰近竹湖與北側生活動線，是北側宿舍群的第一站。" },
+      { title: "學生宿舍十一舍", progress: 0.22, landmark: "residence", narration: "十一舍位於校園東北側，鄰近竹湖與北側生活動線，是北側宿舍群的第一站。" },
       { title: "學生宿舍九、十舍", progress: 0.48, narration: "九舍與十舍並列於校園北側，周圍連接餐飲、運動及中央教學區的步行路線。" },
       { title: "學生餐廳", progress: 1, narration: "學生餐廳位於校園南側生活區，鄰近南側宿舍與主要步道，宿舍生活區導覽在此完成。" }
     ],
     durations: [7, 7, 12],
-    endTarget: [-12, 2.5, -43]
-  },
-  sports: {
-    label: "運動區",
-    points: [[32, 6, -4], [23, 5, 3], [12, 5, 12], [0, 5, 23], [-10, 5, 34], [-18, 5, 42], [-23, 5, 52], [-32, 5, 49], [-40, 5, 47], [-45, 5, 50]],
-    stops: [
-      { title: "浩然圖書館", progress: 0, narration: "運動區導覽從浩然圖書館出發，沿中央道路往校園西北側前進。" },
-      { title: "綜合球館", progress: 0.65, narration: "綜合球館位於校園北側，是室內球類、訓練與大型活動的重要場地。" },
-      { title: "田徑場", progress: 1, narration: "田徑場位於綜合球館西側，包含環形跑道與中央運動場，本次運動區導覽在此完成。" }
-    ],
-    durations: [10, 7],
-    endTarget: [-45, 1, 38]
-  }
-};
-
-const walkTourButton = document.querySelector("#walk-tour");
-const tourGuide = document.querySelector("#tour-guide");
-const tourStep = document.querySelector("#tour-step");
-const tourTitle = document.querySelector("#tour-title");
-const tourNarration = document.querySelector("#tour-narration");
-const tourPercent = document.querySelector("#tour-percent");
-const tourProgress = document.querySelector(".tour-progress");
-const tourProgressFill = document.querySelector("#tour-progress-fill");
-const tourPauseButton = document.querySelector("#tour-pause");
-const tourAudioButton = document.querySelector("#tour-audio");
-const tourExitButton = document.querySelector("#tour-exit");
-const tourMapRoute = document.querySelector("#tour-map-route");
-const tourMapStations = document.querySelector("#tour-map-stations");
-const tourMapPosition = document.querySelector("#tour-map-position");
-const tourMapStatus = document.querySelector("#tour-map-status");
-const tourMapStops = document.querySelector("#tour-map-stops");
-const tourStationLabels = document.querySelector("#tour-station-labels");
-const tourRouteSelect = document.querySelector("#tour-route-select");
-const tourMapSvg = document.querySelector("#tour-map-svg");
-const navNextStop = document.querySelector("#nav-next-stop");
-const navDistance = document.querySelector("#nav-distance");
-const navTime = document.querySelector("#nav-time");
-const navTurn = document.querySelector("#nav-turn");
-const freeWalkButton = document.querySelector("#free-walk");
-const freeWalkControls = document.querySelector("#free-walk-controls");
-const tourStopDuration =…198 tokens truncated…
-  lookLeft: false,
-  lookRight: false
-};
-
-function createTourCurve(points) {
-  return new THREE.CatmullRomCurve3(points.map((point) => new THREE.Vector3(...point)), false, "catmullrom", 0.45);
-}
-
-function projectTourPoint(point) {
-  return {
-    x: 20 + (point.x + 66) * (220 / 148),
-    y: 16 + (51 - point.z) * (148 / 105)
-  };
-}
-
-function setNavigationReadout(stopTitle, distanceMeters, direction) {
-  navNextStop.textContent = stopTitle;
-  navDistance.textContent = distanceMeters < 10 ? `${Math.round(distanceMeters)} m` : `${Math.round(distanceMeters / 10) * 10} m`;
-  navTime.textContent = distanceMeters < 10 ? "已抵達" : `${Math.max(1, Math.ceil(distanceMeters / walkingMetersPerMinute))} 分`;
-  navTurn.textContent = distanceMeters < 10 ? "已抵達" : direction;
-}
-
-function directionFromAngle(angleRadians) {
-  const angle = THREE.MathUtils.radToDeg(angleRadians);
-  if (Math.abs(angle) > 150) return "迴轉";
-  if (angle > 15) return "向右";
-  if (angle < -15) return "向左";
-  return "直行";
-}
-
-function routeTurnDirection(progress) {
-  const currentTangent = walkTourCurve.getTangentAt(Math.min(progress, 0.995)).setY(0).normalize();
-  const futureTangent = walkTourCurve.getTangentAt(Math.min(progress + 0.055, 0.999)).setY(0).normalize();
-  const angle = Math.atan2(
-    currentTangent.x * futureTangent.z - currentTangent.z * futureTangent.x,
-    currentTangent.dot(futureTangent)
-  );
-  return directionFromAngle(angle);
-}
-
-function updateTourNavigation(progress) {
-  const targetIndex = tourStopIndex >= tourStops.length - 1
-    ? tourStops.length - 1
-    : tourStopIndex + 1;
-  const targetStop = tourStops[targetIndex];
-  const remainingProgress = Math.max(0, targetStop.progress - progress);
-  const distanceMeters = walkTourCurve.getLength() * remainingProgress * metersPerUnit;
+    endTarget: [-12,…2365 tokens truncated…th() * remainingProgress * metersPerUnit;
   setNavigationReadout(targetStop.title, distanceMeters, routeTurnDirection(progress));
 }
 
 function updateFreeWalkNavigation() {
+  if (customNavigation) {
+    let targetPoint = customNavigation.points[customNavigation.index];
+    let toTarget = targetPoint.clone().sub(camera.position).setY(0);
+    let distanceMeters = toTarget.length() * metersPerUnit;
+    if (distanceMeters < 10 && customNavigation.index < customNavigation.points.length - 1) {
+      customNavigation.index += 1;
+      targetPoint = customNavigation.points[customNavigation.index];
+      toTarget = targetPoint.clone().sub(camera.position).setY(0);
+      distanceMeters = toTarget.length() * metersPerUnit;
+    }
+    const forward = new THREE.Vector3();
+    camera.getWorldDirection(forward);
+    forward.setY(0).normalize();
+    const targetDirection = toTarget.lengthSq() > 0 ? toTarget.normalize() : forward;
+    const angle = Math.atan2(
+      forward.x * targetDirection.z - forward.z * targetDirection.x,
+      forward.dot(targetDirection)
+    );
+    const mapPoint = projectTourPoint(camera.position);
+    tourMapPosition.setAttribute("cx", mapPoint.x.toFixed(1));
+    tourMapPosition.setAttribute("cy", mapPoint.y.toFixed(1));
+    const arrived = customNavigation.index === customNavigation.points.length - 1 && distanceMeters < 10;
+    tourMapStatus.textContent = arrived ? `已抵達：${customNavigation.title}` : `前往：${customNavigation.title}`;
+    setNavigationReadout(customNavigation.title, distanceMeters, directionFromAngle(angle));
+    if (arrived && customNavigation.landmark && detailPanel.hidden) showLandmark(customNavigation.landmark);
+    return;
+  }
   const targetStop = tourStops[freeWalkTargetIndex];
   const targetPoint = walkTourCurve.getPointAt(targetStop.progress);
   const toTarget = targetPoint.clone().sub(camera.position).setY(0);
@@ -597,6 +578,7 @@ function completeWalkTour() {
 }
 
 function startWalkTour() {
+  clearSearchNavigation();
   stopFreeWalk();
   walkTourActive = true;
   walkTourPaused = false;
@@ -729,6 +711,7 @@ function updateFreeWalk(delta) {
 }
 
 function jumpToTourStop(index) {
+  clearSearchNavigation();
   stopFreeWalk();
   walkTourActive = true;
   walkTourPaused = true;
@@ -750,6 +733,7 @@ function jumpToTourStop(index) {
 }
 
 function switchTourRoute(key) {
+  clearSearchNavigation();
   stopFreeWalk();
   stopWalkTour();
   currentRouteKey = key;
@@ -766,6 +750,7 @@ function switchTourRoute(key) {
 }
 
 function setView(key) {
+  clearSearchNavigation();
   stopFreeWalk();
   stopWalkTour();
   camera.position.set(...views[key].camera);
@@ -814,6 +799,10 @@ tourMapStops.addEventListener("click", (event) => {
   if (button) jumpToTourStop(Number(button.dataset.tourStop));
 });
 tourRouteSelect.addEventListener("change", () => switchTourRoute(tourRouteSelect.value));
+buildingSearch.addEventListener("submit", (event) => {
+  event.preventDefault();
+  planRouteToBuilding(buildingSearchInput.value.trim());
+});
 
 const freeWalkKeyMap = {
   KeyW: "forward",
