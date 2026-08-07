@@ -1,7 +1,3 @@
-Exit code: 0
-Wall time: 5.4 seconds
-Total output lines: 1158
-Output:
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
