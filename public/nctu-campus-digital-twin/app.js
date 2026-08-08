@@ -1,5 +1,5 @@
-import * as THREE from "https://unpkg.com/three@0.161.0/build/three.module.js";
-import { OrbitControls } from "https://unpkg.com/three@0.161.0/examples/jsm/controls/OrbitControls.js";
+import * as THREE from "./vendor/three.module.js";
+import { OrbitControls } from "./vendor/OrbitControls.js";
 
 const canvas = document.querySelector("#campus-canvas");
 const scene = new THREE.Scene();
@@ -396,7 +396,10 @@ const tourRoutes = {
       { title: "北大門", progress: 0, narration: "宿舍生活區導覽從北大門內側出發，先沿東側道路前往校園北側的學生宿舍。" },
       { title: "學生宿舍十一舍", progress: 0.22, landmark: "residence", narration: "十一舍位於校園東北側，鄰近竹湖與北側生活動線，是北側宿舍群的第一站。" },
       { title: "學生宿舍九、十舍", progress: 0.48, narration: "九舍與十舍並列於校園北側，周圍連接餐飲、運動及中央教學區的步行路線。" },
-      { title: "學生餐廳", progress: 1, narration: "學生餐廳位於校園南側生活區，鄰近南側宿舍與主要步道，宿舍生活…2385 tokens truncated…th() * remainingProgress * metersPerUnit;
+      { title: "學生餐廳", progress: 1, narration: "學生餐廳位於校園南側生活區，鄰近南側宿舍與主要步道，宿舍生活區導覽在此完成。" }
+    ],
+    durations: [7, 7, 12],
+    endTarget:…2366 tokens truncated…th() * remainingProgress * metersPerUnit;
   setNavigationReadout(targetStop.title, distanceMeters, routeTurnDirection(progress));
 }
 
