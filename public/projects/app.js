@@ -318,8 +318,24 @@ const projects = [
 
 const app = document.querySelector("#projectApp")
 const categoryFromPage = document.body.dataset.category || "all"
+const PROJECT_FAVORITES_KEY = "jjfishjj:projects:favorites"
 let currentCategory = categories.some((category) => category.id === categoryFromPage) ? categoryFromPage : "all"
 let query = ""
+let favoritesOnly = false
+let favoriteIds = readFavorites()
+
+function readFavorites() {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(PROJECT_FAVORITES_KEY) || "[]")
+    return new Set(Array.isArray(parsed) ? parsed : [])
+  } catch {
+    return new Set()
+  }
+}
+
+function projectId(project) {
+  return project.url || project.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")
+}
 
 function getCategory(id) {
   return categories.find((category) => category.id === id) || categories[0]
@@ -334,7 +350,8 @@ function getVisibleProjects() {
   return projects.filter((project) => {
     const categoryMatch = currentCategory === "all" || project.category === currentCategory
     const text = [project.title, project.type, project.description, project.tags.join(" ")].join(" ").toLowerCase()
-    return categoryMatch && (!normalized || text.includes(normalized))
+    const favoriteMatch = !favoritesOnly || favoriteIds.has(projectId(project))
+    return categoryMatch && favoriteMatch && (!normalized || text.includes(normalized))
   })
 }
 
@@ -357,6 +374,8 @@ function renderProject(project) {
   const category = getCategory(project.category)
   const demoLink = project.demo ? `<a class="project-link" href="${project.demo}" target="_blank" rel="noreferrer">查看展示</a>` : ""
   const repoLink = project.repo ? `<a class="project-link" href="${project.repo}" target="_blank" rel="noreferrer">GitHub</a>` : ""
+  const id = projectId(project)
+  const isFavorite = favoriteIds.has(id)
   return `
     <article class="project-card">
       <div>
@@ -368,7 +387,7 @@ function renderProject(project) {
           ${project.tags.map((tag) => `<span class="tag">${tag}</span>`).join("")}
         </div>
       </div>
-      <div class="project-actions">${demoLink}${repoLink}</div>
+      <div class="project-actions">${demoLink}${repoLink}<button class="project-link favorite-project${isFavorite ? " active" : ""}" type="button" data-project-id="${id}">${isFavorite ? "★ 已收藏" : "☆ 收藏"}</button></div>
     </article>
   `
 }
@@ -395,6 +414,7 @@ function render() {
             <div class="summary-stat"><strong>${projects.length}</strong><span>整理專案</span></div>
             <div class="summary-stat"><strong>${categories.length - 1}</strong><span>專案分類</span></div>
             <div class="summary-stat"><strong>${projects.filter((project) => project.demo).length}</strong><span>可看展示</span></div>
+            <div class="summary-stat"><strong>${favoriteIds.size}</strong><span>已收藏</span></div>
           </div>
         </aside>
       </div>
@@ -414,9 +434,9 @@ function render() {
           <p>${selected.id === "all" ? "這裡先把作品集用主題分類，之後新增 repo 或 demo 時，只要加入對應分類就能維持清楚。" : selected.intro}</p>
         </div>
 
-        <div class="toolbar">
+          <div class="toolbar">
           <input class="search" type="search" placeholder="搜尋專案、技術或用途" value="${query}" aria-label="搜尋專案" />
-          <span class="count">${visible.length} / ${projects.length} 個專案</span>
+          <div class="toolbar-actions"><button class="saved-filter${favoritesOnly ? " active" : ""}" type="button">★ ${favoritesOnly ? "顯示全部" : "只看收藏"}</button><span class="count">${visible.length} / ${projects.length} 個專案</span></div>
         </div>
 
         ${
@@ -432,6 +452,22 @@ function render() {
     query = event.target.value
     render()
     app.querySelector(".search")?.focus()
+  })
+
+  app.querySelector(".saved-filter")?.addEventListener("click", () => {
+    favoritesOnly = !favoritesOnly
+    render()
+  })
+
+  app.querySelectorAll("[data-project-id]").forEach((button) => {
+    button.addEventListener("click", (event) => {
+      event.preventDefault()
+      const id = button.dataset.projectId
+      if (favoriteIds.has(id)) favoriteIds.delete(id)
+      else favoriteIds.add(id)
+      localStorage.setItem(PROJECT_FAVORITES_KEY, JSON.stringify([...favoriteIds]))
+      render()
+    })
   })
 }
 

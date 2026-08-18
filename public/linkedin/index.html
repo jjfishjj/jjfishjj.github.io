@@ -355,6 +355,39 @@
         line-height: 1.5;
       }
 
+      .skill-workspace {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 22px;
+        margin-top: 14px;
+        border: 1px solid rgba(118, 185, 0, 0.28);
+        border-radius: 14px;
+        padding: 20px 22px;
+        background: linear-gradient(135deg, rgba(118, 185, 0, 0.11), rgba(19, 26, 36, 0.82));
+      }
+
+      .skill-workspace h3 {
+        margin: 8px 0;
+        font-size: 19px;
+      }
+
+      .skill-workspace p {
+        max-width: 680px;
+        margin: 0;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.7;
+      }
+
+      .workspace-actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 8px;
+        flex-shrink: 0;
+      }
+
       .dashboard {
         display: grid;
         grid-template-columns: minmax(0, 1.2fr) minmax(300px, 0.8fr);
@@ -676,6 +709,7 @@
         .hero-grid,
         .section-head,
         .dashboard,
+        .skill-workspace,
         .sim-lab,
         .experience-grid,
         .outcomes {
@@ -699,6 +733,15 @@
 
         .stats-grid {
           grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .skill-workspace {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        .workspace-actions {
+          justify-content: flex-start;
         }
       }
 
@@ -752,7 +795,8 @@
       <div class="shell topbar-inner">
         <a class="brand" href="/">Kuo Jun Bin <span>/ Jerome</span></a>
         <nav class="nav" aria-label="主要連結">
-          <a href="/">首頁</a>
+          <a href="/">案例庫</a>
+          <a href="/projects/">作品集</a>
           <a href="#interactive-3d">3D Lab</a>
           <a href="/ai-prompt-game-tutorial/">AI 遊戲教學</a>
           <a href="/lectures/">語言講座</a>
@@ -776,8 +820,9 @@
               語言學習講座規劃與 LinkedIn profile，呈現可旋轉、可探索的跨領域作品集。
             </p>
             <div class="actions">
-              <a class="button primary" href="https://www.linkedin.com/in/kuo-jun-bin-%EC%A4%80%EB%B9%88-jerome-0a224490/" target="_blank" rel="noreferrer">查看我的 LinkedIn 履歷</a>
-              <a class="button secondary" href="https://github.com/jjfishjj" target="_blank" rel="noreferrer">查看我的 GitHub 專案</a>
+              <a class="button primary" href="/" >探索 NVIDIA 案例庫</a>
+              <a class="button secondary" href="/projects/">查看我的作品集</a>
+              <a class="button secondary" href="https://www.linkedin.com/in/kuo-jun-bin-%EC%A4%80%EB%B9%88-jerome-0a224490/" target="_blank" rel="noreferrer">查看 LinkedIn 履歷</a>
             </div>
           </div>
 
@@ -817,18 +862,18 @@
               <h2>公開成果數據</h2>
             </div>
             <p>
-              這些數據來自公開網站與 GitHub 可確認資料，協助訪客快速理解我的經驗密度與技術分布。
+              這些數據來自公開網站與 GitHub 可確認資料；新版案例庫也提供搜尋、收藏、比較與詳細頁，協助訪客從經驗摘要進一步閱讀實作脈絡。
             </p>
           </div>
 
           <div class="stats-grid">
             <div class="stat">
-              <div class="value">55</div>
-              <div class="label">NVIDIA Agent Skills 案例整理</div>
+                <div class="value">63</div>
+                <div class="label">NVIDIA Agent Skills 案例整理</div>
             </div>
             <div class="stat">
-              <div class="value">7</div>
-              <div class="label">AI / GPU 技術分類</div>
+                <div class="value">9</div>
+                <div class="label">AI / GPU 技術分類</div>
             </div>
             <div class="stat">
               <div class="value">21</div>
@@ -843,6 +888,17 @@
               <div class="label">經驗主題展示卡</div>
             </div>
           </div>
+          <div class="skill-workspace">
+            <div>
+              <div class="eyebrow">Skill Workspace</div>
+              <h3>從履歷摘要進入可操作的技術案例。</h3>
+              <p>首頁現在支援分類、搜尋、案例詳細頁與最多三案比較；收藏會保留在你的瀏覽器中，適合整理面試、研究或下一個 prototype 的閱讀清單。</p>
+            </div>
+            <div class="workspace-actions">
+              <a class="button primary" href="/#case-dashboard">查看案例統計</a>
+              <a class="button secondary" href="/#case-grid">開始收藏案例</a>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -854,7 +910,7 @@
               <h2>技術經驗分布</h2>
             </div>
             <p>
-              下面用已整理的 55 個案例做技術分布視覺化，最高值為 AI / LLM 的 12 個案例。
+              下面用已整理的 63 個案例做技術分布視覺化，最高值為 AI / LLM 的 12 個案例。
             </p>
           </div>
 
@@ -1084,7 +1140,7 @@
               <div>
 	                <h3>NVIDIA Agent Skills showcase</h3>
 	                <p>
-	                  我建立 55 個案例的搜尋式展示頁，讓讀者能按技術領域理解 NVIDIA AI tooling 的實際應用。
+	                  我建立 63 個案例的搜尋式展示頁，讓讀者能按技術領域理解 NVIDIA AI tooling 的實際應用。
 	                </p>
               </div>
             </div>

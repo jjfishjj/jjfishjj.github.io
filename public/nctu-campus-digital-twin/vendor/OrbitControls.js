@@ -1,3 +1,4 @@
+/* eslint-disable */
 import {
 	EventDispatcher,
 	MOUSE,
@@ -1504,4 +1505,3 @@ class OrbitControls extends EventDispatcher {
 }
 
 export { OrbitControls };
-
