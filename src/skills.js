@@ -2,7 +2,90 @@
 const mk = (skill) =>
   `npx skills add nvidia/skills --skill ${skill} --agent claude-code`
 
-export const SKILLS = [
+const EXTENDED_SKILLS = [
+  {
+    cat: 'agent', icon: '🧩', title: 'Agentic RAG 編排', skill: 'agentic-rag-orchestration',
+    desc: '多步驟 agent — 檢索、工具呼叫與來源引用協作',
+    scenario: '讓研究型 agent 先規劃問題，再呼叫檢索與計算工具，最後輸出帶來源的可追溯答案。',
+    cmd: 'npx skills add nvidia/skills --skill agentic-rag-orchestration --agent claude-code',
+    tags: ['Agent', 'RAG', 'Tool Use'], level: '進階',
+    focus: '把單輪問答拆成可觀測、可重試的工具鏈。',
+    outcomes: ['可追蹤每一步工具呼叫', '降低無來源回答', '支援失敗重試與人工接管'],
+    prerequisites: '熟悉 RAG、function calling 與基本服務編排。',
+  },
+  {
+    cat: 'agent', icon: '🛡️', title: 'Agent Guardrails', skill: 'agent-guardrails',
+    desc: 'AI agent 安全邊界 — policy、權限與敏感資料防護',
+    scenario: '為企業 agent 設定可允許的工具、資料範圍與敏感資訊遮罩，讓自動化流程可被治理。',
+    cmd: 'npx skills add nvidia/skills --skill agent-guardrails --agent claude-code',
+    tags: ['Safety', 'Policy', 'Governance'], level: '進階',
+    focus: '以最小權限原則設計 agent 的執行邊界。',
+    outcomes: ['工具權限白名單', '敏感內容過濾', '政策違規事件記錄'],
+    prerequisites: '了解 API 權限、審計紀錄與基本威脅模型。',
+  },
+  {
+    cat: 'agent', icon: '📡', title: 'Agent Observability', skill: 'agent-observability',
+    desc: 'Agent 可觀測性 — latency、token、工具成功率與成本',
+    scenario: '將 agent 每一步的延遲、token 消耗、工具失敗率與使用者回饋整理成可行動的營運指標。',
+    cmd: 'npx skills add nvidia/skills --skill agent-observability --agent claude-code',
+    tags: ['Observability', 'Latency', 'Cost'], level: '中階',
+    focus: '從 trace 與 metrics 找出 agent 體驗與成本瓶頸。',
+    outcomes: ['建立請求級 trace', '比較模型與 prompt 成本', '定位工具失敗熱點'],
+    prerequisites: '具備基本 logging、metrics 與服務監控概念。',
+  },
+  {
+    cat: 'agent', icon: '🧪', title: 'Agent Evaluation', skill: 'agent-evaluation',
+    desc: 'Agent 評估 — 任務成功率、引用正確性與安全測試',
+    scenario: '建立可重複的測試集，評估 agent 是否完成任務、正確引用資料並遵守安全政策。',
+    cmd: 'npx skills add nvidia/skills --skill agent-evaluation --agent claude-code',
+    tags: ['Evaluation', 'Quality', 'Red Team'], level: '進階',
+    focus: '把主觀 demo 轉成可回歸的品質門檻。',
+    outcomes: ['任務成功率基準', '引用與答案品質分數', '安全回歸測試報告'],
+    prerequisites: '了解測試資料集、評分規則與模型輸出評估。',
+  },
+  {
+    cat: 'data', icon: '🚀', title: 'Triton 推論服務', skill: 'triton-inference-serving',
+    desc: '模型服務化 — batching、ensemble 與 GPU 資源配置',
+    scenario: '把訓練完成的視覺模型包成 Triton inference server，依流量調整 dynamic batching 與模型併行。',
+    cmd: 'docker run --gpus all --rm -p 8000:8000 nvcr.io/nvidia/tritonserver:latest',
+    tags: ['Triton', 'Serving', 'Batching'], level: '進階',
+    focus: '在延遲、吞吐量與 GPU 使用率間找到服務平衡。',
+    outcomes: ['可觀測的 inference endpoint', '可調整 batch 策略', '支援多模型 ensemble'],
+    prerequisites: '熟悉 Docker、REST/gRPC API 與模型輸入輸出格式。',
+  },
+  {
+    cat: 'data', icon: '⚡', title: 'TensorRT-LLM 效能調校', skill: 'tensorrt-llm-performance',
+    desc: 'LLM 推論最佳化 — quantization、KV cache 與吞吐量',
+    scenario: '針對長上下文生成服務比較 FP16、INT8 與 KV cache 設定，找出符合 SLA 的部署配置。',
+    cmd: 'nvidia-smi && trtllm-build --help',
+    tags: ['TensorRT-LLM', 'Quantization', 'SLA'], level: '進階',
+    focus: '用 benchmark 數據驗證推論最佳化，而非只看單次速度。',
+    outcomes: ['首 token 延遲比較', '每秒 token 吞吐量', '顯存與成本估算'],
+    prerequisites: '熟悉 LLM serving、GPU memory 與基本 benchmark 設計。',
+  },
+  {
+    cat: 'data', icon: '🔬', title: 'GPU Profiling', skill: 'gpu-profiling-workflow',
+    desc: 'Nsight 效能分析 — kernel、memory 與 CPU/GPU overlap',
+    scenario: '針對 GPU 利用率偏低的訓練工作，從 timeline 與 kernel 統計找出資料載入或同步瓶頸。',
+    cmd: 'nsys profile --stats=true python train.py',
+    tags: ['Nsight', 'Profiling', 'Performance'], level: '中階',
+    focus: '以 profiler evidence 取代猜測，建立優化前後的可比基準。',
+    outcomes: ['定位 idle gap', '比較 kernel 時間', '確認 memory bandwidth 瓶頸'],
+    prerequisites: '具備 Python 訓練流程與 GPU memory 基礎。',
+  },
+  {
+    cat: 'data', icon: '📈', title: 'RAPIDS 遊戲營運分析', skill: 'rapids-game-analytics',
+    desc: 'GPU DataFrame — retention、RFM 與 funnel 分析',
+    scenario: '將大型遊戲事件資料從 pandas 遷移到 RAPIDS，快速完成留存、分群與付費漏斗分析。',
+    cmd: 'python -c "import cudf; print(cudf.__version__)"',
+    tags: ['RAPIDS', 'Game Analytics', 'Funnel'], level: '中階',
+    focus: '讓營運分析能在更短時間內迭代更多問題。',
+    outcomes: ['縮短資料清理時間', '支援多版本分群比較', '輸出可讀 KPI 摘要'],
+    prerequisites: '熟悉 pandas、SQL 與遊戲事件資料模型。',
+  },
+]
+
+const BASE_SKILLS = [
   // ── GPU 計算 ──────────────────────────────
   {
     cat: 'compute', icon: '⚡', title: 'cuDF', skill: 'accelerated-computing-cudf',
@@ -294,6 +377,11 @@ export const SKILLS = [
 ]
   .map((s) => ({ ...s, cmd: mk(s.skill) }))
 
+export const SKILLS = [
+  ...BASE_SKILLS,
+  ...EXTENDED_SKILLS.map((s) => ({ ...s, cmd: s.cmd || mk(s.skill) })),
+]
+
 export const CATS = [
   { id: 'all', label: '全部' },
   { id: 'compute', label: 'GPU 計算' },
@@ -303,6 +391,8 @@ export const CATS = [
   { id: 'vision', label: '視覺 AI' },
   { id: 'tao', label: 'TAO Toolkit' },
   { id: 'physical', label: 'Physical AI' },
+  { id: 'agent', label: 'Agent / Safety' },
+  { id: 'data', label: 'Data / MLOps' },
 ]
 
 // 我的相關作品
