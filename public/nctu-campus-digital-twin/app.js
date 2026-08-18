@@ -399,9 +399,152 @@ const tourRoutes = {
       { title: "學生餐廳", progress: 1, narration: "學生餐廳位於校園南側生活區，鄰近南側宿舍與主要步道，宿舍生活區導覽在此完成。" }
     ],
     durations: [7, 7, 12],
-    endTarget:…2366 tokens truncated…th() * remainingProgress * metersPerUnit;
-  setNavigationReadout(targetStop.title, distanceMeters, routeTurnDirection(progress));
+    endTarget: [-12, 4, -52]
+  }
+};
+
+const tourMapStations = document.querySelector("#tour-map-stations");
+const tourMapPosition = document.querySelector("#tour-map-position");
+const tourMapStatus = document.querySelector("#tour-map-status");
+const tourMapStops = document.querySelector("#tour-map-stops");
+const tourStationLabels = document.querySelector("#tour-station-labels");
+const tourRouteSelect = document.querySelector("#tour-route-select");
+const tourMapSvg = document.querySelector("#tour-map-svg");
+const tourMapRoute = document.querySelector("#tour-map-route");
+const searchMapRoute = document.querySelector("#search-map-route");
+const searchMapDestination = document.querySelector("#search-map-destination");
+const navNextStop = document.querySelector("#nav-next-stop");
+const navDistance = document.querySelector("#nav-distance");
+const navTime = document.querySelector("#nav-time");
+const navTurn = document.querySelector("#nav-turn");
+const freeWalkButton = document.querySelector("#free-walk");
+const freeWalkControls = document.querySelector("#free-walk-controls");
+const tourGuide = document.querySelector("#tour-guide");
+const tourStep = document.querySelector("#tour-step");
+const tourTitle = document.querySelector("#tour-title");
+const tourPercent = document.querySelector("#tour-percent");
+const tourProgressFill = document.querySelector("#tour-progress-fill");
+const tourProgress = document.querySelector(".tour-progress");
+const tourNarration = document.querySelector("#tour-narration");
+const tourPauseButton = document.querySelector("#tour-pause");
+const tourAudioButton = document.querySelector("#tour-audio");
+const tourExitButton = document.querySelector("#tour-exit");
+const walkTourButton = document.querySelector("#walk-tour");
+const buildingSearch = document.querySelector("#building-search");
+const buildingSearchInput = document.querySelector("#building-search-input");
+const metersPerUnit = 1.6;
+const tourStopDuration = 4;
+
+function createTourCurve(points) {
+  return new THREE.CatmullRomCurve3(
+    points.map(([x, y, z]) => new THREE.Vector3(x, y, z)),
+    false,
+    "catmullrom",
+    0.35
+  );
 }
+
+function projectTourPoint(point) {
+  const x = THREE.MathUtils.clamp(16 + ((point.x + 66) / 150) * 220, 16, 246);
+  const y = THREE.MathUtils.clamp(24 + ((point.z + 55) / 108) * 140, 24, 164);
+  return { x, y };
+}
+
+function directionFromAngle(angle) {
+  const directions = ["北", "東北", "東", "東南", "南", "西南", "西", "西北"];
+  const index = Math.round((((angle + Math.PI / 2) % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2)) / (Math.PI / 4)) % directions.length;
+  return directions[index];
+}
+
+function routeTurnDirection(progress) {
+  const current = walkTourCurve.getTangentAt(THREE.MathUtils.clamp(progress, 0, 0.99)).setY(0).normalize();
+  const next = walkTourCurve.getTangentAt(THREE.MathUtils.clamp(progress + 0.04, 0, 0.99)).setY(0).normalize();
+  if (current.lengthSq() === 0 || next.lengthSq() === 0) return "直行";
+  const turn = current.angleTo(next);
+  if (turn < 0.12) return "直行";
+  return current.cross(next).y < 0 ? "左轉" : "右轉";
+}
+
+function setNavigationReadout(title, distanceMeters, direction) {
+  navNextStop.textContent = title;
+  navDistance.textContent = `${Math.max(0, Math.round(distanceMeters))} m`;
+  navTime.textContent = `${Math.max(0, Math.ceil(distanceMeters / 75))} 分`;
+  navTurn.textContent = direction;
+}
+
+function updateTourNavigation(progress) {
+  const currentPoint = walkTourCurve.getPointAt(THREE.MathUtils.clamp(progress, 0, 1));
+  const targetIndex = Math.min(tourStopIndex + (tourHolding ? 0 : 1), tourStops.length - 1);
+  const targetStop = tourStops[targetIndex];
+  const targetPoint = walkTourCurve.getPointAt(targetStop.progress);
+  const toTarget = targetPoint.clone().sub(currentPoint).setY(0);
+  const distanceMeters = toTarget.length() * metersPerUnit;
+  const direction = toTarget.lengthSq() > 0
+    ? directionFromAngle(Math.atan2(toTarget.x, toTarget.z))
+    : routeTurnDirection(progress);
+  setNavigationReadout(targetStop.title, distanceMeters, direction);
+}
+
+function clearSearchNavigation() {
+  customNavigation = null;
+  searchMapRoute.setAttribute("points", "");
+  searchMapDestination.hidden = true;
+}
+
+function planRouteToBuilding(query) {
+  const normalized = query.toLowerCase();
+  if (!normalized) {
+    clearSearchNavigation();
+    tourMapStatus.textContent = "點選站點前往";
+    return;
+  }
+  const entry = [...buildingMeshes.entries()].find(([name]) => name.toLowerCase().includes(normalized));
+  if (!entry) {
+    tourMapStatus.textContent = `找不到：${query}`;
+    clearSearchNavigation();
+    return;
+  }
+  const [name, mesh] = entry;
+  const start = camera.position.clone().setY(4.8);
+  const target = mesh.position.clone().setY(4.8);
+  customNavigation = {
+    title: name,
+    landmark: mesh.userData.landmark,
+    points: [start, target],
+    index: 1
+  };
+  const startMap = projectTourPoint(start);
+  const targetMap = projectTourPoint(target);
+  searchMapRoute.setAttribute("points", `${startMap.x.toFixed(1)},${startMap.y.toFixed(1)} ${targetMap.x.toFixed(1)},${targetMap.y.toFixed(1)}`);
+  searchMapDestination.setAttribute("cx", targetMap.x.toFixed(1));
+  searchMapDestination.setAttribute("cy", targetMap.y.toFixed(1));
+  searchMapDestination.hidden = false;
+  const direction = directionFromAngle(Math.atan2(target.z - start.z, target.x - start.x));
+  setNavigationReadout(name, start.distanceTo(target) * metersPerUnit, direction);
+  tourMapStatus.textContent = `前往：${name}`;
+}
+
+let currentRouteKey = "core";
+let currentRoute = tourRoutes[currentRouteKey];
+let tourStops = currentRoute.stops;
+let tourSegmentDurations = currentRoute.durations;
+let walkTourCurve = createTourCurve(currentRoute.points);
+let tourCurrentProgress = 0;
+let tourStopIndex = 0;
+let tourSegmentElapsed = 0;
+let tourStopElapsed = 0;
+let tourHolding = true;
+let walkTourActive = false;
+let walkTourPaused = false;
+let tourAudioEnabled = true;
+let freeWalkActive = false;
+let freeWalkDragging = false;
+let freeWalkLastPointer = null;
+let freeWalkPitch = 0;
+let freeWalkYaw = 0;
+let freeWalkTargetIndex = 0;
+let customNavigation = null;
+const freeWalkMovement = { forward: false, backward: false, left: false, right: false, lookLeft: false, lookRight: false };
 
 function updateFreeWalkNavigation() {
   if (customNavigation) {
@@ -551,7 +694,6 @@ function showTourStop(index) {
 function stopWalkTour(hideGuide = true) {
   walkTourActive = false;
   walkTourPaused = false;
-  walkTourCompleted = false;
   controls.enabled = true;
   walkTourButton.textContent = "步行導覽";
   walkTourButton.setAttribute("aria-pressed", "false");
@@ -564,7 +706,6 @@ function stopWalkTour(hideGuide = true) {
 
 function completeWalkTour() {
   walkTourActive = false;
-  walkTourCompleted = true;
   controls.enabled = true;
   walkTourButton.textContent = "重新導覽";
   walkTourButton.setAttribute("aria-pressed", "false");
@@ -578,7 +719,6 @@ function startWalkTour() {
   stopFreeWalk();
   walkTourActive = true;
   walkTourPaused = false;
-  walkTourCompleted = false;
   tourStopIndex = 0;
   tourSegmentElapsed = 0;
   tourStopElapsed = 0;
@@ -711,7 +851,6 @@ function jumpToTourStop(index) {
   stopFreeWalk();
   walkTourActive = true;
   walkTourPaused = true;
-  walkTourCompleted = false;
   tourStopIndex = index;
   tourSegmentElapsed = 0;
   tourStopElapsed = 0;
