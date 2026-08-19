@@ -399,7 +399,226 @@ const tourRoutes = {
       { title: "學生餐廳", progress: 1, narration: "學生餐廳位於校園南側生活區，鄰近南側宿舍與主要步道，宿舍生活區導覽在此完成。" }
     ],
     durations: [7, 7, 12],
-    endTarget:…2366 tokens truncated…th() * remainingProgress * metersPerUnit;
+    endTarget: [-12, 2.5, -43]
+  },
+  sports: {
+    label: "運動區",
+    points: [[32, 6, -4], [23, 5, 3], [12, 5, 12], [0, 5, 23], [-10, 5, 34], [-18, 5, 42], [-23, 5, 52], [-32, 5, 49], [-40, 5, 47], [-45, 5, 50]],
+    stops: [
+      { title: "浩然圖書館", progress: 0, narration: "運動區導覽從浩然圖書館出發，沿中央道路往校園西北側前進。" },
+      { title: "綜合球館", progress: 0.65, narration: "綜合球館位於校園北側，是室內球類、訓練與大型活動的重要場地。" },
+      { title: "田徑場", progress: 1, landmark: "sports", narration: "田徑場位於綜合球館西側，包含環形跑道與中央運動場，本次運動區導覽在此完成。" }
+    ],
+    durations: [10, 7],
+    endTarget: [-45, 1, 38]
+  }
+};
+
+const walkTourButton = document.querySelector("#walk-tour");
+const tourGuide = document.querySelector("#tour-guide");
+const tourStep = document.querySelector("#tour-step");
+const tourTitle = document.querySelector("#tour-title");
+const tourNarration = document.querySelector("#tour-narration");
+const tourPercent = document.querySelector("#tour-percent");
+const tourProgress = document.querySelector(".tour-progress");
+const tourProgressFill = document.querySelector("#tour-progress-fill");
+const tourPauseButton = document.querySelector("#tour-pause");
+const tourAudioButton = document.querySelector("#tour-audio");
+const tourExitButton = document.querySelector("#tour-exit");
+const tourMapRoute = document.querySelector("#tour-map-route");
+const searchMapRoute = document.querySelector("#search-map-route");
+const searchMapDestination = document.querySelector("#search-map-destination");
+const tourMapStations = document.querySelector("#tour-map-stations");
+const tourMapPosition = document.querySelector("#tour-map-position");
+const tourMapStatus = document.querySelector("#tour-map-status");
+const tourMapStops = document.querySelector("#tour-map-stops");
+const tourStationLabels = document.querySelector("#tour-station-labels");
+const tourRouteSelect = document.querySelector("#tour-route-select");
+const tourMapSvg = document.querySelector("#tour-map-svg");
+const navNextStop = document.querySelector("#nav-next-stop");
+const navDistance = document.querySelector("#nav-distance");
+const navTime = document.querySelector("#nav-time");
+const navTurn = document.querySelector("#nav-turn");
+const freeWalkButton = document.querySelector("#free-walk");
+const freeWalkControls = document.querySelector("#free-walk-controls");
+const buildingSearch = document.querySelector("#building-search");
+const buildingSearchInput = document.querySelector("#building-search-input");
+const buildingOptions = document.querySelector("#building-options");
+const tourStopDuration = 3.5;
+const metersPerUnit = 4;
+const walkingMetersPerMinute = 75;
+let currentRouteKey = "core";
+let currentRoute = tourRoutes[currentRouteKey];
+let tourStops = currentRoute.stops;
+let tourSegmentDurations = currentRoute.durations;
+let walkTourCurve = createTourCurve(currentRoute.points);
+let walkTourActive = false;
+let walkTourPaused = false;
+let walkTourCompleted = false;
+let tourAudioEnabled = true;
+let tourStopIndex = 0;
+let tourSegmentElapsed = 0;
+let tourStopElapsed = 0;
+let tourHolding = true;
+let tourCurrentProgress = 0;
+let freeWalkActive = false;
+let freeWalkTargetIndex = 1;
+let freeWalkYaw = 0;
+let freeWalkPitch = 0;
+let freeWalkDragging = false;
+let freeWalkLastPointer = null;
+let customNavigation = null;
+const freeWalkMovement = {
+  forward: false,
+  backward: false,
+  left: false,
+  right: false,
+  lookLeft: false,
+  lookRight: false
+};
+
+function createTourCurve(points) {
+  return new THREE.CatmullRomCurve3(points.map((point) => new THREE.Vector3(...point)), false, "catmullrom", 0.45);
+}
+
+function projectTourPoint(point) {
+  return {
+    x: 20 + (point.x + 66) * (220 / 148),
+    y: 16 + (51 - point.z) * (148 / 105)
+  };
+}
+
+for (const [name] of buildings) {
+  const option = document.createElement("option");
+  option.value = name;
+  buildingOptions.append(option);
+}
+
+function clearSearchNavigation() {
+  customNavigation = null;
+  searchMapRoute.setAttribute("points", "");
+  searchMapDestination.hidden = true;
+}
+
+function findNearestRoutePlan(origin, destination, buildingName) {
+  const preferredRoute = buildingName.includes("工程") || buildingName === "電子資訊研究大樓"
+    ? "engineering"
+    : buildingName.includes("宿舍") || buildingName.includes("竹軒") || buildingName === "學生餐廳"
+      ? "residence"
+      : buildingName === "綜合球館"
+        ? "sports"
+        : null;
+  const routeEntries = preferredRoute
+    ? [[preferredRoute, tourRoutes[preferredRoute]]]
+    : Object.entries(tourRoutes);
+  let bestPlan = null;
+  for (const [routeKey, routeDefinition] of routeEntries) {
+    const curve = createTourCurve(routeDefinition.points);
+    const samples = Array.from({ length: 81 }, (_, index) => ({
+      progress: index / 80,
+      point: curve.getPointAt(index / 80)
+    }));
+    const entry = samples.reduce((best, sample) => (
+      sample.point.distanceTo(origin) < best.point.distanceTo(origin) ? sample : best
+    ));
+    const exitPoint = samples.reduce((best, sample) => (
+      sample.point.distanceTo(destination) < best.point.distanceTo(destination) ? sample : best
+    ));
+    const cost = exitPoint.point.distanceTo(destination);
+    if (!bestPlan || cost < bestPlan.cost) bestPlan = { routeKey, curve, entry, exitPoint, cost };
+  }
+  return bestPlan;
+}
+
+function renderSearchNavigation(points, destination) {
+  const mapPoints = points.map((point) => {
+    const projected = projectTourPoint(point);
+    return `${projected.x.toFixed(1)},${projected.y.toFixed(1)}`;
+  });
+  searchMapRoute.setAttribute("points", mapPoints.join(" "));
+  const destinationPoint = projectTourPoint(destination);
+  searchMapDestination.setAttribute("cx", destinationPoint.x.toFixed(1));
+  searchMapDestination.setAttribute("cy", destinationPoint.y.toFixed(1));
+  searchMapDestination.hidden = false;
+}
+
+function planRouteToBuilding(buildingName) {
+  const building = buildings.find(([name]) => name === buildingName);
+  if (!building) {
+    buildingSearchInput.setCustomValidity("請從清單選擇校園建築");
+    buildingSearchInput.reportValidity();
+    return;
+  }
+  buildingSearchInput.setCustomValidity("");
+  const [, size, position] = building;
+  const destination = new THREE.Vector3(...position).setY(4.8);
+  const origin = camera.position.y <= 12 && freeWalkPositionAllowed(camera.position)
+    ? camera.position.clone().setY(4.8)
+    : walkTourCurve.getPointAt(tourCurrentProgress).setY(4.8);
+  const plan = findNearestRoutePlan(origin, destination, buildingName);
+  switchTourRoute(plan.routeKey);
+  tourRouteSelect.value = plan.routeKey;
+
+  const exitDirection = plan.exitPoint.point.clone().sub(destination).setY(0).normalize();
+  const standOffDistance = Math.max(size[0], size[2]) / 2 + 2.2;
+  const arrivalPoint = destination.clone().addScaledVector(exitDirection, standOffDistance).setY(4.8);
+  const pathPoints = [origin.clone()];
+  const direction = plan.exitPoint.progress >= plan.entry.progress ? 1 : -1;
+  const steps = Math.max(2, Math.ceil(Math.abs(plan.exitPoint.progress - plan.entry.progress) / 0.04));
+  for (let index = 0; index <= steps; index += 1) {
+    const progress = THREE.MathUtils.lerp(plan.entry.progress, plan.exitPoint.progress, index / steps);
+    pathPoints.push(walkTourCurve.getPointAt(progress).setY(4.8));
+  }
+  pathPoints.push(arrivalPoint);
+  customNavigation = {
+    title: buildingName,
+    landmark: buildingMeshes.get(buildingName).userData.landmark,
+    points: pathPoints,
+    index: 1,
+    direction
+  };
+  renderSearchNavigation(pathPoints, destination);
+  camera.position.copy(origin);
+  startFreeWalk();
+  customNavigation.index = 1;
+  renderSearchNavigation(pathPoints, destination);
+  tourMapStatus.textContent = `已規劃：${buildingName}`;
+  updateFreeWalkNavigation();
+  if (customNavigation.landmark) showLandmark(customNavigation.landmark);
+}
+
+function setNavigationReadout(stopTitle, distanceMeters, direction) {
+  navNextStop.textContent = stopTitle;
+  navDistance.textContent = distanceMeters < 10 ? `${Math.round(distanceMeters)} m` : `${Math.round(distanceMeters / 10) * 10} m`;
+  navTime.textContent = distanceMeters < 10 ? "已抵達" : `${Math.max(1, Math.ceil(distanceMeters / walkingMetersPerMinute))} 分`;
+  navTurn.textContent = distanceMeters < 10 ? "已抵達" : direction;
+}
+
+function directionFromAngle(angleRadians) {
+  const angle = THREE.MathUtils.radToDeg(angleRadians);
+  if (Math.abs(angle) > 150) return "迴轉";
+  if (angle > 15) return "向右";
+  if (angle < -15) return "向左";
+  return "直行";
+}
+
+function routeTurnDirection(progress) {
+  const currentTangent = walkTourCurve.getTangentAt(Math.min(progress, 0.995)).setY(0).normalize();
+  const futureTangent = walkTourCurve.getTangentAt(Math.min(progress + 0.055, 0.999)).setY(0).normalize();
+  const angle = Math.atan2(
+    currentTangent.x * futureTangent.z - currentTangent.z * futureTangent.x,
+    currentTangent.dot(futureTangent)
+  );
+  return directionFromAngle(angle);
+}
+
+function updateTourNavigation(progress) {
+  const targetIndex = tourStopIndex >= tourStops.length - 1
+    ? tourStops.length - 1
+    : tourStopIndex + 1;
+  const targetStop = tourStops[targetIndex];
+  const remainingProgress = Math.max(0, targetStop.progress - progress);
+  const distanceMeters = walkTourCurve.getLength() * remainingProgress * metersPerUnit;
   setNavigationReadout(targetStop.title, distanceMeters, routeTurnDirection(progress));
 }
 
@@ -936,4 +1155,3 @@ function animate() {
 renderTourRoute();
 
 animate();
-
