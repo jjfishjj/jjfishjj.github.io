@@ -108,18 +108,20 @@ campus.rotation.x = -Math.PI / 2;
 campus.receiveShadow = true;
 scene.add(campus);
 
-box("Daxue Road", [9, 0.18, 132], [70, -0.02, 2], materials.road, -0.12);
-addRoad([[-62, -20], [-43, -18], [-28, -13], [-13, -9], [3, -7], [15, -3], [26, 5]], 5.5);
-addRoad([[67, 22], [59, 22], [54, 19], [48, 16], [40, 14], [31, 10], [26, 5], [15, -3], [3, -7], [-12, -5], [-27, 1], [-42, 12]], 5);
-addRoad([[-34, -42], [-31, -18], [-28, 3], [-28, 28], [-20, 45]], 4.2);
-addRoad([[18, -45], [18, -25], [20, -10], [22, 3], [26, 15], [31, 40]], 4.2);
-addRoad([[-50, 34], [-20, 30], [10, 29], [35, 38], [50, 37], [58, 25]], 3.6, materials.path);
-addRoad([[-43, 12], [-36, 2], [-31, -11], [-20, -20], [-5, -25], [8, -28]], 3.4, materials.path);
-box("library plaza", [22, 0.08, 12], [8, 0.11, 8], materials.path);
+box("大學路", [9, 0.18, 132], [70, -0.02, 2], materials.road, -0.12);
+box("新安路", [132, 0.18, 8], [5, -0.02, -59], materials.road, 0.02);
+addRoad([[67, 24], [57, 24], [47, 20], [36, 14], [24, 8], [11, 7], [0, 8], [-16, 10], [-31, 10], [-47, 9]], 5.4);
+addRoad([[45, 31], [27, 34], [8, 33], [-12, 31], [-31, 30], [-50, 30]], 4.1);
+addRoad([[34, 13], [32, -4], [33, -20], [35, -34], [27, -43]], 4.2);
+addRoad([[10, 8], [9, -8], [8, -22], [8, -38], [8, -55]], 4.6);
+addRoad([[-16, 10], [-15, -5], [-17, -20], [-15, -37], [8, -38]], 4.2);
+addRoad([[-47, 9], [-43, -8], [-48, -25], [-31, -36], [-15, -37]], 4.1);
+addRoad([[-50, 30], [-34, 22], [-16, 10], [0, 8], [10, 8]], 3.4, materials.path);
+box("浩然廣場", [22, 0.08, 12], [8, 0.11, 8], materials.path);
 
 const lake = new THREE.Mesh(new THREE.CylinderGeometry(10, 10, 0.28, 48), materials.water);
 lake.name = "竹湖";
-lake.position.set(46, 0.06, 31);
+lake.position.set(49, 0.06, 14);
 lake.scale.z = 0.62;
 lake.receiveShadow = true;
 lake.userData.landmark = "lake";
@@ -127,41 +129,55 @@ scene.add(lake);
 
 const track = new THREE.Mesh(new THREE.RingGeometry(9, 13, 64), materials.track);
 track.rotation.x = -Math.PI / 2;
-track.position.set(-45, 0.14, 38);
+track.position.set(-48, 0.14, 39);
 track.scale.x = 1.55;
 scene.add(track);
 const athleticField = new THREE.Mesh(new THREE.CircleGeometry(8.7, 48), materials.field);
 athleticField.rotation.x = -Math.PI / 2;
-athleticField.position.set(-45, 0.15, 38);
+athleticField.position.set(-48, 0.15, 39);
 athleticField.scale.x = 1.55;
 scene.add(athleticField);
 
 const buildingMeshes = new Map();
 const buildings = [
-  ["浩然圖書館", [18, 10, 16], [8, 5, -4], materials.landmark, 0.02],
-  ["行政大樓", [13, 7, 10], [28, 3.5, 24], materials.landmark, -0.08],
-  ["中正堂", [14, 6, 9], [30, 3, 25], materials.academic, -0.18],
-  ["資訊技術服務中心", [13, 7, 8], [8, 3.5, 19], materials.academic, 0.08],
-  ["工程一館", [15, 8, 10], [-24, 4, 1], materials.engineering, -0.05],
-  ["工程二館", [17, 9, 11], [-14, 4.5, -13], materials.engineering, 0.04],
-  ["工程三館", [16, 8, 10], [2, 4, -27], materials.engineering, -0.12],
-  ["工程四館", [13, 8, 9], [-28, 4, 14], materials.engineering, 0.06],
-  ["工程五館", [15, 10, 10], [-35, 5, 1], materials.engineering, -0.08],
-  ["工程六館", [13, 8, 10], [-29, 4, -13], materials.engineering, -0.12],
-  ["科學一館", [14, 8, 9], [-7, 4, 31], materials.academic, -0.04],
-  ["科學二館", [12, 7, 9], [-19, 3.5, 33], materials.academic, 0.1],
-  ["科學三館", [13, 8, 8], [-7, 4, 18], materials.academic, 0.02],
-  ["生物醫學大樓", [13, 9, 10], [46, 4.5, -8], materials.academic, -0.25],
-  ["電子資訊研究大樓", [12, 10, 9], [43, 5, -23], materials.engineering, -0.18],
-  ["管理一館", [13, 7, 9], [0, 3.5, -17], materials.academic, 0.05],
-  ["綜合球館", [17, 7, 12], [-23, 3.5, 44], materials.academic, -0.08],
-  ["學生宿舍九舍", [12, 8, 7], [12, 4, 41], materials.residence, -0.08],
-  ["學生宿舍十舍", [12, 8, 7], [26, 4, 41], materials.residence, -0.08],
-  ["學生宿舍十一舍", [12, 8, 7], [39, 4, 36], materials.residence, -0.14],
-  ["學生宿舍十二舍", [12, 8, 7], [-39, 4, -34], materials.residence, -0.1],
-  ["學生宿舍十三舍", [12, 8, 7], [-26, 4, -39], materials.residence, -0.08],
-  ["學生餐廳", [14, 5, 8], [-12, 2.5, -43], materials.residence, 0.05],
-  ["竹軒女舍", [14, 8, 8], [13, 4, -44], materials.residence, 0.1]
+  ["浩然圖書館", [18, 10, 16], [8, 5, 1], materials.landmark, 0.02],
+  ["行政大樓", [13, 7, 10], [34, 3.5, 24], materials.landmark, -0.08],
+  ["中正堂", [14, 6, 9], [22, 3, 25], materials.academic, -0.08],
+  ["資訊技術服務中心", [13, 7, 8], [18, 3.5, 13], materials.academic, 0.08],
+  ["工程一館", [15, 8, 10], [-33, 4, 22], materials.engineering, -0.05],
+  ["工程二館", [17, 9, 11], [-28, 4.5, 7], materials.engineering, 0.04],
+  ["工程三館", [16, 8, 10], [-25, 4, -8], materials.engineering, -0.08],
+  ["工程四館", [13, 8, 9], [-10, 4, 17], materials.engineering, 0.06],
+  ["工程五館", [15, 10, 10], [-49, 5, 4], materials.engineering, -0.08],
+  ["工程六館", [13, 8, 10], [-43, 4, -12], materials.engineering, -0.12],
+  ["科學一館", [14, 8, 9], [-17, 4, 30], materials.academic, -0.04],
+  ["科學二館", [12, 7, 9], [-4, 3.5, 31], materials.academic, 0.1],
+  ["科學三館", [13, 8, 8], [-18, 4, 18], materials.academic, 0.02],
+  ["生物醫學大樓", [13, 9, 10], [49, 4.5, -5], materials.academic, -0.18],
+  ["電子資訊研究大樓", [12, 10, 9], [47, 5, -20], materials.engineering, -0.12],
+  ["管理一館", [13, 7, 9], [-29, 3.5, -23], materials.academic, 0.05],
+  ["管理二館", [13, 7, 9], [-13, 3.5, -24], materials.academic, -0.03],
+  ["活動中心", [14, 6, 9], [5, 3, -14], materials.landmark, 0.02],
+  ["田家炳光電大樓", [14, 9, 9], [21, 4.5, -17], materials.academic, -0.04],
+  ["人社一館", [12, 7, 8], [43, 3.5, -13], materials.academic, -0.08],
+  ["人社二館", [12, 7, 8], [50, 3.5, -28], materials.academic, -0.08],
+  ["人社三館", [12, 7, 8], [36, 3.5, -29], materials.academic, -0.08],
+  ["綜合球館", [17, 7, 12], [-48, 3.5, 27], materials.academic, -0.08],
+  ["游泳館", [14, 5, 9], [14, 2.5, 43], materials.academic, -0.04],
+  ["學生宿舍九舍", [12, 8, 7], [-11, 4, 42], materials.residence, -0.05],
+  ["學生宿舍十舍", [12, 8, 7], [-25, 4, 42], materials.residence, -0.05],
+  ["學生宿舍十一舍", [12, 8, 7], [45, 4, 38], materials.residence, -0.12],
+  ["研究生宿舍一舍", [12, 8, 7], [31, 4, 43], materials.residence, -0.08],
+  ["竹軒女舍", [14, 8, 8], [1, 4, 43], materials.residence, 0.04],
+  ["學生宿舍七舍", [12, 8, 7], [51, 4, -36], materials.residence, -0.08],
+  ["學生宿舍八舍", [12, 8, 7], [38, 4, -39], materials.residence, -0.08],
+  ["學生宿舍十二舍", [12, 8, 7], [20, 4, -45], materials.residence, -0.04],
+  ["學生宿舍十三舍", [12, 8, 7], [5, 4, -45], materials.residence, -0.04],
+  ["研究生宿舍二舍", [12, 8, 7], [-10, 4, -44], materials.residence, -0.04],
+  ["研究生宿舍三舍", [12, 8, 7], [-24, 4, -42], materials.residence, -0.04],
+  ["綜合一館", [15, 8, 10], [-4, 4, -34], materials.academic, 0.02],
+  ["學生餐廳", [14, 5, 8], [20, 2.5, 33], materials.residence, 0.05],
+  ["棒球場", [16, 2, 12], [-51, 1, -29], materials.field, -0.1]
 ];
 
 for (const [name, size, position, material, rotation] of buildings) {
@@ -172,29 +188,34 @@ buildingMeshes.get("行政大樓").userData.landmark = "administration";
 for (const name of ["工程一館", "工程二館", "工程三館", "工程四館", "工程五館", "工程六館", "電子資訊研究大樓"]) {
   buildingMeshes.get(name).userData.landmark = "engineering";
 }
-for (const name of ["學生宿舍九舍", "學生宿舍十舍", "學生宿舍十一舍", "學生宿舍十二舍", "學生宿舍十三舍", "竹軒女舍"]) {
+for (const name of buildings.map(([name]) => name).filter((name) => name.includes("宿舍") || name.includes("竹軒") || name === "學生餐廳")) {
   buildingMeshes.get(name).userData.landmark = "residence";
 }
 buildingMeshes.get("綜合球館").userData.landmark = "sports";
+buildingMeshes.get("游泳館").userData.landmark = "sports";
+buildingMeshes.get("棒球場").userData.landmark = "sports";
 track.userData.landmark = "sports";
 athleticField.userData.landmark = "sports";
 
 box("北大門北柱", [1.8, 5.5, 3.2], [62, 2.75, 27.5], materials.landmark, 0);
 box("北大門南柱", [1.8, 5.5, 3.2], [62, 2.75, 16.5], materials.landmark, 0);
 box("北大門門楣", [1.3, 1, 8], [62, 5.4, 22], materials.landmark, 0);
-box("南大門", [1.2, 4, 12], [-63, 2, -20], materials.landmark, 0.18);
+box("南大門西柱", [2.4, 5, 1.6], [2, 2.5, -54], materials.landmark, 0);
+box("南大門東柱", [2.4, 5, 1.6], [14, 2.5, -54], materials.landmark, 0);
+box("南大門門楣", [9.6, 1, 1.3], [8, 5, -54], materials.landmark, 0);
 
 const labelGroup = new THREE.Group();
 scene.add(labelGroup);
 for (const [text, position, width] of [
   ["北大門", [62, 8, 22], 8],
-  ["南大門", [-59, 7, -21], 12],
-  ["竹湖", [46, 4, 31], 9],
-  ["浩然圖書館", [8, 13, -4], 18],
-  ["行政大樓", [28, 10, 24], 15],
-  ["工程館群", [-23, 14, -5], 15],
-  ["田徑場", [-45, 5, 38], 12],
-  ["學生宿舍區", [25, 13, 41], 17]
+  ["南大門", [8, 8, -54], 12],
+  ["竹湖", [49, 4, 14], 9],
+  ["浩然圖書館", [8, 13, 1], 18],
+  ["行政大樓", [34, 10, 24], 15],
+  ["工程館群", [-30, 14, 7], 15],
+  ["田徑場", [-48, 5, 39], 12],
+  ["北側宿舍區", [14, 13, 43], 17],
+  ["南側宿舍區", [5, 13, -45], 17]
 ]) {
   labelGroup.add(addLabel(text, position, width));
 }
@@ -202,57 +223,110 @@ for (const [text, position, width] of [
 const landmarkData = {
   lake: {
     title: "竹湖",
-    image: "https://nctuhistory.lib.nycu.edu.tw/collectionImg/306-1969-0003-0370001.jpg",
+    image: "./assets/zhuhu.jpg",
     alt: "從竹湖遠望圖書館、行政大樓與中正堂的歷史照片",
     description: "竹湖位於北大門進校後的左側，是光復校區早期核心景觀。這張 1981 年官方典藏照片由湖畔望向圖書館、行政大樓與中正堂。",
     source: "https://nctuhistory.lib.nycu.edu.tw/list_detail.aspx?cultiD=8677&search_mode=1&search_val=%E4%B8%AD%E6%AD%A3%E5%A0%82&url=4"
   },
   administration: {
     title: "行政大樓",
-    image: "https://nctuhistory.lib.nycu.edu.tw/collectionImg/306-1969-0003-1560001.jpg",
+    image: "./assets/administration.jpg",
     alt: "交通大學光復校區行政大樓歷史照片",
     description: "行政大樓位於竹湖更內側，是光復校區早期行政核心，與中正堂、圖書館共同構成北大門進校後的重要建築群。照片為 1981 年官方典藏。",
     source: "https://nctuhistory.lib.nycu.edu.tw/search_solution.aspx?search_mode=1&search_val=%E8%A1%8C%E6%94%BF%E5%A4%A7%E6%A8%93"
   },
   engineering: {
     title: "工程館群",
-    image: "https://nctuhistory.lib.nycu.edu.tw/collectionImg/306-1969-0003-1860001.jpg",
+    image: "./assets/engineering.jpg",
     alt: "交通大學光復校區工程一館落成啟用照片",
     description: "工程一至六館集中在光復校區中央，是校園工程研究與教學的重要聚落。照片為工程一館 1980 年落成啟用的陽明交大官方典藏。",
     source: "https://nctuhistory.lib.nycu.edu.tw/list_detail.aspx?cultID=8826&search_mode=1&search_val=%E5%B7%A5%E7%A8%8B%E4%B8%80%E9%A4%A8&url=4"
   },
   residence: {
     title: "學生宿舍區",
-    image: "https://museum.lib.nycu.edu.tw/wp-content/uploads/2020/07/1984_0001-1024x685.jpg",
+    image: "./assets/residence.jpg",
     alt: "陽明交大光復校區學生第九宿舍照片",
     description: "光復校區宿舍群分布於校園生活區。學生第九宿舍於 1984 年竣工啟用，之後陸續形成九至十三舍等宿舍聚落。照片來自陽明交大發展館典藏。",
     source: "https://osa.nycu.edu.tw/osa/ch/app/data/view?id=3481&module=nycu0099&serno=9782c8cd-f0af-4d27-a63c-e61c81b13fdc"
   },
   sports: {
     title: "田徑場與運動區",
-    image: "https://museum.lib.nycu.edu.tw/wp-content/uploads/2020/07/1982_0006-1024x685.jpg",
+    image: "./assets/sports.jpg",
     alt: "光復校區體育館與運動區照片",
     description: "光復校區田徑場與游泳池於 1982 年竣工啟用，鄰近綜合球館及戶外球場，形成校園主要運動區。照片為陽明交大發展館典藏的體育館現況。",
     source: "https://museum.lib.nycu.edu.tw/?page_id=936"
   }
 };
 
+const officialCampusMap = "https://www.nycu.edu.tw/userfiles/gach/files/20240112172629456.pdf";
+const buildingHighlights = {
+  "浩然圖書館": "位於中央教學區東側，是主要學習空間與校園核心地標。",
+  "行政大樓": "位於竹湖西北側內緣，與中正堂共同形成北大門入口後的行政核心。",
+  "中正堂": "位於竹湖與行政大樓西側，是光復校區早期核心建築之一。",
+  "資訊技術服務中心": "位於浩然圖書館東北側，鄰近校園核心道路。",
+  "活動中心": "位於浩然圖書館南側，銜接中央教學區與南側生活區。",
+  "田家炳光電大樓": "位於校園中央偏東南，鄰近活動中心與人社館群。",
+  "綜合球館": "位於西北側運動區，鄰近田徑場與工程一館。",
+  "游泳館": "位於北側生活帶，介於研一舍、竹軒與北側宿舍群之間。",
+  "棒球場": "位於校園西南側，與田徑場、綜合球館共同構成戶外運動系統。",
+  "學生餐廳": "位於北側生活帶，連接九、十舍與中央教學區。",
+  "綜合一館": "位於校園南側中央，鄰近管理館與南側宿舍群。"
+};
+
+function buildingRegion(position) {
+  const [x, , z] = position;
+  if (z >= 35) return "北側生活區";
+  if (z <= -34) return "南側生活區";
+  if (x >= 30) return "東側校園區";
+  if (x <= -38) return "西側教學與運動區";
+  return "中央教學區";
+}
+
+function buildingCategory(name) {
+  if (name.includes("工程") || name.includes("電子資訊")) return "engineering";
+  if (name.includes("宿舍") || name.includes("竹軒") || name === "學生餐廳") return "residence";
+  if (["綜合球館", "游泳館", "棒球場"].includes(name)) return "sports";
+  if (name === "行政大樓") return "administration";
+  return "administration";
+}
+
+function buildingRole(name) {
+  if (name.includes("工程") || name.includes("電子資訊")) return "工程教學與研究建築";
+  if (name.includes("科學")) return "科學教學與研究建築";
+  if (name.includes("宿舍") || name.includes("竹軒")) return "學生住宿建築";
+  if (name.includes("管理")) return "管理教學建築";
+  if (name.includes("人社")) return "人文社會教學建築";
+  if (["綜合球館", "游泳館", "棒球場"].includes(name)) return "校園運動設施";
+  return "校園公共與教學建築";
+}
+
+for (const [name, , position] of buildings) {
+  const photoCategory = buildingCategory(name);
+  const representative = landmarkData[photoCategory];
+  landmarkData[name] = {
+    title: name,
+    type: buildingRole(name),
+    image: representative.image,
+    alt: `${buildingRegion(position)}區域代表照片`,
+    description: buildingHighlights[name]
+      || `${name}位於${buildingRegion(position)}，在官方校園配置圖中標示為${buildingRole(name)}。照片為所屬區域或類型的代表影像。`,
+    source: officialCampusMap
+  };
+  buildingMeshes.get(name).userData.landmark = name;
+}
+
 const detailPanel = document.querySelector("#landmark-detail");
+const detailType = document.querySelector(".detail-type");
 const detailTitle = document.querySelector("#detail-title");
 const detailImage = document.querySelector("#detail-image");
 const detailDescription = document.querySelector("#detail-description");
 const detailSource = document.querySelector("#detail-source");
-const interactiveLandmarks = [
-  lake,
-  track,
-  athleticField,
-  buildingMeshes.get("行政大樓"),
-  buildingMeshes.get("綜合球館"),
-  ...[...buildingMeshes.values()].filter((mesh) => ["engineering", "residence"].includes(mesh.userData.landmark))
-];
+const interactiveLandmarks = [lake, track, athleticField, ...buildingMeshes.values()];
 
 function showLandmark(key) {
   const data = landmarkData[key];
+  if (!data) return;
+  detailType.textContent = data.type || "校園地標";
   detailTitle.textContent = data.title;
   detailImage.src = data.image;
   detailImage.alt = data.alt;
@@ -359,27 +433,27 @@ scene.add(new THREE.HemisphereLight(0xd7efff, 0x355538, 1.8));
 
 const views = {
   overview: { camera: [88, 76, 104], target: [0, 0, 0] },
-  northGate: { camera: [82, 9, 22], target: [42, 2, 22] },
-  library: { camera: [32, 24, 25], target: [8, 3, -4] },
-  lake: { camera: [70, 24, 45], target: [46, 1, 31] }
+  northGate: { camera: [82, 9, 24], target: [42, 2, 21] },
+  library: { camera: [32, 24, 25], target: [8, 3, 1] },
+  lake: { camera: [70, 24, 31], target: [49, 1, 14] }
 };
 
 const tourRoutes = {
   core: {
     label: "校園核心",
-    points: [[82, 4.6, 22], [69, 4.5, 22], [61, 4.5, 22], [56, 4.5, 23], [52, 4.5, 25], [49, 4.5, 30], [43, 4.5, 35], [41, 4.5, 37], [36, 4.5, 34], [37, 4.5, 29], [38, 4.5, 23], [37, 4.5, 17], [36, 4.5, 10], [38, 5, 5], [41, 5.8, 0], [44, 6.5, -4]],
+    points: [[82, 4.6, 24], [69, 4.5, 24], [61, 4.5, 24], [56, 4.5, 22], [53, 4.5, 19], [51, 4.5, 15], [48, 4.5, 10], [43, 4.5, 13], [40, 4.5, 19], [36, 4.5, 22], [31, 4.5, 18], [26, 4.5, 12], [21, 4.5, 8], [16, 4.8, 7], [12, 5.2, 7]],
     stops: [
       { title: "北大門", progress: 0, narration: "導覽從光復校區北大門出發。穿過校門後，竹湖位於行進方向左側，中央道路則向校園核心延伸。" },
-      { title: "竹湖", progress: 0.34, landmark: "lake", narration: "竹湖是光復校區早期的重要景觀。從湖畔可以辨認行政大樓、中正堂與浩然圖書館形成的校園東部核心。" },
-      { title: "行政大樓", progress: 0.58, landmark: "administration", narration: "行政大樓位於竹湖內側，是校園早期行政核心。導覽在此轉入中央道路，繼續前往浩然圖書館。" },
+      { title: "竹湖", progress: 0.36, landmark: "lake", narration: "由北大門向西進校時，竹湖位於行進方向左側。湖畔往內可連接行政大樓、中正堂與浩然圖書館。" },
+      { title: "行政大樓", progress: 0.62, landmark: "administration", narration: "行政大樓位於竹湖西北側內緣，是校園早期行政核心。導覽在此接回中央道路，繼續前往浩然圖書館。" },
       { title: "浩然圖書館", progress: 1, narration: "浩然圖書館位於中央教學區東側，周圍連接工程館群與主要校園道路。本次校園核心導覽在此完成。" }
     ],
     durations: [7, 6, 9],
-    endTarget: [8, 4, -4]
+    endTarget: [8, 4, 1]
   },
   engineering: {
     label: "工程館群",
-    points: [[32, 6, -4], [25, 5, -2], [18, 5, 3], [7, 5, 6], [-5, 5, 8], [-16, 5, 10], [-24, 5, 10], [-18, 5, 6], [-9, 5, 0], [-2, 5, -7], [-1, 5, -13], [-7, 5, -5], [-18, 5, -3], [-29, 5, -3]],
+    points: [[12, 5, 7], [3, 5, 8], [-7, 5, 9], [-16, 5, 10], [-23, 5, 14], [-30, 5, 16], [-37, 5, 15], [-31, 5, 10], [-27, 5, 4], [-24, 5, -2], [-25, 5, -8], [-32, 5, -10], [-40, 5, -11]],
     stops: [
       { title: "浩然圖書館", progress: 0, narration: "工程館群導覽從浩然圖書館東側出發，沿中央教學區道路往西進入主要工程館區。" },
       { title: "工程一館", progress: 0.42, landmark: "engineering", narration: "工程一館位於工程館群北側，周圍連接科學館群與校園中央道路，是工程教學區的重要入口。" },
@@ -387,30 +461,30 @@ const tourRoutes = {
       { title: "工程六館", progress: 1, narration: "工程六館位於工程館群西南側。從此處可沿內環道路前往其他工程館與南側生活區。" }
     ],
     durations: [7, 6, 7],
-    endTarget: [-29, 4, -13]
+    endTarget: [-43, 4, -12]
   },
   residence: {
     label: "宿舍生活區",
-    points: [[60, 5, 22], [55, 5, 28], [50, 5, 36], [42, 5, 46], [32, 5, 49], [26, 5, 49], [19, 5, 49], [12, 5, 49], [18, 5, 43], [20, 5, 30], [20, 5, 15], [18, 5, 0], [15, 5, -15], [8, 5, -28], [0, 5, -40], [-12, 5, -52]],
+    points: [[58, 5, 24], [48, 5, 30], [40, 5, 34], [30, 5, 35], [20, 5, 34], [8, 5, 33], [-5, 5, 32], [-16, 5, 31], [-5, 5, 26], [6, 5, 20], [10, 5, 8], [9, 5, -8], [8, 5, -22], [8, 5, -36], [8, 5, -52]],
     stops: [
       { title: "北大門", progress: 0, narration: "宿舍生活區導覽從北大門內側出發，先沿東側道路前往校園北側的學生宿舍。" },
-      { title: "學生宿舍十一舍", progress: 0.22, landmark: "residence", narration: "十一舍位於校園東北側，鄰近竹湖與北側生活動線，是北側宿舍群的第一站。" },
-      { title: "學生宿舍九、十舍", progress: 0.48, narration: "九舍與十舍並列於校園北側，周圍連接餐飲、運動及中央教學區的步行路線。" },
-      { title: "學生餐廳", progress: 1, narration: "學生餐廳位於校園南側生活區，鄰近南側宿舍與主要步道，宿舍生活區導覽在此完成。" }
+      { title: "學生宿舍十一舍", progress: 0.2, landmark: "residence", narration: "十一舍位於校園東北側，與研一舍、游泳館及竹軒共同形成北側生活帶。" },
+      { title: "學生宿舍九、十舍", progress: 0.5, narration: "九舍與十舍位於校園北側偏西，周圍連接運動區、科學館群與中央教學區。" },
+      { title: "南側宿舍群", progress: 1, landmark: "residence", narration: "沿中央南北道路可抵達十二、十三舍與研二、研三舍，並由南大門銜接新安路。" }
     ],
     durations: [7, 7, 12],
-    endTarget: [-12, 2.5, -43]
+    endTarget: [8, 3, -45]
   },
   sports: {
     label: "運動區",
-    points: [[32, 6, -4], [23, 5, 3], [12, 5, 12], [0, 5, 23], [-10, 5, 34], [-18, 5, 42], [-23, 5, 52], [-32, 5, 49], [-40, 5, 47], [-45, 5, 50]],
+    points: [[12, 6, 7], [3, 5, 8], [-8, 5, 10], [-18, 5, 15], [-28, 5, 22], [-38, 5, 29], [-47, 5, 31], [-52, 5, 35], [-51, 5, 39]],
     stops: [
       { title: "浩然圖書館", progress: 0, narration: "運動區導覽從浩然圖書館出發，沿中央道路往校園西北側前進。" },
       { title: "綜合球館", progress: 0.65, narration: "綜合球館位於校園北側，是室內球類、訓練與大型活動的重要場地。" },
       { title: "田徑場", progress: 1, landmark: "sports", narration: "田徑場位於綜合球館西側，包含環形跑道與中央運動場，本次運動區導覽在此完成。" }
     ],
     durations: [10, 7],
-    endTarget: [-45, 1, 38]
+    endTarget: [-48, 1, 39]
   }
 };
 
@@ -500,34 +574,80 @@ function clearSearchNavigation() {
   searchMapDestination.hidden = true;
 }
 
-function findNearestRoutePlan(origin, destination, buildingName) {
-  const preferredRoute = buildingName.includes("工程") || buildingName === "電子資訊研究大樓"
-    ? "engineering"
-    : buildingName.includes("宿舍") || buildingName.includes("竹軒") || buildingName === "學生餐廳"
-      ? "residence"
-      : buildingName === "綜合球館"
-        ? "sports"
-        : null;
-  const routeEntries = preferredRoute
-    ? [[preferredRoute, tourRoutes[preferredRoute]]]
-    : Object.entries(tourRoutes);
-  let bestPlan = null;
-  for (const [routeKey, routeDefinition] of routeEntries) {
-    const curve = createTourCurve(routeDefinition.points);
-    const samples = Array.from({ length: 81 }, (_, index) => ({
-      progress: index / 80,
-      point: curve.getPointAt(index / 80)
-    }));
-    const entry = samples.reduce((best, sample) => (
-      sample.point.distanceTo(origin) < best.point.distanceTo(origin) ? sample : best
-    ));
-    const exitPoint = samples.reduce((best, sample) => (
-      sample.point.distanceTo(destination) < best.point.distanceTo(destination) ? sample : best
-    ));
-    const cost = exitPoint.point.distanceTo(destination);
-    if (!bestPlan || cost < bestPlan.cost) bestPlan = { routeKey, curve, entry, exitPoint, cost };
+const navigationNodes = {
+  northGate: [61, 24], eastEntry: [52, 23], lakeJunction: [43, 18], adminJunction: [35, 14],
+  eastCentral: [24, 8], libraryEast: [12, 7], central: [0, 8], science: [-16, 10],
+  engineering: [-31, 10], westAcademic: [-47, 9], northEast: [42, 31], northResidence: [27, 34],
+  northCenter: [8, 33], northScience: [-12, 31], northEngineering: [-31, 30], sports: [-50, 30],
+  eastMid: [32, -4], eastSouth: [33, -20], eastResidence: [35, -34], southEast: [25, -42],
+  centerMid: [9, -8], centerSouth: [8, -22], southCenter: [8, -38], southGate: [8, -52],
+  engineeringMid: [-15, -5], management: [-17, -20], southWest: [-15, -37],
+  westMid: [-43, -8], westSouth: [-48, -25], baseball: [-31, -36]
+};
+
+const navigationEdges = [
+  ["northGate", "eastEntry"], ["eastEntry", "lakeJunction"], ["lakeJunction", "adminJunction"],
+  ["adminJunction", "eastCentral"], ["eastCentral", "libraryEast"], ["libraryEast", "central"],
+  ["central", "science"], ["science", "engineering"], ["engineering", "westAcademic"],
+  ["lakeJunction", "northEast"], ["northEast", "northResidence"], ["northResidence", "northCenter"],
+  ["northCenter", "northScience"], ["northScience", "northEngineering"], ["northEngineering", "sports"],
+  ["sports", "westAcademic"], ["northCenter", "libraryEast"], ["northScience", "science"],
+  ["adminJunction", "eastMid"], ["eastMid", "eastSouth"], ["eastSouth", "eastResidence"],
+  ["eastResidence", "southEast"], ["southEast", "southCenter"], ["libraryEast", "centerMid"],
+  ["centerMid", "centerSouth"], ["centerSouth", "southCenter"], ["southCenter", "southGate"],
+  ["science", "engineeringMid"], ["engineeringMid", "management"], ["management", "southWest"],
+  ["southWest", "southCenter"], ["westAcademic", "westMid"], ["westMid", "westSouth"],
+  ["westSouth", "baseball"], ["baseball", "southWest"], ["engineering", "engineeringMid"]
+];
+
+const navigationGraph = Object.fromEntries(Object.keys(navigationNodes).map((key) => [key, []]));
+for (const [from, to] of navigationEdges) {
+  const a = new THREE.Vector3(navigationNodes[from][0], 4.8, navigationNodes[from][1]);
+  const b = new THREE.Vector3(navigationNodes[to][0], 4.8, navigationNodes[to][1]);
+  const distance = a.distanceTo(b);
+  navigationGraph[from].push({ key: to, distance });
+  navigationGraph[to].push({ key: from, distance });
+}
+
+function nearestNavigationNode(point) {
+  return Object.entries(navigationNodes).reduce((best, [key, [x, z]]) => {
+    const distance = Math.hypot(point.x - x, point.z - z);
+    return !best || distance < best.distance ? { key, distance } : best;
+  }, null);
+}
+
+function shortestRoadPath(origin, destination) {
+  const start = nearestNavigationNode(origin);
+  const finish = nearestNavigationNode(destination);
+  const distances = Object.fromEntries(Object.keys(navigationNodes).map((key) => [key, Infinity]));
+  const previous = {};
+  const pending = new Set(Object.keys(navigationNodes));
+  distances[start.key] = 0;
+
+  while (pending.size) {
+    const current = [...pending].reduce((best, key) => distances[key] < distances[best] ? key : best);
+    pending.delete(current);
+    if (current === finish.key) break;
+    for (const edge of navigationGraph[current]) {
+      if (!pending.has(edge.key)) continue;
+      const candidate = distances[current] + edge.distance;
+      if (candidate < distances[edge.key]) {
+        distances[edge.key] = candidate;
+        previous[edge.key] = current;
+      }
+    }
   }
-  return bestPlan;
+
+  const keys = [finish.key];
+  while (keys[0] !== start.key) keys.unshift(previous[keys[0]]);
+  return keys.map((key) => new THREE.Vector3(navigationNodes[key][0], 4.8, navigationNodes[key][1]));
+}
+
+function routeCategoryForBuilding(buildingName) {
+  if (buildingName.includes("工程") || buildingName.includes("電子資訊")) return "engineering";
+  if (buildingName.includes("宿舍") || buildingName.includes("竹軒") || buildingName === "學生餐廳") return "residence";
+  if (["綜合球館", "游泳館", "棒球場"].includes(buildingName)) return "sports";
+  return "core";
 }
 
 function renderSearchNavigation(points, destination) {
@@ -555,30 +675,28 @@ function planRouteToBuilding(buildingName) {
   const origin = camera.position.y <= 12 && freeWalkPositionAllowed(camera.position)
     ? camera.position.clone().setY(4.8)
     : walkTourCurve.getPointAt(tourCurrentProgress).setY(4.8);
-  const plan = findNearestRoutePlan(origin, destination, buildingName);
-  switchTourRoute(plan.routeKey);
-  tourRouteSelect.value = plan.routeKey;
+  const routeKey = routeCategoryForBuilding(buildingName);
+  const roadPath = shortestRoadPath(origin, destination);
+  switchTourRoute(routeKey);
+  tourRouteSelect.value = routeKey;
 
-  const exitDirection = plan.exitPoint.point.clone().sub(destination).setY(0).normalize();
+  const finalRoadPoint = roadPath.at(-1);
+  const exitDirection = finalRoadPoint.clone().sub(destination).setY(0).normalize();
   const standOffDistance = Math.max(size[0], size[2]) / 2 + 2.2;
   const arrivalPoint = destination.clone().addScaledVector(exitDirection, standOffDistance).setY(4.8);
-  const pathPoints = [origin.clone()];
-  const direction = plan.exitPoint.progress >= plan.entry.progress ? 1 : -1;
-  const steps = Math.max(2, Math.ceil(Math.abs(plan.exitPoint.progress - plan.entry.progress) / 0.04));
-  for (let index = 0; index <= steps; index += 1) {
-    const progress = THREE.MathUtils.lerp(plan.entry.progress, plan.exitPoint.progress, index / steps);
-    pathPoints.push(walkTourCurve.getPointAt(progress).setY(4.8));
-  }
-  pathPoints.push(arrivalPoint);
+  const pathPoints = [origin.clone(), ...roadPath, arrivalPoint].filter((point, index, points) => (
+    index === 0 || point.distanceTo(points[index - 1]) > 0.5
+  ));
   customNavigation = {
     title: buildingName,
     landmark: buildingMeshes.get(buildingName).userData.landmark,
     points: pathPoints,
-    index: 1,
-    direction
+    index: 1
   };
   renderSearchNavigation(pathPoints, destination);
   camera.position.copy(origin);
+  const firstWaypoint = pathPoints[Math.min(1, pathPoints.length - 1)];
+  camera.lookAt(firstWaypoint.x, 4.2, firstWaypoint.z);
   startFreeWalk();
   customNavigation.index = 1;
   renderSearchNavigation(pathPoints, destination);
@@ -843,8 +961,8 @@ function syncFreeWalkRotation() {
 
 function freeWalkPositionAllowed(position) {
   if (position.x < -66 || position.x > 84 || position.z < -55 || position.z > 53) return false;
-  const lakeOffsetX = (position.x - 46) / 11;
-  const lakeOffsetZ = (position.z - 31) / 7;
+  const lakeOffsetX = (position.x - 49) / 11;
+  const lakeOffsetZ = (position.z - 14) / 7;
   if (lakeOffsetX * lakeOffsetX + lakeOffsetZ * lakeOffsetZ < 1) return false;
   return !buildings.some(([, size, buildingPosition]) => (
     Math.abs(position.x - buildingPosition[0]) < size[0] / 2 + 0.8

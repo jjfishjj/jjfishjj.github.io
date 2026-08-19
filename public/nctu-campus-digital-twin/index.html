@@ -6,7 +6,7 @@
     <meta name="description" content="國立陽明交通大學光復校區 3D 數位孿生概念場景" />
     <title>陽明交大光復校區 3D 數位孿生</title>
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%234fd1a5'/%3E%3Cpath d='M8 22 16 8l8 14h-4l-4-7-4 7Z' fill='%230a0d12'/%3E%3C/svg%3E" />
-    <link rel="stylesheet" href="./styles.css?v=9195e0a" />
+    <link rel="stylesheet" href="./styles.css?v=20260819" />
   </head>
   <body>
     <main class="app-shell">
@@ -18,8 +18,8 @@
             <h1>光復校區數位孿生</h1>
           </div>
           <div class="stats" aria-label="場景統計">
-            <span>主要建築 24</span>
-            <span>地標 4</span>
+            <span>主要建築 38</span>
+            <span>地標 8</span>
             <span>巡邏機器人 1</span>
           </div>
         </div>
@@ -53,7 +53,7 @@
             <path class="map-campus" d="M16 24 L218 18 L246 68 L226 164 L54 170 L12 126 Z" />
             <path class="map-road" d="M238 76 C190 76 158 86 130 95 C106 102 79 93 50 84" />
             <path class="map-road map-road-secondary" d="M153 22 C153 57 151 93 146 156" />
-            <ellipse class="map-lake" cx="186" cy="44" rx="18" ry="10" />
+            <ellipse class="map-lake" cx="191" cy="69" rx="18" ry="10" />
             <rect class="map-building" x="153" y="50" width="22" height="17" rx="2" />
             <rect class="map-building map-library" x="118" y="83" width="26" height="23" rx="2" />
             <rect class="map-building" x="68" y="77" width="38" height="29" rx="2" />
@@ -118,13 +118,13 @@
             </div>
             <button id="close-detail" class="close-detail" type="button" aria-label="關閉地標介紹">×</button>
           </div>
-          <img id="detail-image" src="https://nctuhistory.lib.nycu.edu.tw/collectionImg/306-1969-0003-0370001.jpg" alt="從竹湖遠望校園建築的歷史照片" />
+          <img id="detail-image" src="./assets/zhuhu.jpg" alt="從竹湖遠望校園建築的歷史照片" />
           <p id="detail-description"></p>
           <a id="detail-source" class="source-link" href="https://nctuhistory.lib.nycu.edu.tw/list_detail.aspx?cultiD=8677" target="_blank" rel="noreferrer">查看陽明交大官方典藏</a>
         </section>
         <h2>光復校區配置</h2>
         <p>
-          依陽明交大官方校園圖校正的概念模型。大學路與北大門位於東側，竹湖、行政大樓與浩然圖書館形成校園東部核心，工程館群集中於中央，宿舍與運動區分布在南北兩端。
+          依陽明交大官方校園圖校正的概念模型。大學路與北大門位於東側，進校後竹湖在左側；行政大樓與浩然圖書館向校園中央延伸，工程館群集中於中央，宿舍分布於北、南與東側生活區。
         </p>
         <dl>
           <div>
@@ -137,13 +137,12 @@
           </div>
           <div>
             <dt>生活與運動區</dt>
-            <dd>綜合球館、田徑場、學生宿舍與餐廳</dd>
+            <dd>綜合球館、田徑場、游泳館、棒球場與北南東三區宿舍</dd>
           </div>
         </dl>
         <p class="source-note">配置依 2025 年官方光復校區圖概略建模，非測量或導航用途。</p>
       </aside>
     </main>
-    <script type="module" src="./app.js?v=21a2817"></script>
+    <script type="module" src="./app.js?v=20260819"></script>
   </body>
 </html>
-
