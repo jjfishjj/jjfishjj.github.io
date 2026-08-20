@@ -63,6 +63,15 @@ const projects = [
     repo: "https://github.com/jjfishjj/jjfishjj.github.io",
   },
   {
+    title: "openshell-agent-security-demo",
+    category: "ai-nvidia",
+    type: "GitHub Pages Project",
+    description: "把 coding agent 放進 NVIDIA OpenShell 核心層沙箱，套用宣告式 YAML 政策，並用稽核日誌證明沙箱確實擋下違規操作。",
+    tags: ["NVIDIA OpenShell", "Agent Security", "Sandbox", "Policy"],
+    demo: "https://jjfishjj.github.io/openshell-agent-security-demo/",
+    repo: "https://github.com/jjfishjj/openshell-agent-security-demo",
+  },
+  {
     title: "nim-rag-language-tutor",
     category: "ai-nvidia",
     type: "GitHub Pages Project",
@@ -87,6 +96,15 @@ const projects = [
     tags: ["Pipeline", "HTML", "NVIDIA", "Developer Demo"],
     demo: "https://jjfishjj.github.io/nvidia-dev-pipeline-demo/",
     repo: "https://github.com/jjfishjj/nvidia-dev-pipeline-demo",
+  },
+  {
+    title: "fab-digital-twin",
+    category: "digital-twin-3d",
+    type: "GitHub Pages Project",
+    description: "300mm 半導體晶圓廠的參數化 OpenUSD 數位孿生，完全由 JSON spec 生成，不需 GPU 或 Omniverse 授權即可建置。",
+    tags: ["OpenUSD", "Semiconductor", "Digital Twin", "Python"],
+    demo: "https://jjfishjj.github.io/fab-digital-twin/",
+    repo: "https://github.com/jjfishjj/fab-digital-twin",
   },
   {
     title: "flowforge-factory-twin",
