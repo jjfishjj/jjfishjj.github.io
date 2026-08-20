@@ -87,6 +87,7 @@ export default function App() {
           <a className="profile-link" href="/linkedin/">經歷儀表板</a>
           <a className="profile-link" href="/ai-prompt-game-tutorial/">AI 遊戲教學</a>
           <a className="profile-link" href="/lectures/">語言講座</a>
+          <a className="profile-link" href="https://jjfishjj.github.io/claude-projects-hub/" target="_blank" rel="noreferrer">部署索引 ↗</a>
         </div>
       </header>
 
@@ -216,6 +217,8 @@ export default function App() {
           <a href="/ai-prompt-game-tutorial/">AI Game Tutorial</a>
           {' · '}
           <a href="/lectures/">Lectures</a>
+          {' · '}
+          <a href="https://jjfishjj.github.io/claude-projects-hub/" target="_blank" rel="noreferrer">Deploy Hub</a>
           {' · '}
           Data from{' '}
           <a href="https://github.com/nvidia/skills" target="_blank" rel="noreferrer">NVIDIA/skills</a>
