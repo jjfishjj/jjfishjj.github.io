@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="jjfishjj NVIDIA Skills Workspace PR #1 優化成果與下一步建議。" />
+  <meta name="theme-color" content="#080a0b" />
+  <title>Optimization Briefing | NVIDIA Skills Workspace</title>
+  <style>
+    :root {
+      --bg: #080a0b;
+      --panel: rgba(17, 24, 20, .88);
+      --panel-strong: #111a15;
+      --line: rgba(205, 232, 212, .15);
+      --text: #f0f5ef;
+      --muted: #9aa69e;
+      --subtle: #69756d;
+      --green: #76b900;
+      --green-soft: #b3e46b;
+      --blue: #73c4ff;
+      --gold: #f2c56b;
+      --violet: #c0a9ff;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; color: var(--text); background: var(--bg); font-family: Inter, "Noto Sans TC", "Noto Sans CJK TC", system-ui, sans-serif; }
+    a { color: inherit; }
+    button { font: inherit; }
+    .briefing { min-height: 100vh; background: radial-gradient(circle at 80% 0%, rgba(118,185,0,.13), transparent 28rem), linear-gradient(145deg, #0b100d, var(--bg) 55%); }
+    .topbar { position: fixed; z-index: 10; top: 0; right: 0; left: 0; border-bottom: 1px solid var(--line); background: rgba(8,10,11,.8); backdrop-filter: blur(18px); }
+    .topbar-inner { width: min(1180px, calc(100% - 40px)); min-height: 58px; margin: auto; display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+    .brand { color: var(--green-soft); font-size: 12px; font-weight: 800; letter-spacing: .08em; text-decoration: none; text-transform: uppercase; }
+    .nav { display: flex; align-items: center; gap: 7px; overflow-x: auto; }
+    .nav a, .nav button { border: 1px solid transparent; border-radius: 7px; padding: 7px 10px; color: var(--muted); background: transparent; font-size: 11px; text-decoration: none; white-space: nowrap; cursor: pointer; }
+    .nav a:hover, .nav button:hover { border-color: var(--line); color: var(--text); background: rgba(255,255,255,.04); }
+    .slides { width: min(1180px, calc(100% - 40px)); margin: auto; padding: 92px 0 80px; }
+    .slide { min-height: calc(100vh - 150px); display: flex; flex-direction: column; justify-content: center; padding: 58px 0; scroll-margin-top: 70px; }
+    .slide + .slide { border-top: 1px solid var(--line); }
+    .eyebrow { color: var(--green-soft); font-family: "DM Mono", ui-monospace, monospace; font-size: 10px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { max-width: 850px; margin-bottom: 18px; font-size: clamp(3rem, 8vw, 7.4rem); letter-spacing: -.08em; line-height: .92; }
+    h1 span { color: var(--green-soft); }
+    h2 { max-width: 760px; margin: 11px 0 20px; font-size: clamp(2rem, 5vw, 4.4rem); letter-spacing: -.07em; line-height: .98; }
+    h3 { margin-bottom: 8px; font-size: 17px; letter-spacing: -.04em; }
+    .subtitle { max-width: 620px; color: var(--muted); font-size: 16px; line-height: 1.8; }
+    .meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px; color: var(--subtle); font-family: "DM Mono", ui-monospace, monospace; font-size: 11px; }
+    .meta span { border: 1px solid var(--line); border-radius: 999px; padding: 7px 10px; background: rgba(255,255,255,.025); }
+    .hero-mark { position: absolute; z-index: -1; top: 15vh; right: 9vw; width: min(360px, 35vw); aspect-ratio: 1; border: 1px solid rgba(118,185,0,.22); border-radius: 50%; box-shadow: 0 0 0 40px rgba(118,185,0,.025), 0 0 0 80px rgba(118,185,0,.018); }
+    .hero-mark::after { position: absolute; top: 50%; left: -15%; width: 130%; height: 1px; background: rgba(115,196,255,.2); content: ''; transform: rotate(-25deg); }
+    .metric-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-top: 30px; }
+    .metric, .panel { border: 1px solid var(--line); border-radius: 15px; background: linear-gradient(145deg, var(--panel), rgba(12,16,14,.88)); }
+    .metric { min-height: 150px; display: flex; flex-direction: column; justify-content: space-between; padding: 18px; }
+    .metric strong { color: var(--green-soft); font-size: 45px; letter-spacing: -.08em; line-height: 1; }
+    .metric span { color: var(--muted); font-size: 12px; }
+    .metric.blue strong { color: var(--blue); }
+    .metric.gold strong { color: var(--gold); }
+    .metric.violet strong { color: var(--violet); }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 24px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 24px; }
+    .panel { padding: 22px; }
+    .panel p, .panel li { color: var(--muted); font-size: 13px; line-height: 1.75; }
+    .panel ul { display: grid; gap: 10px; margin: 14px 0 0; padding-left: 20px; }
+    .panel li::marker { color: var(--green-soft); }
+    .flow { display: flex; flex-wrap: wrap; align-items: stretch; gap: 8px; margin-top: 28px; }
+    .flow-step { flex: 1 1 150px; border: 1px solid var(--line); border-radius: 11px; padding: 14px; background: rgba(118,185,0,.07); }
+    .flow-step strong { display: block; margin-bottom: 5px; color: var(--green-soft); font-size: 12px; }
+    .flow-step span { color: var(--muted); font-size: 11px; line-height: 1.5; }
+    .flow-arrow { align-self: center; color: var(--green-soft); font-size: 18px; }
+    .checklist { display: grid; gap: 0; margin-top: 24px; border: 1px solid var(--line); border-radius: 15px; overflow: hidden; }
+    .check-row { display: grid; grid-template-columns: minmax(170px, .7fr) minmax(0, 1.3fr) 90px; gap: 14px; align-items: center; padding: 15px 18px; border-bottom: 1px solid var(--line); }
+    .check-row:last-child { border-bottom: 0; }
+    .check-row strong { font-size: 13px; }
+    .check-row span { color: var(--muted); font-size: 12px; line-height: 1.5; }
+    .status { justify-self: end; border: 1px solid rgba(118,185,0,.4); border-radius: 999px; padding: 5px 8px; color: var(--green-soft) !important; background: rgba(118,185,0,.1); font-family: "DM Mono", ui-monospace, monospace; font-size: 10px !important; }
+    .code { margin-top: 24px; border: 1px solid var(--line); border-radius: 12px; padding: 17px; overflow-x: auto; color: var(--green-soft); background: #060907; font-family: "DM Mono", ui-monospace, monospace; font-size: 12px; line-height: 1.8; }
+    .code .dim { color: var(--subtle); }
+    .priority { position: relative; padding-left: 44px; }
+    .priority::before { position: absolute; top: 0; left: 0; width: 28px; height: 28px; border: 1px solid rgba(118,185,0,.45); border-radius: 50%; color: var(--green-soft); content: attr(data-index); font-family: "DM Mono", ui-monospace, monospace; font-size: 11px; line-height: 28px; text-align: center; }
+    .footer { padding: 22px 0 10px; color: var(--subtle); font-family: "DM Mono", ui-monospace, monospace; font-size: 10px; text-align: center; }
+    .footer a { color: var(--muted); }
+    :focus-visible { outline: 2px solid var(--green-soft); outline-offset: 4px; }
+    @media (max-width: 820px) {
+      .hero-mark { top: 20vh; right: -10vw; width: 45vw; opacity: .65; }
+      .metric-grid, .grid-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .check-row { grid-template-columns: 1fr 80px; }
+      .check-row span { grid-column: 1 / -1; grid-row: 2; }
+      .status { grid-column: 2; grid-row: 1; }
+    }
+    @media (max-width: 560px) {
+      .topbar-inner, .slides { width: min(100% - 28px, 560px); }
+      .topbar-inner { min-height: 52px; }
+      .brand { display: none; }
+      .slides { padding-top: 64px; }
+      .slide { min-height: auto; padding: 64px 0; }
+      h1 { font-size: clamp(3rem, 16vw, 5rem); }
+      h2 { font-size: clamp(2rem, 12vw, 3.3rem); }
+      .metric-grid, .grid-2, .grid-3 { grid-template-columns: 1fr; }
+      .metric { min-height: 120px; }
+      .flow-arrow { width: 100%; transform: rotate(90deg); text-align: center; }
+      .check-row { grid-template-columns: 1fr 74px; padding: 13px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+    }
+    @media print {
+      .topbar { position: static; }
+      .nav { display: none; }
+      .slides { width: 100%; padding-top: 20px; }
+      .slide { min-height: 90vh; break-after: page; }
+    }
+  </style>
+</head>
+<body>
+  <div class="briefing">
+    <header class="topbar">
+      <div class="topbar-inner">
+        <a class="brand" href="/">jjfishjj / briefing</a>
+        <nav class="nav" aria-label="簡報導覽">
+          <a href="/">案例庫</a>
+          <a href="/projects/">作品集</a>
+          <a href="/linkedin/">經歷儀表板</a>
+          <button type="button" id="printButton">列印 / PDF</button>
+        </nav>
+      </div>
+    </header>
+
+    <main class="slides">
+      <section class="slide" id="cover" aria-labelledby="cover-title">
+        <div class="hero-mark" aria-hidden="true"></div>
+        <div class="eyebrow">PR #1 · NVIDIA SKILLS WORKSPACE</div>
+        <h1 id="cover-title">從案例庫，<span>走到可持續的工作區。</span></h1>
+        <p class="subtitle">本輪優化把 63 個 NVIDIA 技術案例整理成更容易探索、比較、回訪與驗證的互動工作區；同時為手機、鍵盤使用者與長期維護建立更穩定的基礎。</p>
+        <div class="meta"><span>feat/nvidia-skills-workspace-20260818</span><span>Commit f35afbf</span><span>2026.08</span></div>
+      </section>
+
+      <section class="slide" id="outcome" aria-labelledby="outcome-title">
+        <div class="eyebrow">01 / OUTCOME</div>
+        <h2 id="outcome-title">這次不是增加頁面，而是縮短找到下一步的距離。</h2>
+        <p class="subtitle">案例庫、作品集與經歷儀表板現在共享更清楚的入口與狀態語意，從第一次搜尋到再次回訪都有可預期的操作路徑。</p>
+        <div class="metric-grid">
+          <article class="metric"><span>可搜尋案例</span><strong>63</strong><span>9 條技術路線，涵蓋 GPU、LLM、Agent Safety 與 Physical AI。</span></article>
+          <article class="metric blue"><span>作品集專案</span><strong>32</strong><span>作品集頁支援搜尋、分類、收藏、分享與 hash 定位。</span></article>
+          <article class="metric gold"><span>回歸測試</span><strong>6</strong><span>以 Chromium 驗證真實瀏覽器互動與跨頁入口。</span></article>
+          <article class="metric violet"><span>最近瀏覽</span><strong>6</strong><span>保存上限，並在 localStorage 讀取時清理過時案例 ID。</span></article>
+        </div>
+      </section>
+
+      <section class="slide" id="workspace" aria-labelledby="workspace-title">
+        <div class="eyebrow">02 / WORKSPACE</div>
+        <h2 id="workspace-title">探索路徑由單一清單，升級為個人化工作台。</h2>
+        <div class="grid-2">
+          <article class="panel"><h3>入口更完整</h3><ul><li>搜尋 skill、關鍵字、場景與技術標籤。</li><li>分類、全部案例、我的收藏與最近瀏覽可互相切換。</li><li>案例詳細 modal 提供情境、實作重點、先備條件、預期成果與啟用指令。</li></ul></article>
+          <article class="panel"><h3>狀態更可靠</h3><ul><li>收藏與比較狀態以安全方式保存，並限制最多三個比較案例。</li><li>開啟詳細頁會產生 query deep link，方便回訪與分享。</li><li>Escape、焦點回復與 scroll lock 讓 modal 操作可預期。</li></ul></article>
+        </div>
+      </section>
+
+      <section class="slide" id="filtering" aria-labelledby="filtering-title">
+        <div class="eyebrow">03 / FILTER & SORT</div>
+        <h2 id="filtering-title">多條件篩選讓「找案例」變成「做選擇」。</h2>
+        <p class="subtitle">結果集合會依序套用搜尋、分類、檢視模式與排序；每個控制項都可單獨使用，也能組合成具體的閱讀路徑。</p>
+        <div class="flow" aria-label="多條件篩選流程">
+          <div class="flow-step"><strong>Search</strong><span>搜尋標題、skill ID、描述、場景與 tags。</span></div><span class="flow-arrow" aria-hidden="true">→</span>
+          <div class="flow-step"><strong>Track</strong><span>GPU、Vision、Agent / Safety、Data / MLOps 等分類。</span></div><span class="flow-arrow" aria-hidden="true">→</span>
+          <div class="flow-step"><strong>View</strong><span>全部、我的收藏、最近瀏覽。</span></div><span class="flow-arrow" aria-hidden="true">→</span>
+          <div class="flow-step"><strong>Sort</strong><span>預設、標題 A-Z、難度、分類 A-Z。</span></div>
+        </div>
+        <div class="code"><span class="dim">// 使用者可以快速縮小決策空間</span><br />query ∩ category ∩ viewMode → sortBy → case grid</div>
+      </section>
+
+      <section class="slide" id="testing" aria-labelledby="testing-title">
+        <div class="eyebrow">04 / REGRESSION</div>
+        <h2 id="testing-title">真實瀏覽器測試，鎖定最容易回歸的互動。</h2>
+        <p class="subtitle">Playwright 以獨立測試情境清除 localStorage，再透過 Chromium 驗證首頁與原生靜態子頁，避免只測到元件表面而漏掉頁面行為。</p>
+        <div class="checklist">
+          <div class="check-row"><strong>首頁搜尋 × 分類 × 排序</strong><span>Agent / Safety + Agent 關鍵字，並驗證標題與難度排序順序。</span><span class="status">PASS</span></div>
+          <div class="check-row"><strong>收藏 × 最近瀏覽</strong><span>切換我的收藏、開啟詳細頁、Escape 關閉並確認最近瀏覽計數。</span><span class="status">PASS</span></div>
+          <div class="check-row"><strong>比較上限提示</strong><span>加入第四個案例時保留三案並播報清楚的狀態訊息。</span><span class="status">PASS</span></div>
+          <div class="check-row"><strong>作品集分享分離</strong><span>搜尋 NVIDIA Skills Showcase、收藏後分享，收藏狀態維持不變。</span><span class="status">PASS</span></div>
+          <div class="check-row"><strong>Hash 深連結</strong><span>由 project-* ID 找到卡片並將焦點放回目標。</span><span class="status">PASS</span></div>
+          <div class="check-row"><strong>主要子頁導覽</strong><span>驗證 /projects/ 與 /linkedin/ 的 title、內容與可達性。</span><span class="status">PASS</span></div>
+        </div>
+      </section>
+
+      <section class="slide" id="a11y" aria-labelledby="a11y-title">
+        <div class="eyebrow">05 / ACCESSIBILITY</div>
+        <h2 id="a11y-title">可及性不是裝飾，而是狀態設計。</h2>
+        <div class="grid-3">
+          <article class="panel"><h3>鍵盤可用</h3><p>加入全站 <code>focus-visible</code>、modal Escape 關閉、開啟後焦點安排與關閉後焦點回復，降低鍵盤使用者迷失的機率。</p></article>
+          <article class="panel"><h3>語意可讀</h3><p>搜尋結果與比較上限使用 live region；分類、收藏、比較模式以 <code>aria-pressed</code> 表達目前狀態。</p></article>
+          <article class="panel"><h3>動態可控</h3><p>加入 <code>prefers-reduced-motion</code> 規則，並讓手機版的 filter、view switch、排序選單在窄螢幕自然堆疊。</p></article>
+        </div>
+      </section>
+
+      <section class="slide" id="cross-page" aria-labelledby="cross-page-title">
+        <div class="eyebrow">06 / CROSS-PAGE</div>
+        <h2 id="cross-page-title">作品集與經歷頁也遵守同一套互動原則。</h2>
+        <div class="grid-2">
+          <article class="panel"><h3>/projects/ 作品集</h3><ul><li>32 個專案可依分類與關鍵字搜尋。</li><li>分享按鈕與收藏按鈕事件分離，避免誤觸。</li><li>穩定 project-* ID 支援 hash 深連結與焦點定位。</li><li>空結果有清楚的 status message 與重設入口。</li></ul></article>
+          <article class="panel"><h3>/linkedin/ 經歷儀表板</h3><ul><li>保留 63 案例、9 類技術路線與 Skill Workspace 入口。</li><li>全站導覽可返回案例庫與作品集。</li><li>3D resume canvas、Robot Mission 與既有互動保持相容。</li><li>下一輪可再補足 screen reader 與載入失敗提示。</li></ul></article>
+        </div>
+      </section>
+
+      <section class="slide" id="quality" aria-labelledby="quality-title">
+        <div class="eyebrow">07 / DELIVERY</div>
+        <h2 id="quality-title">提交前有可重複的品質門檻，PR 也保持可審查。</h2>
+        <div class="grid-2">
+          <article class="panel"><h3>本地驗證結果</h3><div class="checklist"><div class="check-row"><strong>npm run lint</strong><span>ESLint flat config 通過。</span><span class="status">PASS</span></div><div class="check-row"><strong>npm run build</strong><span>Vite production build 通過。</span><span class="status">PASS</span></div><div class="check-row"><strong>npm test</strong><span>6 個 Playwright tests 通過。</span><span class="status">PASS</span></div><div class="check-row"><strong>git diff --check</strong><span>無空白錯誤。</span><span class="status">PASS</span></div></div></article>
+          <article class="panel"><h3>PR #1 狀態</h3><p>本輪提交已推送到 <a href="https://github.com/jjfishjj/jjfishjj.github.io/pull/1">feat/nvidia-skills-workspace-20260818</a>，最新 commit 為 <code>f35afbf</code>；PR 目標為 <code>main</code>，目前維持 OPEN，方便持續審查與合併。</p><div class="code">npm run lint<br />npm run build<br />npm test<br /><span class="dim"># 6 passed · Chromium</span></div></article>
+        </div>
+      </section>
+
+      <section class="slide" id="next" aria-labelledby="next-title">
+        <div class="eyebrow">08 / NEXT MOVES</div>
+        <h2 id="next-title">下一步，從可保存狀態走向可攜式工作區。</h2>
+        <div class="grid-2">
+          <article class="panel priority" data-index="01"><h3>收藏清單匯出／匯入</h3><p>以 JSON 交換收藏與比較清單，支援跨瀏覽器、面試準備與團隊分享。</p></article>
+          <article class="panel priority" data-index="02"><h3>可分享的篩選 URL</h3><p>將 query、分類、view mode 與 sortBy 寫入 URL，讓同一組閱讀路徑可被直接複製。</p></article>
+          <article class="panel priority" data-index="03"><h3>CI 品質閘門</h3><p>把 lint、Playwright 與 build 接到 GitHub Actions，讓後續 PR 在合併前自動回歸。</p></article>
+          <article class="panel priority" data-index="04"><h3>共用靜態頁模板</h3><p>抽出導覽、SEO metadata、theme tokens 與 focus 規則，降低 /linkedin/ 與 3D demo 的維護成本。</p></article>
+        </div>
+        <div class="meta"><span><a href="/">開始瀏覽 63 個案例 →</a></span><span><a href="/projects/">查看 32 個專案 →</a></span><span><a href="/linkedin/">開啟經歷儀表板 →</a></span></div>
+      </section>
+
+      <footer class="footer">Built for <a href="https://github.com/jjfishjj/jjfishjj.github.io">jjfishjj.github.io</a> · PR #1 · NVIDIA Skills Workspace</footer>
+    </main>
+  </div>
+  <script>
+    document.getElementById('printButton')?.addEventListener('click', () => window.print())
+  </script>
+</body>
+</html>
