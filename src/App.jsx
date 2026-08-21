@@ -37,6 +37,9 @@ const CERTIFICATES = [
 
 const FAVORITES_KEY = 'jjfishjj:nvidia-skills:favorites'
 const COMPARE_KEY = 'jjfishjj:nvidia-skills:compare'
+const RECENT_KEY = 'jjfishjj:nvidia-skills:recent'
+const MAX_RECENT = 6
+const LEVEL_ORDER = { 探索: 0, 中階: 1, 進階: 2 }
 
 function readStoredArray(key) {
   try {
@@ -46,6 +49,10 @@ function readStoredArray(key) {
   } catch {
     return []
   }
+}
+
+function isKnownSkillId(id) {
+  return SKILLS.some((skill) => skill.skill === id)
 }
 
 function categoryLabel(id) {
@@ -196,18 +203,37 @@ export default function App() {
   const [query, setQuery] = useState('')
   const [expanded, setExpanded] = useState(null)
   const [selectedSkillId, setSelectedSkillId] = useState(() => new URLSearchParams(window.location.search).get('skill'))
-  const [favoriteIds, setFavoriteIds] = useState(() => readStoredArray(FAVORITES_KEY))
-  const [compareIds, setCompareIds] = useState(() => readStoredArray(COMPARE_KEY))
+  const [favoriteIds, setFavoriteIds] = useState(() => readStoredArray(FAVORITES_KEY).filter(isKnownSkillId))
+  const [compareIds, setCompareIds] = useState(() => readStoredArray(COMPARE_KEY).filter(isKnownSkillId).slice(0, 3))
+  const [recentIds, setRecentIds] = useState(() => readStoredArray(RECENT_KEY).filter(isKnownSkillId).slice(0, MAX_RECENT))
+  const [viewMode, setViewMode] = useState('all')
+  const [sortBy, setSortBy] = useState('default')
   const [showCompare, setShowCompare] = useState(false)
+  const [compareNotice, setCompareNotice] = useState('')
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
-    return SKILLS.filter((skill) => {
+    const matchingSkills = SKILLS.filter((skill) => {
       const searchable = [skill.title, skill.skill, skill.desc, skill.scenario, skill.cat, ...(skill.tags || [])].join(' ').toLowerCase()
       const matchCat = filter === 'all' || skill.cat === filter
-      return matchCat && (!q || searchable.includes(q))
+      const matchView = viewMode === 'all'
+        || (viewMode === 'favorites' && favoriteIds.includes(skill.skill))
+        || (viewMode === 'recent' && recentIds.includes(skill.skill))
+      return matchCat && matchView && (!q || searchable.includes(q))
     })
-  }, [filter, query])
+
+    if (sortBy === 'default') return matchingSkills
+
+    return [...matchingSkills].sort((left, right) => {
+      if (sortBy === 'title-asc') return left.title.localeCompare(right.title, 'zh-Hant')
+      if (sortBy === 'level-asc' || sortBy === 'level-desc') {
+        const direction = sortBy === 'level-asc' ? 1 : -1
+        return (LEVEL_ORDER[detailFor(left).level] - LEVEL_ORDER[detailFor(right).level]) * direction || left.title.localeCompare(right.title, 'zh-Hant')
+      }
+      if (sortBy === 'category') return categoryLabel(left.cat).localeCompare(categoryLabel(right.cat), 'zh-Hant') || left.title.localeCompare(right.title, 'zh-Hant')
+      return 0
+    })
+  }, [favoriteIds, filter, query, recentIds, sortBy, viewMode])
 
   const categoryStats = useMemo(() => CATS.filter((category) => category.id !== 'all').map((category) => ({
     ...category,
@@ -219,12 +245,28 @@ export default function App() {
   const selectedSkill = SKILLS.find((skill) => skill.skill === selectedSkillId)
 
   useEffect(() => {
-    window.localStorage.setItem(FAVORITES_KEY, JSON.stringify(favoriteIds))
+    try {
+      window.localStorage.setItem(FAVORITES_KEY, JSON.stringify(favoriteIds))
+    } catch {
+      // Storage may be blocked in private browsing; the in-memory state still works.
+    }
   }, [favoriteIds])
 
   useEffect(() => {
-    window.localStorage.setItem(COMPARE_KEY, JSON.stringify(compareIds))
+    try {
+      window.localStorage.setItem(COMPARE_KEY, JSON.stringify(compareIds))
+    } catch {
+      // Storage may be blocked in private browsing; the in-memory state still works.
+    }
   }, [compareIds])
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(RECENT_KEY, JSON.stringify(recentIds))
+    } catch {
+      // Storage may be blocked in private browsing; the in-memory state still works.
+    }
+  }, [recentIds])
 
   useEffect(() => {
     const syncSkillFromUrl = () => setSelectedSkillId(new URLSearchParams(window.location.search).get('skill'))
@@ -232,7 +274,33 @@ export default function App() {
     return () => window.removeEventListener('popstate', syncSkillFromUrl)
   }, [])
 
+  useEffect(() => {
+    if (!selectedSkill && !showCompare) return undefined
+
+    const previousActive = document.activeElement
+    const dialog = document.querySelector('[role="dialog"]')
+    const firstFocusable = dialog?.querySelector('button, a[href], input, select, textarea, [tabindex]:not([tabindex="-1"])')
+    firstFocusable?.focus()
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        if (showCompare) setShowCompare(false)
+        else closeDetail()
+      }
+    }
+    document.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown)
+      document.body.style.overflow = previousOverflow
+      if (previousActive && typeof previousActive.focus === 'function') previousActive.focus()
+    }
+  }, [selectedSkill, showCompare])
+
   function openDetail(skillId) {
+    setRecentIds((current) => [skillId, ...current.filter((id) => id !== skillId)].slice(0, MAX_RECENT))
     setSelectedSkillId(skillId)
     window.history.pushState({}, '', `${window.location.pathname}?skill=${encodeURIComponent(skillId)}`)
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -249,8 +317,15 @@ export default function App() {
 
   function toggleCompare(skillId) {
     setCompareIds((current) => {
-      if (current.includes(skillId)) return current.filter((id) => id !== skillId)
-      if (current.length >= 3) return current
+      if (current.includes(skillId)) {
+        setCompareNotice('')
+        return current.filter((id) => id !== skillId)
+      }
+      if (current.length >= 3) {
+        setCompareNotice('比較工具最多同時比較 3 個案例。')
+        return current
+      }
+      setCompareNotice('')
       return [...current, skillId]
     })
   }
@@ -319,12 +394,32 @@ export default function App() {
                 className={`filter-btn ${filter === category.id ? 'active' : ''}`}
                 type="button"
                 onClick={() => setFilter(category.id)}
+                aria-pressed={filter === category.id}
               >
                 {category.label}
                 {category.id !== 'all' && <small>{categoryStats.find((stat) => stat.id === category.id)?.count}</small>}
               </button>
             ))}
-            <span className="count">顯示 {filtered.length} / {SKILLS.length}</span>
+            <div className="view-switch" role="group" aria-label="案例檢視模式">
+              {[
+                ['all', '全部案例'],
+                ['favorites', `我的收藏 ${favoriteIds.length}`],
+                ['recent', `最近瀏覽 ${recentIds.length}`],
+              ].map(([mode, label]) => (
+                <button key={mode} className={`view-switch-btn ${viewMode === mode ? 'active' : ''}`} type="button" aria-pressed={viewMode === mode} onClick={() => setViewMode(mode)}>{label}</button>
+              ))}
+            </div>
+            <label className="sort-control">
+              <span>排序</span>
+              <select aria-label="案例排序" value={sortBy} onChange={(event) => setSortBy(event.target.value)}>
+                <option value="default">預設順序</option>
+                <option value="title-asc">標題 A-Z</option>
+                <option value="level-asc">難度：低到高</option>
+                <option value="level-desc">難度：高到低</option>
+                <option value="category">分類 A-Z</option>
+              </select>
+            </label>
+            <span className="count" aria-live="polite">顯示 {filtered.length} / {SKILLS.length}</span>
           </div>
         </section>
 
@@ -400,8 +495,8 @@ export default function App() {
                       </div>
                     )}
                     <div className="card-actions">
-                      <button className={`icon-action ${isFavorite ? 'active' : ''}`} type="button" onClick={() => toggleFavorite(skill.skill)} aria-label={isFavorite ? `取消收藏 ${skill.title}` : `收藏 ${skill.title}`}>{isFavorite ? '★ 已收藏' : '☆ 收藏'}</button>
-                      <button className={`icon-action ${isCompared ? 'active' : ''}`} type="button" onClick={() => toggleCompare(skill.skill)} aria-label={isCompared ? `從比較移除 ${skill.title}` : `加入比較 ${skill.title}`}>{isCompared ? '✓ 比較中' : '+ 比較'}</button>
+                      <button className={`icon-action ${isFavorite ? 'active' : ''}`} type="button" onClick={() => toggleFavorite(skill.skill)} aria-label={isFavorite ? `取消收藏 ${skill.title}` : `收藏 ${skill.title}`} aria-pressed={isFavorite}>{isFavorite ? '★ 已收藏' : '☆ 收藏'}</button>
+                      <button className={`icon-action ${isCompared ? 'active' : ''}`} type="button" onClick={() => toggleCompare(skill.skill)} aria-label={isCompared ? `從比較移除 ${skill.title}` : `加入比較 ${skill.title}`} aria-pressed={isCompared}>{isCompared ? '✓ 比較中' : '+ 比較'}</button>
                       <button className="detail-link" type="button" onClick={() => openDetail(skill.skill)}>查看詳細 ↗</button>
                     </div>
                   </article>
@@ -447,8 +542,8 @@ export default function App() {
 
       {compareIds.length > 0 && (
         <div className="compare-tray" role="region" aria-label="案例比較工具">
-          <div><strong>{compareIds.length} 個案例正在比較</strong><span>最多可選 3 個案例</span></div>
-          <div className="compare-tray-actions"><button className="text-btn" type="button" onClick={() => setCompareIds([])}>清除</button><button className="compare-btn" type="button" onClick={() => setShowCompare(true)}>開啟比較 ↗</button></div>
+          <div><strong>{compareIds.length} 個案例正在比較</strong><span>最多可選 3 個案例</span>{compareNotice && <span className="compare-notice" role="status" aria-live="polite">{compareNotice}</span>}</div>
+          <div className="compare-tray-actions"><button className="text-btn" type="button" onClick={() => { setCompareIds([]); setCompareNotice('') }}>清除</button><button className="compare-btn" type="button" onClick={() => setShowCompare(true)}>開啟比較 ↗</button></div>
         </div>
       )}
 

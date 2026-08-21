@@ -323,6 +323,25 @@ let currentCategory = categories.some((category) => category.id === categoryFrom
 let query = ""
 let favoritesOnly = false
 let favoriteIds = readFavorites()
+let statusMessage = ""
+
+function escapeHtml(value) {
+  return String(value).replace(/[&<>"']/g, (character) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;",
+  })[character])
+}
+
+function saveFavorites() {
+  try {
+    localStorage.setItem(PROJECT_FAVORITES_KEY, JSON.stringify([...favoriteIds]))
+  } catch {
+    statusMessage = "瀏覽器目前無法保存收藏，但本次瀏覽仍會保留狀態。"
+  }
+}
 
 function readFavorites() {
   try {
@@ -334,7 +353,30 @@ function readFavorites() {
 }
 
 function projectId(project) {
-  return project.url || project.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")
+  const slug = project.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")
+  return slug || encodeURIComponent(project.title)
+}
+
+function projectShareUrl(project) {
+  const url = new URL(window.location.href)
+  url.hash = `project-${projectId(project)}`
+  return url.toString()
+}
+
+async function shareProject(project) {
+  const shareUrl = projectShareUrl(project)
+  try {
+    if (navigator.share) {
+      await navigator.share({ title: project.title, text: project.description, url: shareUrl })
+      statusMessage = `已開啟分享：${project.title}`
+    } else {
+      await navigator.clipboard.writeText(shareUrl)
+      statusMessage = `已複製分享連結：${project.title}`
+    }
+  } catch {
+    statusMessage = "分享已取消，或目前瀏覽器不允許複製連結。"
+  }
+  render()
 }
 
 function getCategory(id) {
@@ -377,17 +419,17 @@ function renderProject(project) {
   const id = projectId(project)
   const isFavorite = favoriteIds.has(id)
   return `
-    <article class="project-card">
+    <article id="project-${id}" class="project-card" tabindex="-1">
       <div>
-        <div class="project-type">${project.type}</div>
-        <h3>${project.title}</h3>
-        <p>${project.description}</p>
+        <div class="project-type">${escapeHtml(project.type)}</div>
+        <h3>${escapeHtml(project.title)}</h3>
+        <p>${escapeHtml(project.description)}</p>
         <div class="tag-row">
-          <span class="tag">${category.short}</span>
-          ${project.tags.map((tag) => `<span class="tag">${tag}</span>`).join("")}
+          <span class="tag">${escapeHtml(category.short)}</span>
+          ${project.tags.map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`).join("")}
         </div>
       </div>
-      <div class="project-actions">${demoLink}${repoLink}<button class="project-link favorite-project${isFavorite ? " active" : ""}" type="button" data-project-id="${id}">${isFavorite ? "★ 已收藏" : "☆ 收藏"}</button></div>
+      <div class="project-actions">${demoLink}${repoLink}<button class="project-link share-project" type="button" data-project-id="${id}" aria-label="分享 ${escapeHtml(project.title)}">分享</button><button class="project-link favorite-project${isFavorite ? " active" : ""}" type="button" data-project-id="${id}" aria-pressed="${isFavorite}">${isFavorite ? "★ 已收藏" : "☆ 收藏"}</button></div>
     </article>
   `
 }
@@ -434,15 +476,16 @@ function render() {
           <p>${selected.id === "all" ? "這裡先把作品集用主題分類，之後新增 repo 或 demo 時，只要加入對應分類就能維持清楚。" : selected.intro}</p>
         </div>
 
-          <div class="toolbar">
-          <input class="search" type="search" placeholder="搜尋專案、技術或用途" value="${query}" aria-label="搜尋專案" />
-          <div class="toolbar-actions"><button class="saved-filter${favoritesOnly ? " active" : ""}" type="button">★ ${favoritesOnly ? "顯示全部" : "只看收藏"}</button><span class="count">${visible.length} / ${projects.length} 個專案</span></div>
+        <div class="toolbar">
+          <input class="search" type="search" placeholder="搜尋專案、技術或用途" value="${escapeHtml(query)}" aria-label="搜尋專案" />
+          <div class="toolbar-actions"><button class="saved-filter${favoritesOnly ? " active" : ""}" type="button" aria-pressed="${favoritesOnly}">★ ${favoritesOnly ? "顯示全部" : "只看收藏"}</button><span class="count" aria-live="polite">${visible.length} / ${projects.length} 個專案</span></div>
         </div>
+        ${statusMessage ? `<p class="status-message" role="status" aria-live="polite">${escapeHtml(statusMessage)}</p>` : ""}
 
         ${
           visible.length
             ? `<div class="project-grid">${visible.map(renderProject).join("")}</div>`
-            : `<div class="empty">目前沒有符合「${query}」的專案，請換一個關鍵字。</div>`
+            : `<div class="empty">目前沒有符合「${escapeHtml(query)}」的專案，請換一個關鍵字。<button class="reset-project-filter" type="button">重設搜尋與收藏篩選</button></div>`
         }
       </section>
     </main>
@@ -456,19 +499,61 @@ function render() {
 
   app.querySelector(".saved-filter")?.addEventListener("click", () => {
     favoritesOnly = !favoritesOnly
+    statusMessage = favoritesOnly ? "現在只顯示已收藏專案。" : "已恢復顯示全部專案。"
     render()
   })
 
-  app.querySelectorAll("[data-project-id]").forEach((button) => {
+  app.querySelector(".reset-project-filter")?.addEventListener("click", () => {
+    query = ""
+    favoritesOnly = false
+    currentCategory = "all"
+    statusMessage = "已重設搜尋、分類與收藏篩選。"
+    render()
+  })
+
+  app.querySelectorAll(".favorite-project").forEach((button) => {
     button.addEventListener("click", (event) => {
       event.preventDefault()
       const id = button.dataset.projectId
-      if (favoriteIds.has(id)) favoriteIds.delete(id)
-      else favoriteIds.add(id)
-      localStorage.setItem(PROJECT_FAVORITES_KEY, JSON.stringify([...favoriteIds]))
+      const project = projects.find((item) => projectId(item) === id)
+      if (favoriteIds.has(id)) {
+        favoriteIds.delete(id)
+        statusMessage = `已從收藏移除：${project?.title || "專案"}`
+      } else {
+        favoriteIds.add(id)
+        statusMessage = `已加入收藏：${project?.title || "專案"}`
+      }
+      saveFavorites()
       render()
+    })
+  })
+
+  app.querySelectorAll(".share-project").forEach((button) => {
+    button.addEventListener("click", (event) => {
+      event.preventDefault()
+      const project = projects.find((item) => projectId(item) === button.dataset.projectId)
+      if (project) shareProject(project)
     })
   })
 }
 
+function focusProjectFromHash() {
+  if (!window.location.hash.startsWith("#project-")) return
+  const card = document.getElementById(window.location.hash.slice(1))
+  if (card) {
+    card.scrollIntoView({ behavior: "smooth", block: "center" })
+    card.focus({ preventScroll: true })
+  }
+}
+
+window.addEventListener("hashchange", focusProjectFromHash)
+window.addEventListener("storage", (event) => {
+  if (event.key === PROJECT_FAVORITES_KEY) {
+    favoriteIds = readFavorites()
+    statusMessage = "收藏已從其他分頁同步。"
+    render()
+  }
+})
+
 render()
+focusProjectFromHash()

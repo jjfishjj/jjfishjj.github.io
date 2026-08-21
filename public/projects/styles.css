@@ -462,3 +462,21 @@ footer a {
     justify-content: space-between;
   }
 }
+
+
+/* Accessibility and sharing enhancements */
+:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
+.project-card:focus-visible { border-color: var(--cyan); box-shadow: 0 0 0 4px rgba(85, 199, 255, .12); }
+.status-message { margin: -4px 0 16px; color: var(--cyan); font-size: 12px; }
+.reset-project-filter { display: block; margin: 14px auto 0; min-height: 36px; border: 1px solid var(--line); border-radius: 8px; padding: 0 12px; color: var(--text); background: rgba(255, 255, 255, .05); cursor: pointer; font: inherit; font-size: 12px; font-weight: 750; }
+.reset-project-filter:hover { border-color: rgba(118, 185, 0, .55); color: var(--green); }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
+@media (max-width: 560px) {
+  .toolbar-actions { align-items: stretch; flex-direction: column; gap: 8px; }
+  .saved-filter { width: 100%; min-height: 40px; }
+  .count { text-align: left; }
+  .project-link { flex: 1 1 auto; }
+}
