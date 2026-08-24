@@ -355,6 +355,54 @@ h1 {
   gap: 10px;
 }
 
+.environment-controls {
+  position: absolute;
+  z-index: 4;
+  left: 24px;
+  bottom: 92px;
+  display: flex;
+  align-items: end;
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(12, 17, 23, 0.88);
+  backdrop-filter: blur(12px);
+}
+
+.environment-controls label {
+  display: grid;
+  gap: 4px;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.environment-controls select,
+.environment-controls button {
+  min-height: 34px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #17202a;
+  color: var(--text);
+  font: inherit;
+  font-size: 12px;
+}
+
+.environment-controls select {
+  min-width: 82px;
+  padding: 0 26px 0 9px;
+}
+
+.environment-controls button {
+  padding: 0 12px;
+}
+
+.environment-controls button[aria-pressed="true"] {
+  border-color: var(--accent);
+  background: rgba(79, 209, 165, 0.2);
+}
+
 .free-walk-controls {
   position: absolute;
   z-index: 5;
@@ -597,6 +645,64 @@ dd {
   line-height: 1.45;
 }
 
+.mission-panel {
+  margin-bottom: 24px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--line);
+}
+
+.mission-heading {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.mission-heading h2 {
+  margin: 3px 0 0;
+  font-size: 22px;
+}
+
+.mission-heading strong {
+  color: var(--accent);
+  font-size: 13px;
+}
+
+.mission-checklist {
+  display: grid;
+  gap: 9px;
+  margin: 16px 0;
+  padding-left: 24px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.mission-checklist li::marker {
+  color: var(--accent-2);
+  font-weight: 800;
+}
+
+.mission-checklist li[data-complete="true"] {
+  color: var(--text);
+  text-decoration: line-through;
+  text-decoration-color: var(--accent);
+}
+
+.mission-reward {
+  margin: 0 0 12px;
+  color: var(--accent-2);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.mission-panel button {
+  width: 100%;
+  min-height: 42px;
+  border-color: var(--accent);
+  background: rgba(79, 209, 165, 0.16);
+}
+
 @media (max-width: 860px) {
   body {
     overflow: auto;
@@ -621,6 +727,13 @@ dd {
 
   .toolbar {
     bottom: 16px;
+  }
+
+  .environment-controls {
+    left: 16px;
+    right: 16px;
+    bottom: 174px;
+    justify-content: center;
   }
 
   .tour-guide {

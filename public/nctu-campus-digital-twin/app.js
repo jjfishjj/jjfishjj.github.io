@@ -1,5 +1,6 @@
 import * as THREE from "./vendor/three.module.js";
 import { OrbitControls } from "./vendor/OrbitControls.js";
+import { campusGeoreference } from "./campus-data.js";
 
 const canvas = document.querySelector("#campus-canvas");
 const scene = new THREE.Scene();
@@ -14,6 +15,8 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.05;
 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
@@ -93,15 +96,15 @@ function addLabel(text, position, width = 16) {
 }
 
 const campusShape = new THREE.Shape();
-campusShape.moveTo(-66, -22);
-campusShape.lineTo(-53, -48);
-campusShape.lineTo(8, -54);
-campusShape.lineTo(52, -38);
-campusShape.lineTo(66, -6);
-campusShape.lineTo(61, 33);
-campusShape.lineTo(35, 50);
-campusShape.lineTo(-34, 51);
-campusShape.lineTo(-61, 34);
+campusShape.moveTo(-76, -22);
+campusShape.lineTo(-66, -52);
+campusShape.lineTo(-8, -58);
+campusShape.lineTo(45, -42);
+campusShape.lineTo(52, -2);
+campusShape.lineTo(39, 44);
+campusShape.lineTo(5, 66);
+campusShape.lineTo(-48, 62);
+campusShape.lineTo(-76, 30);
 campusShape.closePath();
 const campus = new THREE.Mesh(new THREE.ShapeGeometry(campusShape), materials.lawn);
 campus.rotation.x = -Math.PI / 2;
@@ -110,19 +113,36 @@ scene.add(campus);
 
 box("大學路", [9, 0.18, 132], [70, -0.02, 2], materials.road, -0.12);
 box("新安路", [132, 0.18, 8], [5, -0.02, -59], materials.road, 0.02);
-addRoad([[67, 24], [57, 24], [47, 20], [36, 14], [24, 8], [11, 7], [0, 8], [-16, 10], [-31, 10], [-47, 9]], 5.4);
-addRoad([[45, 31], [27, 34], [8, 33], [-12, 31], [-31, 30], [-50, 30]], 4.1);
-addRoad([[34, 13], [32, -4], [33, -20], [35, -34], [27, -43]], 4.2);
-addRoad([[10, 8], [9, -8], [8, -22], [8, -38], [8, -55]], 4.6);
-addRoad([[-16, 10], [-15, -5], [-17, -20], [-15, -37], [8, -38]], 4.2);
-addRoad([[-47, 9], [-43, -8], [-48, -25], [-31, -36], [-15, -37]], 4.1);
-addRoad([[-50, 30], [-34, 22], [-16, 10], [0, 8], [10, 8]], 3.4, materials.path);
+for (const roadData of campusGeoreference.roads) {
+  const roadPoints = roadData.points.map(([x, z]) => new THREE.Vector3(x, 0.1, z));
+  if (roadPoints.length < 2) continue;
+  if (roadData.width >= 0.5) {
+    const curve = new THREE.CatmullRomCurve3(roadPoints, false, "catmullrom", 0.15);
+    const roadMesh = new THREE.Mesh(new THREE.TubeGeometry(curve, Math.min(36, roadPoints.length * 3), roadData.width / 2, 6, false), materials.road);
+    roadMesh.scale.y = 0.06;
+    roadMesh.receiveShadow = true;
+    scene.add(roadMesh);
+  } else {
+    const pathLine = new THREE.Line(
+      new THREE.BufferGeometry().setFromPoints(roadPoints),
+      new THREE.LineBasicMaterial({ color: 0xb9ac91, transparent: true, opacity: 0.72 })
+    );
+    scene.add(pathLine);
+  }
+}
 box("浩然廣場", [22, 0.08, 12], [8, 0.11, 8], materials.path);
+
+const northGateGeo = campusGeoreference.landmarks["北大門"];
+const lakeGeo = campusGeoreference.landmarks["竹湖"];
+const southGateGeo = campusGeoreference.landmarks["南大門"];
+const northGatePoint = [northGateGeo?.x ?? 62, northGateGeo?.z ?? 24];
+const lakePoint = [lakeGeo?.x ?? 49, lakeGeo?.z ?? 14];
+const southGatePoint = [southGateGeo?.x ?? 8, southGateGeo?.z ?? -54];
 
 const lake = new THREE.Mesh(new THREE.CylinderGeometry(10, 10, 0.28, 48), materials.water);
 lake.name = "竹湖";
-lake.position.set(49, 0.06, 14);
-lake.scale.z = 0.62;
+lake.position.set(lakePoint[0], 0.06, lakePoint[1]);
+lake.scale.set(Math.max(0.7, (lakeGeo?.width ?? 20) / 20), 1, Math.max(0.55, (lakeGeo?.depth ?? 12) / 20));
 lake.receiveShadow = true;
 lake.userData.landmark = "lake";
 scene.add(lake);
@@ -139,7 +159,7 @@ athleticField.scale.x = 1.55;
 scene.add(athleticField);
 
 const buildingMeshes = new Map();
-const buildings = [
+const baseBuildings = [
   ["浩然圖書館", [18, 10, 16], [8, 5, 1], materials.landmark, 0.02],
   ["行政大樓", [13, 7, 10], [34, 3.5, 24], materials.landmark, -0.08],
   ["中正堂", [14, 6, 9], [22, 3, 25], materials.academic, -0.08],
@@ -180,6 +200,18 @@ const buildings = [
   ["棒球場", [16, 2, 12], [-51, 1, -29], materials.field, -0.1]
 ];
 
+const buildings = baseBuildings.map(([name, size, position, material, rotation]) => {
+  const osmLayout = campusGeoreference.buildings[name];
+  if (!osmLayout) return [name, size, position, material, rotation];
+  return [
+    name,
+    [osmLayout.width, size[1], osmLayout.depth],
+    [osmLayout.x, position[1], osmLayout.z],
+    material,
+    rotation
+  ];
+});
+
 for (const [name, size, position, material, rotation] of buildings) {
   buildingMeshes.set(name, addBuilding(name, size, position, material, rotation));
 }
@@ -197,22 +229,22 @@ buildingMeshes.get("棒球場").userData.landmark = "sports";
 track.userData.landmark = "sports";
 athleticField.userData.landmark = "sports";
 
-box("北大門北柱", [1.8, 5.5, 3.2], [62, 2.75, 27.5], materials.landmark, 0);
-box("北大門南柱", [1.8, 5.5, 3.2], [62, 2.75, 16.5], materials.landmark, 0);
-box("北大門門楣", [1.3, 1, 8], [62, 5.4, 22], materials.landmark, 0);
-box("南大門西柱", [2.4, 5, 1.6], [2, 2.5, -54], materials.landmark, 0);
-box("南大門東柱", [2.4, 5, 1.6], [14, 2.5, -54], materials.landmark, 0);
-box("南大門門楣", [9.6, 1, 1.3], [8, 5, -54], materials.landmark, 0);
+box("北大門北柱", [1.8, 5.5, 3.2], [northGatePoint[0], 2.75, northGatePoint[1] + 5], materials.landmark, 0);
+box("北大門南柱", [1.8, 5.5, 3.2], [northGatePoint[0], 2.75, northGatePoint[1] - 5], materials.landmark, 0);
+box("北大門門楣", [1.3, 1, 8], [northGatePoint[0], 5.4, northGatePoint[1]], materials.landmark, 0);
+box("南大門西柱", [2.4, 5, 1.6], [southGatePoint[0] - 6, 2.5, southGatePoint[1]], materials.landmark, 0);
+box("南大門東柱", [2.4, 5, 1.6], [southGatePoint[0] + 6, 2.5, southGatePoint[1]], materials.landmark, 0);
+box("南大門門楣", [9.6, 1, 1.3], [southGatePoint[0], 5, southGatePoint[1]], materials.landmark, 0);
 
 const labelGroup = new THREE.Group();
 scene.add(labelGroup);
 for (const [text, position, width] of [
-  ["北大門", [62, 8, 22], 8],
-  ["南大門", [8, 8, -54], 12],
-  ["竹湖", [49, 4, 14], 9],
-  ["浩然圖書館", [8, 13, 1], 18],
-  ["行政大樓", [34, 10, 24], 15],
-  ["工程館群", [-30, 14, 7], 15],
+  ["北大門", [northGatePoint[0], 8, northGatePoint[1]], 8],
+  ["南大門", [southGatePoint[0], 8, southGatePoint[1]], 12],
+  ["竹湖", [lakePoint[0], 4, lakePoint[1]], 9],
+  ["浩然圖書館", [buildingMeshes.get("浩然圖書館").position.x, 13, buildingMeshes.get("浩然圖書館").position.z], 18],
+  ["行政大樓", [buildingMeshes.get("行政大樓").position.x, 10, buildingMeshes.get("行政大樓").position.z], 15],
+  ["工程館群", [buildingMeshes.get("工程二館").position.x, 14, buildingMeshes.get("工程二館").position.z], 15],
   ["田徑場", [-48, 5, 39], 12],
   ["北側宿舍區", [14, 13, 43], 17],
   ["南側宿舍區", [5, 13, -45], 17]
@@ -429,16 +461,86 @@ sun.shadow.camera.right = 90;
 sun.shadow.camera.top = 90;
 sun.shadow.camera.bottom = -90;
 scene.add(sun);
-scene.add(new THREE.HemisphereLight(0xd7efff, 0x355538, 1.8));
+const hemisphereLight = new THREE.HemisphereLight(0xd7efff, 0x355538, 1.8);
+scene.add(hemisphereLight);
+
+const rainGeometry = new THREE.BufferGeometry();
+const rainPositions = new Float32Array(900 * 3);
+for (let index = 0; index < rainPositions.length; index += 3) {
+  rainPositions[index] = THREE.MathUtils.randFloatSpread(150);
+  rainPositions[index + 1] = THREE.MathUtils.randFloat(4, 74);
+  rainPositions[index + 2] = THREE.MathUtils.randFloatSpread(130);
+}
+rainGeometry.setAttribute("position", new THREE.BufferAttribute(rainPositions, 3));
+const rain = new THREE.Points(
+  rainGeometry,
+  new THREE.PointsMaterial({ color: 0xb8d8e8, size: 0.16, transparent: true, opacity: 0.72 })
+);
+rain.visible = false;
+scene.add(rain);
+
+const environmentState = { time: "day", weather: "clear", rtx: false };
+const buildingMaterials = [materials.academic, materials.engineering, materials.landmark, materials.residence];
+
+function updateEnvironment() {
+  const palettes = {
+    day: { sky: 0x93bed2, fog: 0x93bed2, sun: 0xfff1cf, sunIntensity: 3.1, hemi: 1.8, exposure: 1.05, position: [60, 90, 45] },
+    sunset: { sky: 0xd58e75, fog: 0xc89079, sun: 0xffb46b, sunIntensity: 2.5, hemi: 1.25, exposure: 0.92, position: [-70, 30, 45] },
+    night: { sky: 0x101923, fog: 0x172332, sun: 0x8eb8ff, sunIntensity: 0.55, hemi: 0.72, exposure: 0.72, position: [-30, 55, -45] }
+  };
+  const palette = palettes[environmentState.time];
+  scene.background.setHex(palette.sky);
+  scene.fog.color.setHex(palette.fog);
+  scene.fog.near = environmentState.weather === "rain" ? 55 : environmentState.weather === "cloudy" ? 78 : 100;
+  scene.fog.far = environmentState.weather === "rain" ? 145 : environmentState.weather === "cloudy" ? 175 : 220;
+  sun.color.setHex(palette.sun);
+  sun.intensity = palette.sunIntensity * (environmentState.weather === "cloudy" ? 0.58 : environmentState.weather === "rain" ? 0.42 : 1);
+  sun.position.set(...palette.position);
+  hemisphereLight.intensity = palette.hemi * (environmentState.weather === "clear" ? 1 : 0.72);
+  renderer.toneMappingExposure = palette.exposure * (environmentState.rtx ? 1.12 : 1);
+  renderer.shadowMap.type = environmentState.rtx ? THREE.VSMShadowMap : THREE.PCFSoftShadowMap;
+  rain.visible = environmentState.weather === "rain";
+  buildingMaterials.forEach((material) => {
+    material.roughness = environmentState.rtx ? 0.48 : 0.76;
+    material.metalness = environmentState.rtx ? 0.1 : 0.02;
+    material.emissive.setHex(environmentState.time === "night" ? 0x17243a : 0x000000);
+    material.emissiveIntensity = environmentState.time === "night" ? 0.38 : 0;
+    material.needsUpdate = true;
+  });
+}
 
 const views = {
   overview: { camera: [88, 76, 104], target: [0, 0, 0] },
-  northGate: { camera: [82, 9, 24], target: [42, 2, 21] },
+  northGate: { camera: [northGatePoint[0] + 14, 9, northGatePoint[1] + 3], target: [northGatePoint[0] - 4, 2, northGatePoint[1] - 2] },
   library: { camera: [32, 24, 25], target: [8, 3, 1] },
-  lake: { camera: [70, 24, 31], target: [49, 1, 14] }
+  lake: { camera: [lakePoint[0] + 16, 20, lakePoint[1] + 14], target: [lakePoint[0], 1, lakePoint[1]] }
 };
 
+const missionMidpoint = [
+  (northGatePoint[0] + lakePoint[0]) / 2,
+  (northGatePoint[1] + lakePoint[1]) / 2
+];
 const tourRoutes = {
+  northLake: {
+    label: "北大門到竹湖任務",
+    points: [
+      [northGatePoint[0] + 12, 4.8, northGatePoint[1] + 2],
+      [northGatePoint[0] + 4, 4.8, northGatePoint[1] + 1],
+      [northGatePoint[0], 4.8, northGatePoint[1]],
+      [missionMidpoint[0] - 2, 4.8, missionMidpoint[1] + 2],
+      [missionMidpoint[0], 4.8, missionMidpoint[1]],
+      [lakePoint[0] - 4, 4.8, lakePoint[1] + 5],
+      [lakePoint[0] - 2, 4.8, lakePoint[1] + 2]
+    ],
+    stops: [
+      { title: "北大門報到", progress: 0, narration: "歡迎來到光復校區探索任務。請面向北大門，確認我們將由大學路入口進入校園。" },
+      { title: "入口道路", progress: 0.32, narration: "通過北大門後，先觀察入口道路。依 OpenStreetMap 座標，竹湖位於入口內側偏左前方，請沿道路前進。" },
+      { title: "竹湖支路", progress: 0.66, narration: "現在轉入通往竹湖的支路。注意湖畔植栽與步行空間，並留意右側的校園核心建築。" },
+      { title: "竹湖觀景點", progress: 1, landmark: "lake", narration: "任務完成。你已從北大門抵達竹湖觀景點，並完成入口方向、支路與湖畔地標辨識。" }
+    ],
+    durations: [6, 7, 7],
+    endTarget: [lakePoint[0], 2, lakePoint[1]]
+  },
   core: {
     label: "校園核心",
     points: [[82, 4.6, 24], [69, 4.5, 24], [61, 4.5, 24], [56, 4.5, 22], [53, 4.5, 19], [51, 4.5, 15], [48, 4.5, 10], [43, 4.5, 13], [40, 4.5, 19], [36, 4.5, 22], [31, 4.5, 18], [26, 4.5, 12], [21, 4.5, 8], [16, 4.8, 7], [12, 5.2, 7]],
@@ -518,6 +620,10 @@ const freeWalkControls = document.querySelector("#free-walk-controls");
 const buildingSearch = document.querySelector("#building-search");
 const buildingSearchInput = document.querySelector("#building-search-input");
 const buildingOptions = document.querySelector("#building-options");
+const missionButton = document.querySelector("#start-mission");
+const missionStatus = document.querySelector("#mission-status");
+const missionChecklist = document.querySelector("#mission-checklist");
+const missionReward = document.querySelector("#mission-reward");
 const tourStopDuration = 3.5;
 const metersPerUnit = 4;
 const walkingMetersPerMinute = 75;
@@ -542,6 +648,8 @@ let freeWalkPitch = 0;
 let freeWalkDragging = false;
 let freeWalkLastPointer = null;
 let customNavigation = null;
+let missionActive = false;
+let missionCompleted = false;
 const freeWalkMovement = {
   forward: false,
   backward: false,
@@ -557,8 +665,8 @@ function createTourCurve(points) {
 
 function projectTourPoint(point) {
   return {
-    x: 20 + (point.x + 66) * (220 / 148),
-    y: 16 + (51 - point.z) * (148 / 105)
+    x: 20 + (point.x + 80) * (220 / 140),
+    y: 16 + (70 - point.z) * (148 / 130)
   };
 }
 
@@ -584,6 +692,59 @@ const navigationNodes = {
   engineeringMid: [-15, -5], management: [-17, -20], southWest: [-15, -37],
   westMid: [-43, -8], westSouth: [-48, -25], baseball: [-31, -36]
 };
+
+const osmRoadGraph = new Map();
+function osmNodeKey(point) {
+  return `${point[0].toFixed(3)},${point[1].toFixed(3)}`;
+}
+for (const roadData of campusGeoreference.roads) {
+  const points = roadData.points;
+  for (let index = 0; index < points.length; index += 1) {
+    const key = osmNodeKey(points[index]);
+    if (!osmRoadGraph.has(key)) {
+      osmRoadGraph.set(key, { point: new THREE.Vector3(points[index][0], 4.8, points[index][1]), edges: new Map() });
+    }
+    if (index === 0) continue;
+    const previousKey = osmNodeKey(points[index - 1]);
+    const currentNode = osmRoadGraph.get(key);
+    const previousNode = osmRoadGraph.get(previousKey);
+    const distance = currentNode.point.distanceTo(previousNode.point);
+    currentNode.edges.set(previousKey, distance);
+    previousNode.edges.set(key, distance);
+  }
+}
+
+function shortestOsmRoadPath(origin, destination) {
+  const entries = [...osmRoadGraph.entries()];
+  if (!entries.length) return null;
+  const nearest = (point) => entries.reduce((best, entry) => (
+    entry[1].point.distanceToSquared(point) < best[1].point.distanceToSquared(point) ? entry : best
+  ));
+  const start = nearest(origin)[0];
+  const finish = nearest(destination)[0];
+  const scores = new Map([[start, 0]]);
+  const previous = new Map();
+  const open = new Set([start]);
+
+  while (open.size) {
+    const current = [...open].reduce((best, key) => scores.get(key) < scores.get(best) ? key : best);
+    open.delete(current);
+    if (current === finish) break;
+    const currentNode = osmRoadGraph.get(current);
+    for (const [next, distance] of currentNode.edges) {
+      const candidate = scores.get(current) + distance;
+      if (candidate < (scores.get(next) ?? Infinity)) {
+        scores.set(next, candidate);
+        previous.set(next, current);
+        open.add(next);
+      }
+    }
+  }
+  if (!scores.has(finish)) return null;
+  const keys = [finish];
+  while (keys[0] !== start) keys.unshift(previous.get(keys[0]));
+  return keys.map((key) => osmRoadGraph.get(key).point.clone());
+}
 
 const navigationEdges = [
   ["northGate", "eastEntry"], ["eastEntry", "lakeJunction"], ["lakeJunction", "adminJunction"],
@@ -617,6 +778,8 @@ function nearestNavigationNode(point) {
 }
 
 function shortestRoadPath(origin, destination) {
+  const osmPath = shortestOsmRoadPath(origin, destination);
+  if (osmPath?.length) return osmPath;
   const start = nearestNavigationNode(origin);
   const finish = nearestNavigationNode(destination);
   const distances = Object.fromEntries(Object.keys(navigationNodes).map((key) => [key, Infinity]));
@@ -870,6 +1033,21 @@ function speakTourStop(index) {
   window.speechSynthesis.speak(utterance);
 }
 
+function updateMissionProgress(index) {
+  if (!missionActive || currentRouteKey !== "northLake") return;
+  const items = [...missionChecklist.querySelectorAll("li")];
+  items.forEach((item, itemIndex) => item.dataset.complete = String(itemIndex <= index));
+  missionStatus.textContent = `${Math.min(index + 1, items.length)} / ${items.length}`;
+}
+
+function resetMission() {
+  missionCompleted = false;
+  missionReward.hidden = true;
+  missionStatus.textContent = "0 / 4";
+  missionButton.textContent = "重新開始任務";
+  [...missionChecklist.querySelectorAll("li")].forEach((item) => item.dataset.complete = "false");
+}
+
 function showTourStop(index) {
   const stop = tourStops[index];
   tourStep.textContent = `第 ${index + 1} 站，共 ${tourStops.length} 站`;
@@ -883,6 +1061,7 @@ function showTourStop(index) {
     detailPanel.hidden = true;
   }
   speakTourStop(index);
+  updateMissionProgress(index);
 }
 
 function stopWalkTour(hideGuide = true) {
@@ -908,6 +1087,14 @@ function completeWalkTour() {
   tourPauseButton.disabled = true;
   tourExitButton.textContent = "關閉";
   updateTourProgress(1);
+  if (missionActive && currentRouteKey === "northLake") {
+    missionCompleted = true;
+    missionActive = false;
+    missionReward.hidden = false;
+    missionStatus.textContent = "4 / 4";
+    missionButton.textContent = "再次挑戰";
+    [...missionChecklist.querySelectorAll("li")].forEach((item) => item.dataset.complete = "true");
+  }
 }
 
 function startWalkTour() {
@@ -960,9 +1147,9 @@ function syncFreeWalkRotation() {
 }
 
 function freeWalkPositionAllowed(position) {
-  if (position.x < -66 || position.x > 84 || position.z < -55 || position.z > 53) return false;
-  const lakeOffsetX = (position.x - 49) / 11;
-  const lakeOffsetZ = (position.z - 14) / 7;
+  if (position.x < -80 || position.x > 60 || position.z < -60 || position.z > 70) return false;
+  const lakeOffsetX = (position.x - lakePoint[0]) / Math.max(5, (lakeGeo?.width ?? 20) / 2);
+  const lakeOffsetZ = (position.z - lakePoint[1]) / Math.max(4, (lakeGeo?.depth ?? 12) / 2);
   if (lakeOffsetX * lakeOffsetX + lakeOffsetZ * lakeOffsetZ < 1) return false;
   return !buildings.some(([, size, buildingPosition]) => (
     Math.abs(position.x - buildingPosition[0]) < size[0] / 2 + 0.8
@@ -1095,6 +1282,26 @@ document.querySelector("#view-overview").addEventListener("click", () => setView
 document.querySelector("#view-north-gate").addEventListener("click", () => setView("northGate"));
 document.querySelector("#view-library").addEventListener("click", () => setView("library"));
 document.querySelector("#view-lake").addEventListener("click", () => setView("lake"));
+missionButton.addEventListener("click", () => {
+  resetMission();
+  switchTourRoute("northLake");
+  tourRouteSelect.value = "northLake";
+  missionActive = true;
+  startWalkTour();
+});
+document.querySelector("#time-mode").addEventListener("change", (event) => {
+  environmentState.time = event.currentTarget.value;
+  updateEnvironment();
+});
+document.querySelector("#weather-mode").addEventListener("change", (event) => {
+  environmentState.weather = event.currentTarget.value;
+  updateEnvironment();
+});
+document.querySelector("#rtx-mode").addEventListener("click", (event) => {
+  environmentState.rtx = !environmentState.rtx;
+  event.currentTarget.setAttribute("aria-pressed", String(environmentState.rtx));
+  updateEnvironment();
+});
 walkTourButton.addEventListener("click", () => {
   if (walkTourActive) {
     stopWalkTour();
@@ -1131,7 +1338,10 @@ tourMapStops.addEventListener("click", (event) => {
   const button = event.target.closest("[data-tour-stop]");
   if (button) jumpToTourStop(Number(button.dataset.tourStop));
 });
-tourRouteSelect.addEventListener("change", () => switchTourRoute(tourRouteSelect.value));
+tourRouteSelect.addEventListener("change", () => {
+  if (tourRouteSelect.value !== "northLake") missionActive = false;
+  switchTourRoute(tourRouteSelect.value);
+});
 buildingSearch.addEventListener("submit", (event) => {
   event.preventDefault();
   planRouteToBuilding(buildingSearchInput.value.trim());
@@ -1227,6 +1437,14 @@ function resize() {
 function animate() {
   resize();
   const delta = clock.getDelta();
+  if (rain.visible) {
+    const positions = rain.geometry.attributes.position.array;
+    for (let index = 1; index < positions.length; index += 3) {
+      positions[index] -= delta * 28;
+      if (positions[index] < 1) positions[index] = 74;
+    }
+    rain.geometry.attributes.position.needsUpdate = true;
+  }
   routeTime = (routeTime + delta * 0.035) % 1;
   const point = patrolCurve.getPointAt(routeTime);
   const ahead = patrolCurve.getPointAt((routeTime + 0.008) % 1);
@@ -1271,5 +1489,7 @@ function animate() {
 }
 
 renderTourRoute();
+updateEnvironment();
 
 animate();
+

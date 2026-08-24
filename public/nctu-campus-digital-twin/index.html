@@ -38,6 +38,7 @@
             <span>導覽路線</span>
             <select id="tour-route-select">
               <option value="core">校園核心</option>
+              <option value="northLake">北大門到竹湖任務</option>
               <option value="engineering">工程館群</option>
               <option value="residence">宿舍生活區</option>
               <option value="sports">運動區</option>
@@ -98,6 +99,25 @@
             <button type="button" data-look="right" aria-label="向右轉" title="向右轉">↷</button>
           </div>
         </section>
+        <section class="environment-controls" aria-label="環境與光影設定">
+          <label>
+            <span>時間</span>
+            <select id="time-mode">
+              <option value="day">白天</option>
+              <option value="sunset">黃昏</option>
+              <option value="night">夜晚</option>
+            </select>
+          </label>
+          <label>
+            <span>天氣</span>
+            <select id="weather-mode">
+              <option value="clear">晴朗</option>
+              <option value="cloudy">陰天</option>
+              <option value="rain">雨天</option>
+            </select>
+          </label>
+          <button id="rtx-mode" type="button" aria-pressed="false">RTX 光影</button>
+        </section>
         <div class="toolbar" aria-label="場景視角">
           <button id="view-overview" type="button">全景</button>
           <button id="view-north-gate" type="button">北大門</button>
@@ -110,6 +130,23 @@
         </div>
       </section>
       <aside class="panel" aria-label="校園配置資訊">
+        <section class="mission-panel" aria-labelledby="mission-title">
+          <div class="mission-heading">
+            <div>
+              <p class="detail-type">校園探索任務</p>
+              <h2 id="mission-title">北大門到竹湖</h2>
+            </div>
+            <strong id="mission-status">0 / 4</strong>
+          </div>
+          <ol id="mission-checklist" class="mission-checklist">
+            <li>從北大門報到</li>
+            <li>辨認入口道路方向</li>
+            <li>沿左側支路接近竹湖</li>
+            <li>抵達竹湖觀景點</li>
+          </ol>
+          <p id="mission-reward" class="mission-reward" hidden>已獲得：竹湖探索章</p>
+          <button id="start-mission" type="button">開始語音任務</button>
+        </section>
         <section id="landmark-detail" class="landmark-detail" hidden>
           <div class="detail-head">
             <div>
@@ -140,9 +177,10 @@
             <dd>綜合球館、田徑場、游泳館、棒球場與北南東三區宿舍</dd>
           </div>
         </dl>
-        <p class="source-note">配置依 2025 年官方光復校區圖概略建模，非測量或導航用途。</p>
+        <p class="source-note">水平配置使用 OpenStreetMap WGS84／ENU 座標與官方校園圖校正；© OpenStreetMap contributors，非測量或緊急導航用途。RTX 光影為瀏覽器風格預覽。</p>
       </aside>
     </main>
-    <script type="module" src="./app.js?v=20260819"></script>
+    <script type="module" src="./app.js?v=20260823"></script>
   </body>
 </html>
+
