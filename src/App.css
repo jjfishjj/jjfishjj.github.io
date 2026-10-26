@@ -122,7 +122,7 @@ body {
 }
 .hf-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 12px;
 }
 .hf-card {
@@ -513,5 +513,9 @@ body {
 }
 
 @media (min-width: 601px) and (max-width: 900px) {
+  .hf-grid { grid-template-columns: 1fr 1fr; }
+}
+
+@media (min-width: 901px) and (max-width: 1120px) {
   .hf-grid { grid-template-columns: 1fr 1fr; }
 }

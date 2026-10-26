@@ -324,6 +324,12 @@ export const HUGGING_FACE_SHOWCASE = [
     proof: '10 notes · visible retrieval · abstention',
     url: 'https://huggingface.co/spaces/junbin666/nim-rag-language-tutor',
   },
+  {
+    kind: 'SPACE · GPU ANALYTICS', icon: '⚡', title: 'cuDF Game Analytics Benchmark',
+    desc: '把 pandas／cuDF 的 workload 特性、資料規模與 transfer overhead 轉成可操作的 GPU-fit 決策工具，並公開實測與尚未驗證的邊界。',
+    proof: 'recorded metrics · workload fit · no inflated speedup claim',
+    url: 'https://huggingface.co/spaces/junbin666/cudf-game-analytics-benchmark',
+  },
 ]
 
 // 我的相關作品
