@@ -100,6 +100,62 @@ body {
   padding: 2rem 1.5rem 4rem;
 }
 
+/* Public Hugging Face evidence */
+.hf-showcase {
+  margin-bottom: 2.4rem;
+  padding-bottom: 2.4rem;
+  border-bottom: 1px solid #1e1e1e;
+}
+.hf-showcase .section-heading { margin-bottom: 0; }
+.section-intro {
+  max-width: 660px;
+  margin: 0.6rem 0 1.1rem;
+  color: #888;
+  font-size: 13px;
+  line-height: 1.65;
+}
+.hf-profile {
+  color: #9bcf63;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+}
+.hf-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+.hf-card {
+  display: flex;
+  min-height: 238px;
+  flex-direction: column;
+  padding: 1.2rem;
+  border: 1px solid #283123;
+  border-radius: 12px;
+  background: linear-gradient(145deg, #171d14, #121212 68%);
+  color: inherit;
+  text-decoration: none;
+  transition: transform .15s, border-color .15s;
+}
+.hf-card:hover { transform: translateY(-2px); border-color: #76b90088; }
+.hf-card-head { display: flex; align-items: center; gap: 8px; }
+.hf-icon { font-size: 19px; }
+.hf-kind {
+  flex: 1;
+  color: #76b900;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .09em;
+}
+.hf-card h3 { margin: 1rem 0 .55rem; color: #f4f4f4; font-size: 16px; }
+.hf-card p { color: #8d958c; font-size: 12px; line-height: 1.65; }
+.hf-card code {
+  margin-top: auto;
+  padding-top: 1rem;
+  color: #b9d994;
+  font: 11px/1.45 'Courier New', monospace;
+}
+
 /* Controls */
 .controls { margin-bottom: 1.5rem; }
 
@@ -452,4 +508,10 @@ body {
   .main { padding: 1.5rem 1rem 3rem; }
   .grid { grid-template-columns: 1fr; }
   .cert-grid { grid-template-columns: 1fr; }
+  .hf-grid { grid-template-columns: 1fr; }
+  .hf-card { min-height: 205px; }
+}
+
+@media (min-width: 601px) and (max-width: 900px) {
+  .hf-grid { grid-template-columns: 1fr 1fr; }
 }

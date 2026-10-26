@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react'
 import './App.css'
-import { SKILLS, CATS, PROJECTS } from './skills'
+import { SKILLS, CATS, PROJECTS, HUGGING_FACE_SHOWCASE } from './skills'
 
 const CERTIFICATES = [
   {
@@ -92,6 +92,35 @@ export default function App() {
       </header>
 
       <main className="main">
+        <section className="hf-showcase" aria-labelledby="hf-showcase-title">
+          <div className="section-heading">
+            <div>
+              <span className="section-kicker">LIVE ON HUGGING FACE</span>
+              <h2 id="hf-showcase-title">可驗證的 NVIDIA 作品</h2>
+            </div>
+            <a className="hf-profile" href="https://huggingface.co/junbin666" target="_blank" rel="noreferrer">
+              @junbin666 ↗
+            </a>
+          </div>
+          <p className="section-intro">
+            不只展示概念：每個成果都提供公開互動頁、技術邊界與可檢查的 evidence。
+          </p>
+          <div className="hf-grid">
+            {HUGGING_FACE_SHOWCASE.map((item) => (
+              <a key={item.url} className="hf-card" href={item.url} target="_blank" rel="noreferrer">
+                <div className="hf-card-head">
+                  <span className="hf-icon" aria-hidden="true">{item.icon}</span>
+                  <span className="hf-kind">{item.kind}</span>
+                  <span className="proj-arrow">↗</span>
+                </div>
+                <h3>{item.title}</h3>
+                <p>{item.desc}</p>
+                <code>{item.proof}</code>
+              </a>
+            ))}
+          </div>
+        </section>
+
         <div className="controls">
           <div className="search-wrap">
             <span className="search-icon">🔍</span>
