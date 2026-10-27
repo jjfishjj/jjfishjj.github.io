@@ -420,11 +420,12 @@ function render() {
           <div class="actions">
             <a class="button primary" href="#project-list">看專案列表</a>
             <a class="button secondary" href="/linkedin/">看經歷儀表板</a>
+            <a class="button secondary hf-button" href="https://huggingface.co/spaces/junbin666/nvidia-project-portfolio" target="_blank" rel="noreferrer">看 HF 可驗證成果 ↗</a>
           </div>
         </div>
         <aside class="summary-panel">
           <h2>目前整理狀態</h2>
-          <p>依照技術方向與展示目的分頁，讓訪客可以先選主題，再進入 demo、GitHub repo 或履歷頁理解成果。</p>
+          <p>依照技術方向與展示目的分頁，讓訪客可以先選主題，再進入 demo、GitHub repo、Hugging Face 公開成果或履歷頁理解成果。</p>
           <div class="summary-stats">
             <div class="summary-stat"><strong>${projects.length}</strong><span>整理專案</span></div>
             <div class="summary-stat"><strong>${categories.length - 1}</strong><span>專案分類</span></div>

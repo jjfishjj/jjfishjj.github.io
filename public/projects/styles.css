@@ -165,6 +165,18 @@ h1 {
   background: rgba(255, 255, 255, 0.04);
 }
 
+.button.secondary.hf-button {
+  color: #c7efa0;
+  border-color: rgba(118, 185, 0, 0.46);
+  background: rgba(118, 185, 0, 0.1);
+}
+
+.button.secondary.hf-button:hover {
+  color: #efffdc;
+  border-color: var(--green);
+  background: rgba(118, 185, 0, 0.18);
+}
+
 .summary-panel {
   border: 1px solid var(--line);
   border-radius: 8px;

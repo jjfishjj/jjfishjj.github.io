@@ -93,6 +93,17 @@ body {
   background: #111a11;
 }
 
+.profile-link.hf-portfolio-link {
+  border-color: #76b90066;
+  color: #b7e37d;
+  background: #14200f;
+}
+
+.profile-link.hf-portfolio-link:hover {
+  border-color: #76b900;
+  color: #d6ff9f;
+}
+
 /* Main */
 .main {
   max-width: 1100px;
@@ -119,6 +130,13 @@ body {
   font-size: 12px;
   font-weight: 700;
   text-decoration: none;
+}
+.hf-links { display: flex; align-items: center; justify-content: flex-end; gap: 12px; flex-wrap: wrap; }
+.hf-profile.featured {
+  border: 1px solid #76b90055;
+  border-radius: 999px;
+  padding: 7px 11px;
+  background: #17230f;
 }
 .hf-grid {
   display: grid;

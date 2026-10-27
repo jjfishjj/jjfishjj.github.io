@@ -85,6 +85,7 @@ export default function App() {
         <div className="hero-actions">
           <a className="profile-link" href="/projects/">專案總覽</a>
           <a className="profile-link" href="/linkedin/">經歷儀表板</a>
+          <a className="profile-link hf-portfolio-link" href="https://huggingface.co/spaces/junbin666/nvidia-project-portfolio" target="_blank" rel="noreferrer">HF Portfolio ↗</a>
           <a className="profile-link" href="/ai-prompt-game-tutorial/">AI 遊戲教學</a>
           <a className="profile-link" href="/lectures/">語言講座</a>
           <a className="profile-link" href="https://jjfishjj.github.io/claude-projects-hub/" target="_blank" rel="noreferrer">部署索引 ↗</a>
@@ -98,9 +99,14 @@ export default function App() {
               <span className="section-kicker">LIVE ON HUGGING FACE</span>
               <h2 id="hf-showcase-title">可驗證的 NVIDIA 作品</h2>
             </div>
-            <a className="hf-profile" href="https://huggingface.co/junbin666" target="_blank" rel="noreferrer">
-              @junbin666 ↗
-            </a>
+            <div className="hf-links">
+              <a className="hf-profile featured" href="https://huggingface.co/spaces/junbin666/nvidia-project-portfolio" target="_blank" rel="noreferrer">
+                34 專案總覽 ↗
+              </a>
+              <a className="hf-profile" href="https://huggingface.co/junbin666" target="_blank" rel="noreferrer">
+                @junbin666 ↗
+              </a>
+            </div>
           </div>
           <p className="section-intro">
             不只展示概念：每個成果都提供公開互動頁、技術邊界與可檢查的 evidence。
@@ -242,6 +248,8 @@ export default function App() {
           <a href="/projects/">Projects</a>
           {' · '}
           <a href="/linkedin/">Professional Profile</a>
+          {' · '}
+          <a href="https://huggingface.co/spaces/junbin666/nvidia-project-portfolio" target="_blank" rel="noreferrer">Hugging Face Portfolio</a>
           {' · '}
           <a href="/ai-prompt-game-tutorial/">AI Game Tutorial</a>
           {' · '}
