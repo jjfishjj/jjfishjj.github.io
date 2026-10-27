@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import './App.css'
 import { SKILLS, CATS, PROJECTS, HUGGING_FACE_SHOWCASE } from './skills'
 
@@ -55,6 +55,22 @@ export default function App() {
   const [filter, setFilter] = useState('all')
   const [query, setQuery] = useState('')
   const [expanded, setExpanded] = useState(null)
+  const [hfStats, setHfStats] = useState({ status: 'loading', data: null })
+
+  useEffect(() => {
+    let active = true
+    Promise.resolve()
+      .then(() => globalThis.HFPortfolioStats.fetchHuggingFaceStats())
+      .then((data) => {
+        if (active) setHfStats({ status: 'ready', data })
+      })
+      .catch(() => {
+        if (active) setHfStats({ status: 'unavailable', data: null })
+      })
+    return () => {
+      active = false
+    }
+  }, [])
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
@@ -110,6 +126,18 @@ export default function App() {
           </div>
           <p className="section-intro">
             不只展示概念：每個成果都提供公開互動頁、技術邊界與可檢查的 evidence。
+          </p>
+          <p className={`hf-live-stats ${hfStats.status}`} aria-live="polite">
+            {hfStats.status === 'ready' && (
+              <>
+                Hugging Face API 即時統計：<strong>{hfStats.data.spaces} Spaces</strong>
+                <span>·</span><strong>{hfStats.data.models} Models</strong>
+                <span>·</span><strong>{hfStats.data.datasets} {hfStats.data.datasets === 1 ? 'Dataset' : 'Datasets'}</strong>
+                <span>·</span><strong>{hfStats.data.total} 公開成果</strong>
+              </>
+            )}
+            {hfStats.status === 'loading' && 'Hugging Face API 統計同步中…'}
+            {hfStats.status === 'unavailable' && 'Hugging Face API 暫時無法連線；下方保留已驗證的精選成果。'}
           </p>
           <div className="hf-grid">
             {HUGGING_FACE_SHOWCASE.map((item) => (

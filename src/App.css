@@ -125,6 +125,23 @@ body {
   font-size: 13px;
   line-height: 1.65;
 }
+.hf-live-stats {
+  display: flex;
+  min-height: 36px;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 0 0 1rem;
+  padding: 8px 11px;
+  border: 1px solid #283123;
+  border-radius: 8px;
+  color: #7f8b7d;
+  background: #10150f;
+  font-size: 11px;
+}
+.hf-live-stats strong { color: #b9d994; }
+.hf-live-stats span { color: #465043; }
+.hf-live-stats.unavailable { border-color: #4b3822; color: #caa66c; }
 .hf-profile {
   color: #9bcf63;
   font-size: 12px;

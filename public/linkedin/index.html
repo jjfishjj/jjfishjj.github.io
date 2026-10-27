@@ -819,7 +819,7 @@
               <h2>公開成果數據</h2>
             </div>
             <p>
-              這些數據來自公開網站與 GitHub 可確認資料，協助訪客快速理解我的經驗密度與技術分布。
+              這些數據來自公開網站、GitHub 與 Hugging Face API，協助訪客快速理解我的經驗密度與技術分布。
             </p>
           </div>
 
@@ -837,8 +837,8 @@
               <div class="label">GitHub public repositories</div>
             </div>
             <div class="stat">
-              <div class="value">9</div>
-              <div class="label">Hugging Face 公開成果</div>
+              <div class="value" id="hfArtifactCount" aria-live="polite">11</div>
+              <div class="label" id="hfArtifactBreakdown">Hugging Face 公開成果 · API 同步中</div>
             </div>
             <div class="stat">
               <div class="value">6</div>
@@ -1147,6 +1147,20 @@
     </footer>
 	    <script type="module">
 	      import * as THREE from "https://unpkg.com/three@0.160.0/build/three.module.js";
+	      import { fetchHuggingFaceStats } from "../hf-stats.js";
+
+	      const hfArtifactCount = document.querySelector("#hfArtifactCount");
+	      const hfArtifactBreakdown = document.querySelector("#hfArtifactBreakdown");
+	      fetchHuggingFaceStats()
+	        .then((stats) => {
+	          hfArtifactCount.textContent = String(stats.total);
+	          const datasetLabel = stats.datasets === 1 ? "Dataset" : "Datasets";
+	          hfArtifactBreakdown.textContent = `Hugging Face 公開成果 · ${stats.spaces} Spaces / ${stats.models} Models / ${stats.datasets} ${datasetLabel}`;
+	          hfArtifactCount.title = stats.source === "live" ? "Hugging Face API 即時同步" : "使用最近成功同步的快取數據";
+	        })
+	        .catch(() => {
+	          hfArtifactBreakdown.textContent = "Hugging Face 公開成果 · API 暫時無法連線";
+	        });
 	
 	      const galaxyHost = document.querySelector("#resumeGalaxy");
 	      if (galaxyHost) {
