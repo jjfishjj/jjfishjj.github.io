@@ -1,0 +1,1624 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Professional Profile & Experience Dashboard | Kuo Jun Bin</title>
+    <meta
+      name="description"
+      content="Jerome Kuo's interactive 3D experience dashboard, bringing together LinkedIn experience, GitHub projects, NVIDIA AI work, game products, analytics proposals, and educational programs."
+    />
+    <meta property="og:title" content="Kuo Jun Bin | Professional Profile Dashboard" />
+    <link rel="canonical" href="https://jjfishjj.github.io/linkedin/en/" />
+    <link rel="alternate" hreflang="en" href="https://jjfishjj.github.io/linkedin/en/" />
+    <link rel="alternate" hreflang="zh-Hant" href="https://jjfishjj.github.io/linkedin/" />
+    <meta
+      property="og:description"
+      content="An interactive portfolio spanning AI, GPU computing, Omniverse and Isaac Sim concepts, game products, data analytics, IC power efficiency, and educational program design."
+    />
+    <meta property="og:type" content="profile" />
+    <meta property="og:url" content="https://jjfishjj.github.io/linkedin/en/" />
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #0d1117;
+        --panel: #131a24;
+        --panel-2: #172131;
+        --text: #eef2f7;
+        --muted: #98a2b3;
+        --line: rgba(255, 255, 255, 0.12);
+        --green: #76b900;
+        --green-soft: rgba(118, 185, 0, 0.16);
+        --blue: #5aa7ff;
+        --gold: #f3b91e;
+        --pink: #ff7ab6;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-width: 320px;
+        font-family: Inter, "Noto Sans TC", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", sans-serif;
+        background:
+          radial-gradient(circle at 14% 10%, rgba(118, 185, 0, 0.17), transparent 28rem),
+          radial-gradient(circle at 85% 12%, rgba(90, 167, 255, 0.12), transparent 30rem),
+          linear-gradient(180deg, #0d1117 0%, #090d13 100%);
+        color: var(--text);
+      }
+
+      a {
+        color: inherit;
+      }
+
+      .shell {
+        width: min(1160px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        border-bottom: 1px solid var(--line);
+        background: rgba(13, 17, 23, 0.86);
+        backdrop-filter: blur(18px);
+      }
+
+      .topbar-inner {
+        min-height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .brand {
+        text-decoration: none;
+        font-weight: 800;
+        letter-spacing: 0;
+      }
+
+      .brand span {
+        color: var(--green);
+      }
+
+      .nav {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .nav a,
+      .button {
+        min-height: 40px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid transparent;
+        border-radius: 8px;
+        padding: 0 14px;
+        color: var(--muted);
+        font-size: 14px;
+        font-weight: 700;
+        text-decoration: none;
+      }
+
+      .nav a:hover,
+      .button.secondary:hover {
+        color: var(--text);
+        border-color: var(--line);
+        background: rgba(255, 255, 255, 0.05);
+      }
+
+      .button.primary {
+        color: #071006;
+        background: var(--green);
+      }
+
+      .button.secondary {
+        color: var(--text);
+        border-color: var(--line);
+        background: rgba(255, 255, 255, 0.04);
+      }
+
+      .hero {
+        position: relative;
+        min-height: 760px;
+        overflow: hidden;
+        padding: 118px 0 72px;
+        display: grid;
+        align-items: center;
+        isolation: isolate;
+      }
+
+      .galaxy-scene {
+        position: absolute;
+        inset: 0;
+        z-index: -2;
+        background:
+          radial-gradient(circle at 52% 45%, rgba(118, 185, 0, 0.22), transparent 19rem),
+          radial-gradient(circle at 78% 16%, rgba(90, 167, 255, 0.18), transparent 27rem),
+          linear-gradient(135deg, rgba(4, 8, 12, 0.78), rgba(13, 17, 23, 0.96));
+      }
+
+      .galaxy-scene canvas {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+
+      .hero::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background:
+          linear-gradient(90deg, rgba(9, 13, 19, 0.9) 0%, rgba(9, 13, 19, 0.68) 38%, rgba(9, 13, 19, 0.02) 100%),
+          linear-gradient(180deg, rgba(9, 13, 19, 0.02) 0%, rgba(9, 13, 19, 0.88) 100%);
+        pointer-events: none;
+      }
+
+      .hero-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 0.76fr) minmax(360px, 1.24fr);
+        gap: 32px;
+        align-items: center;
+      }
+
+      .hero-copy {
+        max-width: 650px;
+      }
+
+      .eyebrow {
+        width: fit-content;
+        margin-bottom: 18px;
+        padding: 7px 11px;
+        border: 1px solid rgba(118, 185, 0, 0.28);
+        border-radius: 999px;
+        color: var(--green);
+        background: var(--green-soft);
+        font-size: 13px;
+        font-weight: 800;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin-top: 0;
+      }
+
+      h1 {
+        max-width: 680px;
+        margin-bottom: 22px;
+        font-size: clamp(40px, 5.7vw, 68px);
+        line-height: 0.98;
+        letter-spacing: 0;
+      }
+
+      .lead {
+        max-width: 660px;
+        margin-bottom: 28px;
+        color: var(--muted);
+        font-size: clamp(17px, 2vw, 21px);
+        line-height: 1.75;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .constellation-panel {
+        justify-self: end;
+        width: min(100%, 430px);
+        display: grid;
+        gap: 12px;
+        align-self: end;
+        padding-top: 0;
+        transform: translateY(250px);
+      }
+
+      .constellation-title {
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 850;
+        letter-spacing: 0;
+        text-transform: uppercase;
+      }
+
+      .constellation-stack {
+        display: grid;
+        gap: 10px;
+      }
+
+      .constellation-item {
+        display: grid;
+        grid-template-columns: 108px 1fr;
+        gap: 14px;
+        align-items: center;
+        min-height: 58px;
+        border: 1px solid rgba(255, 255, 255, 0.13);
+        border-radius: 8px;
+        padding: 10px 12px;
+        background: rgba(9, 13, 19, 0.36);
+        backdrop-filter: blur(14px);
+      }
+
+      .constellation-item strong {
+        color: var(--green);
+        font-size: 14px;
+      }
+
+      .constellation-item span {
+        color: var(--text);
+        font-size: 13px;
+        line-height: 1.55;
+      }
+
+      .identity-card {
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 24px;
+        background: linear-gradient(180deg, rgba(23, 33, 49, 0.94), rgba(19, 26, 36, 0.94));
+        box-shadow: 0 22px 70px rgba(0, 0, 0, 0.28);
+      }
+
+      .identity-card h2 {
+        margin-bottom: 8px;
+        font-size: 24px;
+      }
+
+      .identity-card p {
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      .id-list {
+        display: grid;
+        gap: 10px;
+        margin-top: 22px;
+      }
+
+      .id-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        padding-top: 10px;
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .id-row strong {
+        color: var(--text);
+      }
+
+      section {
+        padding: 46px 0;
+      }
+
+      .section-head {
+        display: grid;
+        grid-template-columns: 1fr minmax(260px, 420px);
+        gap: 28px;
+        align-items: end;
+        margin-bottom: 24px;
+      }
+
+      h2 {
+        margin-bottom: 0;
+        font-size: clamp(28px, 4vw, 42px);
+        letter-spacing: 0;
+      }
+
+      .section-head p,
+      .muted {
+        color: var(--muted);
+        line-height: 1.75;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .stat,
+      .panel,
+      .experience,
+      .metric-card {
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: rgba(19, 26, 36, 0.86);
+      }
+
+      .stat {
+        padding: 20px;
+      }
+
+      .stat .value {
+        margin-bottom: 8px;
+        color: var(--green);
+        font-size: clamp(28px, 4vw, 44px);
+        font-weight: 900;
+        line-height: 1;
+      }
+
+      .stat .label {
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.5;
+      }
+
+      .dashboard {
+        display: grid;
+        grid-template-columns: minmax(0, 1.2fr) minmax(300px, 0.8fr);
+        gap: 16px;
+      }
+
+      .panel {
+        padding: 24px;
+      }
+
+      .panel h3 {
+        margin-bottom: 16px;
+        font-size: 18px;
+      }
+
+      .bars {
+        display: grid;
+        gap: 14px;
+      }
+
+      .bar-row {
+        display: grid;
+        grid-template-columns: 104px 1fr 38px;
+        gap: 12px;
+        align-items: center;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .track {
+        height: 12px;
+        overflow: hidden;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.08);
+      }
+
+      .fill {
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(90deg, var(--green), var(--blue));
+      }
+
+      .metric-list {
+        display: grid;
+        gap: 12px;
+      }
+
+      .metric-card {
+        padding: 16px;
+      }
+
+      .metric-card strong {
+        display: block;
+        margin-bottom: 6px;
+        color: var(--text);
+      }
+
+      .metric-card span {
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.6;
+      }
+
+      .sim-lab {
+        display: grid;
+        grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.75fr);
+        gap: 16px;
+        align-items: stretch;
+      }
+
+      .sim-scene {
+        position: relative;
+        min-height: 460px;
+        overflow: hidden;
+        border: 1px solid rgba(118, 185, 0, 0.22);
+        border-radius: 16px;
+        background:
+          linear-gradient(180deg, rgba(10, 16, 24, 0.82), rgba(5, 8, 13, 0.96)),
+          radial-gradient(circle at 50% 20%, rgba(90, 167, 255, 0.16), transparent 28rem);
+      }
+
+      .sim-scene canvas {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+
+      .sim-overlay {
+        position: absolute;
+        left: 18px;
+        right: 18px;
+        bottom: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        pointer-events: none;
+      }
+
+      .sim-status {
+        max-width: 420px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 12px;
+        padding: 12px 14px;
+        color: var(--text);
+        background: rgba(9, 13, 19, 0.74);
+        backdrop-filter: blur(10px);
+        font-size: 13px;
+        line-height: 1.6;
+      }
+
+      .sim-score {
+        min-width: 96px;
+        border-radius: 12px;
+        padding: 12px 14px;
+        color: #071006;
+        background: var(--green);
+        text-align: center;
+        font-weight: 900;
+      }
+
+      .sim-score span {
+        display: block;
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .sim-copy {
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 24px;
+        background: rgba(19, 26, 36, 0.86);
+      }
+
+      .sim-copy h3 {
+        margin-bottom: 10px;
+        font-size: 22px;
+      }
+
+      .sim-copy p {
+        color: var(--muted);
+        line-height: 1.75;
+      }
+
+      .sim-actions {
+        display: grid;
+        gap: 10px;
+        margin: 20px 0;
+      }
+
+      .sim-btn {
+        min-height: 42px;
+        border: 1px solid rgba(118, 185, 0, 0.32);
+        border-radius: 8px;
+        color: var(--text);
+        background: rgba(118, 185, 0, 0.1);
+        font: inherit;
+        font-weight: 800;
+        cursor: pointer;
+      }
+
+      .sim-btn:hover {
+        border-color: rgba(118, 185, 0, 0.72);
+        background: rgba(118, 185, 0, 0.18);
+      }
+
+      .sim-facts {
+        display: grid;
+        gap: 10px;
+        margin-top: 18px;
+      }
+
+      .sim-fact {
+        padding: 12px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        color: var(--muted);
+        background: rgba(255, 255, 255, 0.04);
+        font-size: 13px;
+        line-height: 1.6;
+      }
+
+      .sim-fallback {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        padding: 24px;
+        color: var(--muted);
+        text-align: center;
+        line-height: 1.7;
+      }
+
+      .sim-fallback[hidden] {
+        display: none;
+      }
+
+      .experience-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .experience {
+        padding: 22px;
+      }
+
+      .experience .tag {
+        width: fit-content;
+        margin-bottom: 16px;
+        padding: 5px 9px;
+        border-radius: 7px;
+        color: #071006;
+        background: var(--green);
+        font-size: 12px;
+        font-weight: 850;
+      }
+
+      .experience h3 {
+        margin-bottom: 10px;
+        font-size: 21px;
+      }
+
+      .experience p {
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+        margin-top: 18px;
+      }
+
+      .experience-actions {
+        margin-top: 16px;
+      }
+
+      .chip {
+        border: 1px solid rgba(118, 185, 0, 0.28);
+        border-radius: 999px;
+        padding: 4px 9px;
+        color: var(--green);
+        background: var(--green-soft);
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .timeline {
+        position: relative;
+        display: grid;
+        gap: 14px;
+      }
+
+      .timeline-item {
+        display: grid;
+        grid-template-columns: 142px 1fr;
+        gap: 18px;
+        padding: 20px;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: rgba(19, 26, 36, 0.72);
+      }
+
+      .time {
+        color: var(--green);
+        font-size: 13px;
+        font-weight: 850;
+      }
+
+      .timeline-item h3 {
+        margin-bottom: 8px;
+        font-size: 19px;
+      }
+
+      .timeline-item p {
+        margin-bottom: 0;
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      .outcomes {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .outcome {
+        padding: 24px;
+        border-radius: 14px;
+        color: #071006;
+        background: var(--green);
+      }
+
+      .outcome.alt {
+        color: var(--text);
+        background: linear-gradient(135deg, rgba(90, 167, 255, 0.2), rgba(255, 122, 182, 0.18));
+        border: 1px solid var(--line);
+      }
+
+      .outcome h3 {
+        margin-bottom: 10px;
+        font-size: 22px;
+      }
+
+      .outcome p {
+        margin-bottom: 0;
+        line-height: 1.7;
+      }
+
+      footer {
+        padding: 34px 0;
+        color: var(--muted);
+        border-top: 1px solid var(--line);
+      }
+
+      @media (max-width: 900px) {
+        .hero-grid,
+        .section-head,
+        .dashboard,
+        .sim-lab,
+        .experience-grid,
+        .outcomes {
+          grid-template-columns: 1fr;
+        }
+
+        .hero {
+          min-height: 880px;
+        }
+
+        .hero::after {
+          background:
+            linear-gradient(180deg, rgba(9, 13, 19, 0.88) 0%, rgba(9, 13, 19, 0.55) 48%, rgba(9, 13, 19, 0.92) 100%);
+        }
+
+        .constellation-panel {
+          justify-self: stretch;
+          padding-top: 210px;
+          transform: none;
+        }
+
+        .stats-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 640px) {
+        .topbar-inner {
+          align-items: flex-start;
+          flex-direction: column;
+          padding: 14px 0;
+        }
+
+        .hero {
+          padding-top: 56px;
+          min-height: 820px;
+        }
+
+        .hero-grid {
+          gap: 22px;
+        }
+
+        .constellation-item {
+          grid-template-columns: 1fr;
+          gap: 4px;
+        }
+
+        .constellation-panel {
+          padding-top: 180px;
+        }
+
+        .stats-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .bar-row,
+        .timeline-item {
+          grid-template-columns: 1fr;
+        }
+
+        .sim-scene {
+          min-height: 360px;
+        }
+
+        .sim-overlay {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="shell topbar-inner">
+        <a class="brand" href="/">Kuo Jun Bin <span>/ Jerome</span></a>
+        <nav class="nav" aria-label="Primary navigation">
+          <a href="/">Home</a>
+          <a href="#interactive-3d">3D Lab</a>
+          <a href="/ai-prompt-game-tutorial/">AI Game Tutorial</a>
+          <a href="/lectures/">Language Lectures</a>
+          <a href="https://huggingface.co/spaces/junbin666/nvidia-project-portfolio" target="_blank" rel="noreferrer">HF Portfolio</a>
+          <a href="https://github.com/jjfishjj" target="_blank" rel="noreferrer">GitHub</a>
+          <a href="https://www.linkedin.com/in/kuo-jun-bin-%EC%A4%80%EB%B9%88-jerome-0a224490/" target="_blank" rel="noreferrer">LinkedIn</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="galaxy-scene" id="resumeGalaxy" aria-hidden="true"></div>
+        <div class="shell hero-grid">
+          <div class="hero-copy">
+            <div class="eyebrow">3D Resume Interface</div>
+            <h1>An interactive 3D dashboard of AI exploration, project outcomes, and educational programs.</h1>
+            <p class="lead">
+              This portfolio brings together publicly verifiable GitHub projects, NVIDIA Agent Skills cases,
+              Gamania AI work, MetaSens game experience, data-analytics proposal dashboards,
+              Omniverse and Isaac Sim concept demos, IC power-efficiency research,
+              language-learning program design, and my LinkedIn profile in one explorable 3D experience.
+            </p>
+            <div class="actions">
+              <a class="button primary" href="https://www.linkedin.com/in/kuo-jun-bin-%EC%A4%80%EB%B9%88-jerome-0a224490/" target="_blank" rel="noreferrer">View LinkedIn Profile</a>
+              <a class="button secondary" href="https://github.com/jjfishjj" target="_blank" rel="noreferrer">Explore GitHub Projects</a>
+              <a class="button secondary" href="https://huggingface.co/spaces/junbin666/nvidia-project-portfolio" target="_blank" rel="noreferrer">View Hugging Face Work ↗</a>
+            </div>
+          </div>
+
+          <aside class="constellation-panel" aria-label="3D resume constellation key">
+            <div class="constellation-title">Live orbit nodes</div>
+            <div class="constellation-stack">
+              <div class="constellation-item">
+                <strong>AI Core</strong>
+                <span>NVIDIA / Google certified direction, LLM deployment, RAG, AI TOP ATOM workshop.</span>
+              </div>
+              <div class="constellation-item">
+                <strong>Game Data</strong>
+                <span>Gamania, Prasia, GA workflow, AI image/video workshop and user behavior analytics.</span>
+              </div>
+              <div class="constellation-item">
+                <strong>Web3 Game</strong>
+                <span>MetaSens / MetaFame NFT, token, gamification, backend data analysis.</span>
+              </div>
+              <div class="constellation-item">
+                <strong>Hardware</strong>
+                <span>Semiconductor materials, thin films, GPU / CPU / motherboard component thinking.</span>
+              </div>
+              <div class="constellation-item">
+                <strong>Language</strong>
+                <span>2025 multilingual conference speaker, memory system design and learning science.</span>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section>
+        <div class="shell">
+          <div class="section-head">
+            <div>
+              <div class="eyebrow">Snapshot</div>
+              <h2>Public Work at a Glance</h2>
+            </div>
+            <p>
+              These metrics come from public websites, GitHub, and the Hugging Face API, offering a quick view of the depth and distribution of my technical work.
+            </p>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat">
+              <div class="value">55</div>
+              <div class="label">NVIDIA Agent Skills Cases</div>
+            </div>
+            <div class="stat">
+              <div class="value">7</div>
+              <div class="label">AI / GPU Technical Categories</div>
+            </div>
+            <div class="stat">
+              <div class="value">21</div>
+              <div class="label">GitHub public repositories</div>
+            </div>
+            <div class="stat">
+              <div class="value" id="hfArtifactCount" aria-live="polite">11</div>
+              <div class="label" id="hfArtifactBreakdown">Public Hugging Face Work · Syncing API</div>
+            </div>
+            <div class="stat">
+              <div class="value">6</div>
+              <div class="label">Experience Theme Cards</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="shell">
+          <div class="section-head">
+            <div>
+              <div class="eyebrow">Capability Map</div>
+              <h2>Technical Experience Distribution</h2>
+            </div>
+            <p>
+              The chart maps 55 documented cases across technical categories, led by 12 AI and LLM cases.
+            </p>
+          </div>
+
+          <div class="dashboard">
+            <div class="panel">
+              <h3>NVIDIA Agent Skills by Category</h3>
+              <div class="bars">
+                <div class="bar-row">
+                  <span>AI / LLM</span>
+                  <div class="track"><div class="fill" style="width: 100%"></div></div>
+                  <strong>12</strong>
+                </div>
+                <div class="bar-row">
+                  <span>Deployment / Inference</span>
+                  <div class="track"><div class="fill" style="width: 83%"></div></div>
+                  <strong>10</strong>
+                </div>
+                <div class="bar-row">
+                  <span>GPU Computing</span>
+                  <div class="track"><div class="fill" style="width: 67%"></div></div>
+                  <strong>8</strong>
+                </div>
+                <div class="bar-row">
+                  <span>TAO Toolkit</span>
+                  <div class="track"><div class="fill" style="width: 67%"></div></div>
+                  <strong>8</strong>
+                </div>
+                <div class="bar-row">
+                  <span>Healthcare AI</span>
+                  <div class="track"><div class="fill" style="width: 58%"></div></div>
+                  <strong>7</strong>
+                </div>
+                <div class="bar-row">
+                  <span>Vision AI</span>
+                  <div class="track"><div class="fill" style="width: 50%"></div></div>
+                  <strong>6</strong>
+                </div>
+                <div class="bar-row">
+                  <span>Physical AI</span>
+                  <div class="track"><div class="fill" style="width: 33%"></div></div>
+                  <strong>4</strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel">
+              <h3>What This Work Demonstrates</h3>
+              <div class="metric-list">
+                <div class="metric-card">
+                  <strong>Technical Knowledge Design</strong>
+                  <span>Turned NVIDIA skills into a searchable case library with reusable commands and clear technical categories.</span>
+                </div>
+                <div class="metric-card">
+                  <strong>Applied Project Research</strong>
+                  <span>Built public project tracks around GPU acceleration, LLM deployment, and IC power efficiency.</span>
+                </div>
+                <div class="metric-card">
+                  <strong>Educational Product Design</strong>
+                  <span>Developed chunking and spelling-memory methods into public, repeatable, and continuously updated learning programs.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="interactive-3d">
+        <div class="shell">
+          <div class="section-head">
+            <div>
+              <div class="eyebrow">3D Interactive Lab</div>
+              <h2>Omniverse / Isaac Sim Concept Demo</h2>
+            </div>
+            <p>
+              This browser-based Three.js scene presents digital-twin and robotics-mission concepts, turning a conventional resume into an interactive portfolio experience.
+            </p>
+          </div>
+
+          <div class="sim-lab">
+            <div class="sim-scene" id="simScene" aria-label="3D robotics simulation concept">
+              <div class="sim-fallback" id="simFallback">3D scene loading</div>
+              <div class="sim-overlay">
+                <div class="sim-status" id="simStatus">Omniverse-style digital twin scene ready.</div>
+                <div class="sim-score"><span>Score</span><strong id="simScore">0</strong></div>
+              </div>
+            </div>
+
+	            <aside class="sim-copy">
+	              <h3>Interactive 3D Visualization</h3>
+	              <p>
+	                Inspired by NVIDIA Omniverse digital twins and Isaac Sim robotics workflows,
+	                this demo shows my approach to 3D web experiences, interactive missions, and product demonstrations.
+	              </p>
+              <div class="sim-actions">
+                <button class="sim-btn" id="missionBtn" type="button">Launch Robot Mission</button>
+                <button class="sim-btn" id="resetMissionBtn" type="button">Reset Simulation</button>
+              </div>
+              <div class="sim-facts">
+                <div class="sim-fact">Digital twin: visualize 3D scenes, data nodes, and product workflows.</div>
+                <div class="sim-fact">Robotics simulation: use mission paths to demonstrate Isaac Sim-style testing concepts.</div>
+                <div class="sim-fact">Mini game: extend the concept into collection, obstacle avoidance, path planning, or product onboarding.</div>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="shell">
+          <div class="section-head">
+            <div>
+              <div class="eyebrow">Experience Themes</div>
+              <h2>Experience Themes</h2>
+            </div>
+            <p>
+              Rather than listing roles alone, I organize my experience around capabilities so recruiters, partners,
+              and technical communities can quickly understand the through-line across AI, games, analytics, hardware-efficiency research, and education.
+            </p>
+          </div>
+
+          <div class="experience-grid">
+            <article class="experience">
+              <div class="tag">AI Engineering</div>
+	              <h3>AI / GPU Technical Case Translation</h3>
+	              <p>
+	                I translate NVIDIA ecosystem tools and use cases into approachable technical stories spanning GPU computing,
+	                LLM training, inference deployment, RAG, healthcare AI, and video AI.
+	              </p>
+              <div class="chips">
+                <span class="chip">NVIDIA Skills</span>
+                <span class="chip">GPU Computing</span>
+                <span class="chip">LLM Deployment</span>
+              </div>
+            </article>
+
+            <article class="experience">
+              <div class="tag">Gamania</div>
+	              <h3>Gamania AI Project Experience</h3>
+	              <p>
+	                I turn AI concepts into discussable, proposal-ready, and implementable project directions by clarifying requirements,
+	                use cases, data flows, and outcome narratives so teams can see which real problems AI can solve.
+	              </p>
+              <div class="chips">
+                <span class="chip">AI Proposal</span>
+                <span class="chip">Use Case Design</span>
+                <span class="chip">Workflow Planning</span>
+              </div>
+            </article>
+
+            <article class="experience">
+              <div class="tag">MetaSens</div>
+	              <h3>MetaSens Game Project Experience</h3>
+	              <p>
+	                My game-product and interactive-experience work covers user experience, content pacing,
+	                system design, launch presentation, and clear communication of product outcomes.
+	              </p>
+              <div class="chips">
+                <span class="chip">Game Experience</span>
+                <span class="chip">UX Flow</span>
+                <span class="chip">Product Storytelling</span>
+              </div>
+            </article>
+
+            <article class="experience">
+              <div class="tag">Analytics</div>
+	              <h3>Data-Analytics Proposal Dashboards</h3>
+	              <p>
+	                I turn proposals into visual dashboards using metric cards, trend charts, category comparisons, and outcome summaries,
+	                enabling decision-makers to understand problems, opportunities, progress, and expected impact quickly.
+	              </p>
+              <div class="chips">
+                <span class="chip">Dashboard Design</span>
+                <span class="chip">Data Storytelling</span>
+                <span class="chip">KPI Visualization</span>
+              </div>
+              <div class="actions experience-actions">
+                <a class="button secondary" href="/projects/data-analytics-visualization/#case-study">View Analytics Case Study</a>
+              </div>
+            </article>
+
+            <article class="experience">
+              <div class="tag">Research</div>
+	              <h3>IC Power Efficiency & System Optimization</h3>
+	              <p>
+	                I organize chip-efficiency research across clock and power gating, DVFS, and AI power prediction,
+	                translating technical concepts into trackable project outcomes.
+	              </p>
+              <div class="chips">
+                <span class="chip">DVFS</span>
+                <span class="chip">Power Gating</span>
+                <span class="chip">AI Power Prediction</span>
+              </div>
+            </article>
+
+            <article class="experience">
+              <div class="tag">Teaching</div>
+	              <h3>Language-Learning Methods & Program Design</h3>
+	              <p>
+	                I developed chunking and spelling-memory methods into language-learning programs designed for practice,
+	                feedback, iteration, and continuous improvement.
+	              </p>
+              <div class="chips">
+                <span class="chip">Chunking Method</span>
+                <span class="chip">Spelling Memory</span>
+                <span class="chip">Lecture Design</span>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="shell">
+          <div class="section-head">
+            <div>
+              <div class="eyebrow">Portfolio Timeline</div>
+              <h2>Public Portfolio Timeline</h2>
+            </div>
+            <p>
+              This timeline connects public projects, portfolio pages, and technical demos across AI, games, analytics, hardware research, and educational design.
+            </p>
+          </div>
+
+          <div class="timeline">
+            <div class="timeline-item">
+              <div class="time">AI / NVIDIA</div>
+              <div>
+	                <h3>NVIDIA Agent Skills showcase</h3>
+	                <p>
+	                  Built a searchable library of 55 cases so readers can explore practical NVIDIA AI tooling by technical domain.
+	                </p>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="time">AI / Gamania</div>
+              <div>
+	                <h3>Gamania AI project experience</h3>
+	                <p>
+	                  Organized Gamania AI project experience around requirement framing, AI use-case design, proposal communication, and outcome presentation.
+	                </p>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="time">Game / MetaSens</div>
+              <div>
+	                <h3>MetaSens game experience</h3>
+	                <p>
+	                  Applied game and interactive-product experience to product design and entertainment technology beyond AI, data, and hardware research.
+	                </p>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="time">Analytics</div>
+              <div>
+	                <h3>Data analytics proposal dashboards</h3>
+	                <p>
+	                  Demonstrated how I translate data, strategy, and outcome metrics into decision-ready management dashboards.
+	                </p>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="time">Research / IC</div>
+              <div>
+	                <h3>IC power efficiency research</h3>
+	                <p>
+	                  Documented chip-efficiency and AI power-prediction work as public research spanning hardware, AI, and system optimization.
+	                </p>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="time">Education</div>
+              <div>
+	                <h3>Language learning lecture preview</h3>
+	                <p>
+	                  Expanded chunking and spelling-memory methods into course materials, registration, replays, and continuously updated learning resources.
+	                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="shell">
+        © 2026 Kuo Jun Bin / Jerome · LinkedIn profile hub and experience dashboard.
+      </div>
+    </footer>
+	    <script type="module">
+	      import * as THREE from "https://unpkg.com/three@0.160.0/build/three.module.js";
+	      import { fetchHuggingFaceStats } from "../../hf-stats.js";
+
+	      const hfArtifactCount = document.querySelector("#hfArtifactCount");
+	      const hfArtifactBreakdown = document.querySelector("#hfArtifactBreakdown");
+	      fetchHuggingFaceStats()
+	        .then((stats) => {
+	          hfArtifactCount.textContent = String(stats.total);
+	          const datasetLabel = stats.datasets === 1 ? "Dataset" : "Datasets";
+	          hfArtifactBreakdown.textContent = `Public Hugging Face Work · ${stats.spaces} Spaces / ${stats.models} Models / ${stats.datasets} ${datasetLabel}`;
+	          hfArtifactCount.title = stats.source === "live" ? "Live Hugging Face API data" : "Using the latest successful cached data";
+	        })
+	        .catch(() => {
+	          hfArtifactBreakdown.textContent = "Public Hugging Face Work · API temporarily unavailable";
+	        });
+
+	      const galaxyHost = document.querySelector("#resumeGalaxy");
+	      if (galaxyHost) {
+	        const scene = new THREE.Scene();
+	        const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 160);
+	        camera.position.set(3.6, 5.8, 18);
+
+	        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
+	        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+	        renderer.setClearColor(0x000000, 0);
+	        galaxyHost.appendChild(renderer.domElement);
+
+	        const root = new THREE.Group();
+	        root.position.set(4.55, 2.05, 0);
+	        root.scale.setScalar(1.34);
+	        scene.add(root);
+
+	        scene.add(new THREE.AmbientLight(0x9db8ff, 0.7));
+	        const keyLight = new THREE.DirectionalLight(0xffffff, 1.4);
+	        keyLight.position.set(7, 9, 8);
+	        scene.add(keyLight);
+	        const rimLight = new THREE.PointLight(0x76b900, 5.4, 48);
+	        rimLight.position.set(4, 5, 9);
+	        scene.add(rimLight);
+
+	        const coreMaterial = new THREE.MeshStandardMaterial({
+	          color: 0x101821,
+	          emissive: 0x143600,
+	          emissiveIntensity: 0.58,
+	          metalness: 0.58,
+	          roughness: 0.24,
+	        });
+	        const core = new THREE.Mesh(new THREE.IcosahedronGeometry(1.55, 2), coreMaterial);
+	        root.add(core);
+
+	        const coreWire = new THREE.LineSegments(
+	          new THREE.WireframeGeometry(new THREE.IcosahedronGeometry(1.78, 2)),
+	          new THREE.LineBasicMaterial({ color: 0x76b900, transparent: true, opacity: 0.92 }),
+	        );
+	        root.add(coreWire);
+
+	        const orbitMaterials = [
+	          new THREE.LineBasicMaterial({ color: 0x76b900, transparent: true, opacity: 0.62 }),
+	          new THREE.LineBasicMaterial({ color: 0x5aa7ff, transparent: true, opacity: 0.5 }),
+	          new THREE.LineBasicMaterial({ color: 0xf3b91e, transparent: true, opacity: 0.46 }),
+	        ];
+	        [4.1, 5.9, 7.5].forEach((radius, index) => {
+	          const points = [];
+	          for (let i = 0; i <= 160; i += 1) {
+	            const angle = (i / 160) * Math.PI * 2;
+	            points.push(new THREE.Vector3(Math.cos(angle) * radius, 0, Math.sin(angle) * radius));
+	          }
+	          const orbit = new THREE.Line(new THREE.BufferGeometry().setFromPoints(points), orbitMaterials[index]);
+	          orbit.rotation.x = Math.PI / 2.5 + index * 0.18;
+	          orbit.rotation.z = index * 0.55;
+	          root.add(orbit);
+	        });
+
+	        const resumeNodes = [
+	          { label: "AI Core", detail: "NVIDIA / Google / LLM", color: 0x76b900, size: 0.64, angle: 0.1, level: 0.7 },
+	          { label: "Gamania", detail: "Game data + AI workflow", color: 0x5aa7ff, size: 0.54, angle: 1.1, level: -0.2 },
+	          { label: "MetaSens", detail: "Web3 game / NFT / token", color: 0xff7ab6, size: 0.52, angle: 2.15, level: 0.45 },
+	          { label: "Hardware", detail: "Semiconductor / GPU / CPU", color: 0xf3b91e, size: 0.58, angle: 3.2, level: -0.55 },
+	          { label: "GitHub", detail: "Prototype portfolio", color: 0x8fd3ff, size: 0.5, angle: 4.25, level: 0.12 },
+	          { label: "Language", detail: "Speaker + memory design", color: 0xd0ff66, size: 0.5, angle: 5.25, level: -0.35 },
+	        ];
+
+	        function makeLabelTexture(title, detail, color) {
+	          const canvas = document.createElement("canvas");
+	          canvas.width = 512;
+	          canvas.height = 192;
+	          const ctx = canvas.getContext("2d");
+	          ctx.clearRect(0, 0, canvas.width, canvas.height);
+	          ctx.fillStyle = "rgba(7, 10, 15, 0.74)";
+	          ctx.strokeStyle = `#${color.toString(16).padStart(6, "0")}`;
+	          ctx.lineWidth = 4;
+	          ctx.beginPath();
+	          ctx.roundRect(20, 20, 472, 150, 22);
+	          ctx.fill();
+	          ctx.stroke();
+	          ctx.fillStyle = "#eef2f7";
+	          ctx.font = "800 34px Inter, sans-serif";
+	          ctx.fillText(title, 46, 78);
+	          ctx.fillStyle = "#aeb8c8";
+	          ctx.font = "600 22px Inter, sans-serif";
+	          ctx.fillText(detail, 46, 120);
+	          return new THREE.CanvasTexture(canvas);
+	        }
+
+	        const nodeGroup = new THREE.Group();
+	        const nodeMeshes = [];
+	        root.add(nodeGroup);
+
+	        resumeNodes.forEach((item, index) => {
+	          const radius = index % 2 === 0 ? 6.6 : 5.2;
+	          const position = new THREE.Vector3(
+	            Math.cos(item.angle) * radius,
+	            item.level,
+	            Math.sin(item.angle) * radius,
+	          );
+	          const material = new THREE.MeshStandardMaterial({
+	            color: item.color,
+	            emissive: item.color,
+	            emissiveIntensity: 0.55,
+	            metalness: 0.42,
+	            roughness: 0.3,
+	          });
+	          const node = new THREE.Mesh(new THREE.SphereGeometry(item.size, 42, 42), material);
+	          node.position.copy(position);
+	          node.userData = item;
+	          nodeGroup.add(node);
+	          nodeMeshes.push(node);
+
+	          const connector = new THREE.Line(
+	            new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, 0), position]),
+	            new THREE.LineBasicMaterial({ color: item.color, transparent: true, opacity: 0.52 }),
+	          );
+	          nodeGroup.add(connector);
+
+	          const ring = new THREE.Mesh(
+	            new THREE.TorusGeometry(item.size * 1.45, 0.025, 8, 72),
+	            new THREE.MeshBasicMaterial({ color: item.color, transparent: true, opacity: 0.95 }),
+	          );
+	          ring.position.copy(position);
+	          ring.rotation.x = Math.PI / 2;
+	          nodeGroup.add(ring);
+	          node.userData.ring = ring;
+
+	          const labelTexture = makeLabelTexture(item.label, item.detail, item.color);
+	          const label = new THREE.Sprite(
+	            new THREE.SpriteMaterial({ map: labelTexture, transparent: true, depthWrite: false }),
+	          );
+	          label.position.copy(position.clone().add(new THREE.Vector3(0, 1.08, 0)));
+	          label.scale.set(3.7, 1.38, 1);
+	          nodeGroup.add(label);
+	          node.userData.label = label;
+	        });
+
+	        const particleCount = 220;
+	        const particlePositions = new Float32Array(particleCount * 3);
+	        const particleColors = new Float32Array(particleCount * 3);
+	        const particleColor = new THREE.Color();
+	        for (let i = 0; i < particleCount; i += 1) {
+	          const radius = 8 + Math.random() * 18;
+	          const angle = Math.random() * Math.PI * 2;
+	          const y = (Math.random() - 0.5) * 9;
+	          particlePositions[i * 3] = Math.cos(angle) * radius;
+	          particlePositions[i * 3 + 1] = y;
+	          particlePositions[i * 3 + 2] = Math.sin(angle) * radius;
+	          particleColor.set(i % 3 === 0 ? 0x76b900 : i % 3 === 1 ? 0x5aa7ff : 0xf3b91e);
+	          particleColors[i * 3] = particleColor.r;
+	          particleColors[i * 3 + 1] = particleColor.g;
+	          particleColors[i * 3 + 2] = particleColor.b;
+	        }
+	        const particleGeometry = new THREE.BufferGeometry();
+	        particleGeometry.setAttribute("position", new THREE.BufferAttribute(particlePositions, 3));
+	        particleGeometry.setAttribute("color", new THREE.BufferAttribute(particleColors, 3));
+	        const particles = new THREE.Points(
+	          particleGeometry,
+	          new THREE.PointsMaterial({ size: 0.078, vertexColors: true, transparent: true, opacity: 0.82 }),
+	        );
+	        scene.add(particles);
+
+	        const raycaster = new THREE.Raycaster();
+	        const pointer = new THREE.Vector2(-10, -10);
+	        let targetTilt = 0;
+	        let activeNode = null;
+	        const clock = new THREE.Clock();
+
+	        function resizeGalaxy() {
+	          const width = Math.max(galaxyHost.clientWidth, 320);
+	          const height = Math.max(galaxyHost.clientHeight, 520);
+	          camera.aspect = width / height;
+	          camera.updateProjectionMatrix();
+	          renderer.setSize(width, height, false);
+	        }
+
+	        galaxyHost.addEventListener("pointermove", (event) => {
+	          const rect = galaxyHost.getBoundingClientRect();
+	          pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+	          pointer.y = -(((event.clientY - rect.top) / rect.height) * 2 - 1);
+	          targetTilt = pointer.x * 0.42;
+	        });
+
+	        function animateGalaxy() {
+	          const elapsed = clock.elapsedTime;
+	          root.rotation.y += (targetTilt - root.rotation.y) * 0.02;
+	          root.rotation.y += 0.0028;
+	          root.rotation.x = Math.sin(elapsed * 0.22) * 0.07;
+	          camera.lookAt(root.position.x, root.position.y, root.position.z);
+	          core.rotation.x += 0.008;
+	          core.rotation.y += 0.011;
+	          coreWire.rotation.y -= 0.006;
+	          particles.rotation.y -= 0.0009;
+
+	          raycaster.setFromCamera(pointer, camera);
+	          const hit = raycaster.intersectObjects(nodeMeshes, false)[0]?.object ?? null;
+	          activeNode = hit;
+
+	          nodeMeshes.forEach((node, index) => {
+	            const pulse = 1 + Math.sin(elapsed * 2.2 + index) * 0.04;
+	            const hover = node === activeNode ? 1.35 : 1;
+	            node.scale.setScalar(pulse * hover);
+	            node.userData.ring.rotation.z += 0.012 + index * 0.001;
+	            node.userData.ring.scale.setScalar(node === activeNode ? 1.22 : 1);
+	            node.userData.label.material.opacity = node === activeNode ? 1 : 0.72;
+	          });
+
+	          renderer.render(scene, camera);
+	          requestAnimationFrame(animateGalaxy);
+	        }
+
+	        resizeGalaxy();
+	        animateGalaxy();
+	        window.addEventListener("resize", resizeGalaxy);
+	      }
+
+	      const sceneHost = document.querySelector("#simScene");
+	      const fallback = document.querySelector("#simFallback");
+      const statusEl = document.querySelector("#simStatus");
+      const scoreEl = document.querySelector("#simScore");
+      const missionBtn = document.querySelector("#missionBtn");
+      const resetBtn = document.querySelector("#resetMissionBtn");
+
+      if (sceneHost) {
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x071018);
+
+        const camera = new THREE.PerspectiveCamera(48, 1, 0.1, 100);
+        camera.position.set(7, 5.4, 7);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, preserveDrawingBuffer: true });
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.shadowMap.enabled = true;
+        sceneHost.prepend(renderer.domElement);
+        fallback.hidden = true;
+
+        const keyLight = new THREE.DirectionalLight(0xffffff, 1.25);
+        keyLight.position.set(5, 8, 6);
+        keyLight.castShadow = true;
+        scene.add(keyLight);
+        scene.add(new THREE.AmbientLight(0x7aa7ff, 0.42));
+
+        const floor = new THREE.Mesh(
+          new THREE.PlaneGeometry(12, 12, 24, 24),
+          new THREE.MeshStandardMaterial({
+            color: 0x0f1722,
+            metalness: 0.28,
+            roughness: 0.72,
+          }),
+        );
+        floor.rotation.x = -Math.PI / 2;
+        floor.receiveShadow = true;
+        scene.add(floor);
+
+        const grid = new THREE.GridHelper(12, 12, 0x76b900, 0x1d3340);
+        grid.position.y = 0.012;
+        scene.add(grid);
+
+        const hub = new THREE.Group();
+        scene.add(hub);
+
+        const nodeMaterial = new THREE.MeshStandardMaterial({
+          color: 0x76b900,
+          emissive: 0x1d4d00,
+          metalness: 0.35,
+          roughness: 0.38,
+        });
+        const visitedMaterial = new THREE.MeshStandardMaterial({
+          color: 0x5aa7ff,
+          emissive: 0x0b3e73,
+          metalness: 0.3,
+          roughness: 0.36,
+        });
+        const targetMaterial = new THREE.MeshStandardMaterial({
+          color: 0xf3b91e,
+          emissive: 0x5f4100,
+          metalness: 0.28,
+          roughness: 0.34,
+        });
+
+        const targetPositions = [
+          new THREE.Vector3(-3.6, 0.22, -2.8),
+          new THREE.Vector3(3.4, 0.22, -2.6),
+          new THREE.Vector3(3.2, 0.22, 2.8),
+          new THREE.Vector3(-3.3, 0.22, 2.5),
+        ];
+        const targets = targetPositions.map((position, index) => {
+          const node = new THREE.Mesh(new THREE.CylinderGeometry(0.34, 0.46, 0.28, 32), nodeMaterial.clone());
+          node.position.copy(position);
+          node.castShadow = true;
+          node.receiveShadow = true;
+          node.userData.index = index;
+          hub.add(node);
+
+          const ring = new THREE.Mesh(
+            new THREE.TorusGeometry(0.58, 0.025, 8, 48),
+            new THREE.MeshBasicMaterial({ color: 0x76b900 }),
+          );
+          ring.position.set(position.x, 0.05, position.z);
+          ring.rotation.x = Math.PI / 2;
+          hub.add(ring);
+          node.userData.ring = ring;
+          return node;
+        });
+
+        const robot = new THREE.Group();
+        const body = new THREE.Mesh(
+          new THREE.BoxGeometry(0.7, 0.52, 0.88),
+          new THREE.MeshStandardMaterial({ color: 0x202d3d, metalness: 0.52, roughness: 0.28 }),
+        );
+        body.position.y = 0.58;
+        body.castShadow = true;
+        robot.add(body);
+
+        const head = new THREE.Mesh(
+          new THREE.BoxGeometry(0.48, 0.32, 0.38),
+          new THREE.MeshStandardMaterial({ color: 0x76b900, emissive: 0x1c4a00, metalness: 0.22, roughness: 0.38 }),
+        );
+        head.position.y = 1.02;
+        head.castShadow = true;
+        robot.add(head);
+
+        const wheelMaterial = new THREE.MeshStandardMaterial({ color: 0x070a0f, metalness: 0.25, roughness: 0.45 });
+        [-0.46, 0.46].forEach((x) => {
+          [-0.32, 0.32].forEach((z) => {
+            const wheel = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.16, 0.12, 24), wheelMaterial);
+            wheel.rotation.z = Math.PI / 2;
+            wheel.position.set(x, 0.28, z);
+            wheel.castShadow = true;
+            robot.add(wheel);
+          });
+        });
+        robot.position.set(0, 0, 0);
+        scene.add(robot);
+
+        const pathMaterial = new THREE.LineBasicMaterial({ color: 0x5aa7ff, transparent: true, opacity: 0.8 });
+        const pathGeometry = new THREE.BufferGeometry().setFromPoints([
+          new THREE.Vector3(0, 0.08, 0),
+          ...targetPositions.map((p) => new THREE.Vector3(p.x, 0.08, p.z)),
+          new THREE.Vector3(0, 0.08, 0),
+        ]);
+        const pathLine = new THREE.Line(pathGeometry, pathMaterial);
+        scene.add(pathLine);
+
+        const dataCubes = [];
+        const cubeMaterial = new THREE.MeshStandardMaterial({
+          color: 0x5aa7ff,
+          emissive: 0x06284d,
+          metalness: 0.2,
+          roughness: 0.42,
+        });
+        for (let i = 0; i < 18; i += 1) {
+          const cube = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.16, 0.16), cubeMaterial.clone());
+          const angle = (i / 18) * Math.PI * 2;
+          const radius = 4.7 + (i % 3) * 0.22;
+          cube.position.set(Math.cos(angle) * radius, 0.5 + (i % 5) * 0.22, Math.sin(angle) * radius);
+          cube.castShadow = true;
+          scene.add(cube);
+          dataCubes.push(cube);
+        }
+
+        let activeMission = false;
+        let targetIndex = 0;
+        let score = 0;
+        let orbit = 0;
+        const clock = new THREE.Clock();
+
+        function resizeScene() {
+          const width = sceneHost.clientWidth;
+          const height = Math.max(sceneHost.clientHeight, 320);
+          camera.aspect = width / height;
+          camera.updateProjectionMatrix();
+          renderer.setSize(width, height, false);
+        }
+
+        function setScore(value) {
+          score = value;
+          scoreEl.textContent = String(score);
+        }
+
+        function resetMission() {
+          activeMission = false;
+          targetIndex = 0;
+          robot.position.set(0, 0, 0);
+          robot.rotation.y = 0;
+          targets.forEach((target) => {
+            target.material = nodeMaterial.clone();
+            target.userData.ring.material.color.set(0x76b900);
+          });
+          targets[0].material = targetMaterial.clone();
+          setScore(0);
+          statusEl.textContent = "Omniverse-style digital twin scene ready.";
+        }
+
+        function startMission() {
+          activeMission = true;
+          targets[targetIndex].material = targetMaterial.clone();
+          statusEl.textContent = "Isaac Sim-style robot mission running.";
+        }
+
+        missionBtn?.addEventListener("click", startMission);
+        resetBtn?.addEventListener("click", resetMission);
+        sceneHost.addEventListener("pointermove", (event) => {
+          const rect = sceneHost.getBoundingClientRect();
+          orbit = ((event.clientX - rect.left) / rect.width - 0.5) * 0.9;
+        });
+
+        function animate() {
+          const delta = clock.getDelta();
+          const elapsed = clock.elapsedTime;
+
+          hub.rotation.y = Math.sin(elapsed * 0.22) * 0.04;
+          camera.position.x = Math.sin(elapsed * 0.1 + orbit) * 7.5;
+          camera.position.z = Math.cos(elapsed * 0.1 + orbit) * 7.5;
+          camera.lookAt(0, 0.25, 0);
+
+          targets.forEach((target, index) => {
+            target.position.y = 0.22 + Math.sin(elapsed * 2.2 + index) * 0.04;
+            target.userData.ring.rotation.z += delta * (0.75 + index * 0.12);
+          });
+          dataCubes.forEach((cube, index) => {
+            cube.rotation.x += delta * 0.6;
+            cube.rotation.y += delta * 0.8;
+            cube.position.y += Math.sin(elapsed * 1.4 + index) * 0.0009;
+          });
+
+          if (activeMission) {
+            const target = targetPositions[targetIndex];
+            const destination = new THREE.Vector3(target.x, 0, target.z);
+            const direction = destination.clone().sub(robot.position);
+            const distance = direction.length();
+            if (distance > 0.05) {
+              direction.normalize();
+              robot.position.add(direction.multiplyScalar(Math.min(distance, delta * 1.7)));
+              robot.rotation.y = Math.atan2(direction.x, direction.z);
+            } else {
+              targets[targetIndex].material = visitedMaterial.clone();
+              targets[targetIndex].userData.ring.material.color.set(0x5aa7ff);
+              setScore(score + 25);
+              targetIndex = (targetIndex + 1) % targetPositions.length;
+              targets[targetIndex].material = targetMaterial.clone();
+              statusEl.textContent = targetIndex === 0 ? "Mission loop complete. Digital twin route verified." : "Robot route planning checkpoint reached.";
+            }
+          }
+
+          renderer.render(scene, camera);
+          requestAnimationFrame(animate);
+        }
+
+        resizeScene();
+        resetMission();
+        animate();
+        window.addEventListener("resize", resizeScene);
+      }
+    </script>
+  </body>
+</html>
