@@ -305,33 +305,6 @@ export const CATS = [
   { id: 'physical', label: 'Physical AI' },
 ]
 
-export const HUGGING_FACE_SHOWCASE = [
-  {
-    kind: 'SPACE · PHYSICAL AI', icon: '🦾', title: 'Isaac Sim-to-Real VLA Lab',
-    desc: '可操作的 Physical AI 驗證控制台，清楚區分 browser mock、遠端 RTX contract 與實體機械手臂安全邊界。',
-    proof: 'v1/v2 comparison · SIL/HIL gates',
-    url: 'https://huggingface.co/spaces/junbin666/isaac-sim2real-vla-lab',
-  },
-  {
-    kind: 'MODEL · COMPUTER VISION', icon: '🔬', title: 'Tiny Vial CNN v2',
-    desc: '141k-parameter objectness + localization baseline，附 Safetensors、推論範例與可重現評估。',
-    proof: '0/100 synthetic FP · 95% FPR upper bound ≈ 3%',
-    url: 'https://huggingface.co/junbin666/tiny-vial-cnn-sdg-objectness-v2',
-  },
-  {
-    kind: 'SPACE · NIM / RAG', icon: '🗣️', title: 'NIM RAG Language Tutor',
-    desc: '雙語 grounded tutor：問題、top-k evidence、引用與練習形成完整產品迴路，並示範超出 corpus 時拒答。',
-    proof: '10 notes · visible retrieval · abstention',
-    url: 'https://huggingface.co/spaces/junbin666/nim-rag-language-tutor',
-  },
-  {
-    kind: 'SPACE · GPU ANALYTICS', icon: '⚡', title: 'cuDF Game Analytics Benchmark',
-    desc: '把 pandas／cuDF 的 workload 特性、資料規模與 transfer overhead 轉成可操作的 GPU-fit 決策工具，並公開實測與尚未驗證的邊界。',
-    proof: 'recorded metrics · workload fit · no inflated speedup claim',
-    url: 'https://huggingface.co/spaces/junbin666/cudf-game-analytics-benchmark',
-  },
-]
-
 // 我的相關作品
 export const PROJECTS = [
   {

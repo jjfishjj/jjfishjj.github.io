@@ -1,0 +1,30 @@
+name: Check portfolio links
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 1 * * 1'
+  push:
+    paths:
+      - public/portfolio-manifest.json
+      - scripts/check-portfolio-links.mjs
+      - .github/workflows/check-portfolio-links.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: portfolio-link-health
+  cancel-in-progress: true
+
+jobs:
+  check-links:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Validate manifest and check public links
+        run: node scripts/check-portfolio-links.mjs --concurrency 5 --retries 2 --timeout 15000

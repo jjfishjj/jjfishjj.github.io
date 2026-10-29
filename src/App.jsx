@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo } from 'react'
 import './App.css'
-import { SKILLS, CATS, PROJECTS, HUGGING_FACE_SHOWCASE } from './skills'
+import { SKILLS, CATS, PROJECTS } from './skills'
 
 const CERTIFICATES = [
   {
@@ -56,6 +56,7 @@ export default function App() {
   const [query, setQuery] = useState('')
   const [expanded, setExpanded] = useState(null)
   const [hfStats, setHfStats] = useState({ status: 'loading', data: null })
+  const [portfolioManifest, setPortfolioManifest] = useState({ status: 'loading', data: null })
 
   useEffect(() => {
     let active = true
@@ -71,6 +72,34 @@ export default function App() {
       active = false
     }
   }, [])
+
+  useEffect(() => {
+    let active = true
+    fetch('/portfolio-manifest.json', { headers: { Accept: 'application/json' } })
+      .then((response) => {
+        if (!response.ok) throw new Error(`Manifest returned ${response.status}`)
+        return response.json()
+      })
+      .then((data) => {
+        if (!Array.isArray(data.artifacts) || !Array.isArray(data.projects)) {
+          throw new Error('Invalid portfolio manifest')
+        }
+        if (active) setPortfolioManifest({ status: 'ready', data })
+      })
+      .catch(() => {
+        if (active) setPortfolioManifest({ status: 'unavailable', data: null })
+      })
+    return () => {
+      active = false
+    }
+  }, [])
+
+  const featuredArtifacts = useMemo(() => {
+    if (!portfolioManifest.data) return []
+    return portfolioManifest.data.artifacts
+      .filter((artifact) => artifact.featuredOrder)
+      .sort((a, b) => a.featuredOrder - b.featuredOrder)
+  }, [portfolioManifest])
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
@@ -140,18 +169,24 @@ export default function App() {
             {hfStats.status === 'unavailable' && 'Hugging Face API 暫時無法連線；下方保留已驗證的精選成果。'}
           </p>
           <div className="hf-grid">
-            {HUGGING_FACE_SHOWCASE.map((item) => (
-              <a key={item.url} className="hf-card" href={item.url} target="_blank" rel="noreferrer">
+            {featuredArtifacts.map((item) => (
+              <a key={item.id} className="hf-card" href={item.url} target="_blank" rel="noreferrer">
                 <div className="hf-card-head">
                   <span className="hf-icon" aria-hidden="true">{item.icon}</span>
-                  <span className="hf-kind">{item.kind}</span>
+                  <span className="hf-kind">{item.type.toUpperCase()} · {item.tags[0]}</span>
                   <span className="proj-arrow">↗</span>
                 </div>
                 <h3>{item.title}</h3>
-                <p>{item.desc}</p>
-                <code>{item.proof}</code>
+                <p>{item.summary.zh}</p>
+                <code>{item.evidence.zh}</code>
               </a>
             ))}
+            {portfolioManifest.status === 'loading' && (
+              <div className="hf-manifest-state">Portfolio manifest 載入中…</div>
+            )}
+            {portfolioManifest.status === 'unavailable' && (
+              <div className="hf-manifest-state error">Portfolio manifest 暫時無法載入，請直接開啟 HF Portfolio。</div>
+            )}
           </div>
         </section>
 

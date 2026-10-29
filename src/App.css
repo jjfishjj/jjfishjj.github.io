@@ -554,3 +554,14 @@ body {
 @media (min-width: 901px) and (max-width: 1120px) {
   .hf-grid { grid-template-columns: 1fr 1fr; }
 }
+.hf-manifest-state {
+  grid-column: 1 / -1;
+  padding: 2rem;
+  color: #94a3b8;
+  text-align: center;
+  border: 1px dashed rgba(148, 163, 184, 0.35);
+}
+
+.hf-manifest-state.error {
+  color: #ffb3a7;
+}
