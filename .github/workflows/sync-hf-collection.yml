@@ -1,0 +1,33 @@
+name: Sync Hugging Face Collection
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - public/portfolio-manifest.json
+      - scripts/sync_hf_collection.py
+      - .github/workflows/sync-hf-collection.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: hf-collection-sync
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install 'huggingface_hub>=0.34,<3'
+      - name: Validate URL parsing
+        run: python scripts/sync_hf_collection.py --self-test
+      - name: Synchronize and verify Collection
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: python scripts/sync_hf_collection.py --apply --prune

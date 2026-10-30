@@ -131,6 +131,7 @@ export default function App() {
           <a className="profile-link" href="/projects/">專案總覽</a>
           <a className="profile-link" href="/linkedin/">經歷儀表板</a>
           <a className="profile-link hf-portfolio-link" href="https://huggingface.co/spaces/junbin666/nvidia-project-portfolio" target="_blank" rel="noreferrer">HF Portfolio ↗</a>
+          <a className="profile-link" href="/portfolio-health/">Portfolio Health</a>
           <a className="profile-link" href="/ai-prompt-game-tutorial/">AI 遊戲教學</a>
           <a className="profile-link" href="/lectures/">語言講座</a>
           <a className="profile-link" href="https://jjfishjj.github.io/claude-projects-hub/" target="_blank" rel="noreferrer">部署索引 ↗</a>

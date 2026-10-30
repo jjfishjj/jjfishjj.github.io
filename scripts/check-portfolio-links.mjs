@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-import { readFile } from 'node:fs/promises'
-import { resolve } from 'node:path'
+import { mkdir, readFile, rename, writeFile } from 'node:fs/promises'
+import { dirname, resolve } from 'node:path'
 import { pathToFileURL } from 'node:url'
 
 const DEFAULT_MANIFEST = 'public/portfolio-manifest.json'
@@ -18,6 +18,11 @@ export function validateManifest(manifest) {
   const categoryIds = new Set(manifest.categories.map((item) => item.id))
   const unknownCategory = manifest.projects.find((project) => !categoryIds.has(project.category))
   if (unknownCategory) throw new Error(`Unknown category ${unknownCategory.category} on ${unknownCategory.id}`)
+  const artifactIds = new Set(manifest.artifacts.map((item) => item.id))
+  const unknownFeatured = manifest.recruiter?.featuredArtifactIds?.find((id) => !artifactIds.has(id))
+  if (unknownFeatured) throw new Error(`Unknown featured artifact id: ${unknownFeatured}`)
+  const skillIds = manifest.recruiter?.skills?.map((item) => item.id) || []
+  if (new Set(skillIds).size !== skillIds.length) throw new Error('Recruiter skills must have unique ids')
   return manifest
 }
 
@@ -81,18 +86,53 @@ export async function checkLinks(links, options = {}) {
 }
 
 function parseArgs(argv) {
-  const options = { manifest: DEFAULT_MANIFEST, retries: 2, timeoutMs: 15000, concurrency: 5, dryRun: false, selfTest: false }
+  const options = { manifest: DEFAULT_MANIFEST, retries: 2, timeoutMs: 15000, concurrency: 5, dryRun: false, selfTest: false, historyFile: '', runUrl: '' }
   for (let index = 0; index < argv.length; index += 1) {
     const argument = argv[index]
     if (argument === '--manifest') options.manifest = argv[++index]
     else if (argument === '--retries') options.retries = Number(argv[++index])
     else if (argument === '--timeout') options.timeoutMs = Number(argv[++index])
     else if (argument === '--concurrency') options.concurrency = Number(argv[++index])
+    else if (argument === '--history-file') options.historyFile = argv[++index]
+    else if (argument === '--run-url') options.runUrl = argv[++index]
     else if (argument === '--dry-run') options.dryRun = true
     else if (argument === '--self-test') options.selfTest = true
     else throw new Error(`Unknown argument: ${argument}`)
   }
   return options
+}
+
+export function createHealthSnapshot(results, { checkedAt = new Date().toISOString(), runUrl = '', durationMs = 0 } = {}) {
+  const failures = results.filter((result) => !result.ok)
+  const healthy = results.length - failures.length
+  return {
+    checkedAt,
+    runUrl,
+    total: results.length,
+    healthy,
+    failed: failures.length,
+    successRate: results.length ? Number(((healthy / results.length) * 100).toFixed(2)) : 0,
+    durationMs,
+    failures: failures.map(({ url, status, error, kinds }) => ({ url, status, error, kinds }))
+  }
+}
+
+export async function appendHealthHistory(file, snapshot, { limit = 52 } = {}) {
+  const target = resolve(process.cwd(), file)
+  let history = { schemaVersion: 1, updatedAt: snapshot.checkedAt, runs: [] }
+  try {
+    history = JSON.parse(await readFile(target, 'utf8'))
+  } catch (error) {
+    if (error.code !== 'ENOENT') throw error
+  }
+  if (history.schemaVersion !== 1 || !Array.isArray(history.runs)) throw new Error('Unsupported health history format')
+  history.updatedAt = snapshot.checkedAt
+  history.runs = [snapshot, ...history.runs.filter((run) => run.checkedAt !== snapshot.checkedAt)].slice(0, limit)
+  await mkdir(dirname(target), { recursive: true })
+  const temporary = `${target}.tmp`
+  await writeFile(temporary, `${JSON.stringify(history, null, 2)}\n`, 'utf8')
+  await rename(temporary, target)
+  return history
 }
 
 async function runSelfTest() {
@@ -117,8 +157,14 @@ async function main() {
   const links = collectLinks(manifest)
   console.log(`Manifest valid: ${manifest.projects.length} projects, ${manifest.artifacts.length} artifacts, ${links.length} unique URLs`)
   if (options.dryRun) return
+  const startedAt = Date.now()
   const results = await checkLinks(links, options)
   const failures = results.filter((result) => !result.ok)
+  const snapshot = createHealthSnapshot(results, { runUrl: options.runUrl, durationMs: Date.now() - startedAt })
+  if (options.historyFile) {
+    const history = await appendHealthHistory(options.historyFile, snapshot)
+    console.log(`Health history updated: ${options.historyFile} (${history.runs.length} runs retained)`)
+  }
   console.table(results.map((result) => ({ status: result.status || 'ERR', kind: result.kinds.join(', '), url: result.url })))
   if (failures.length) {
     console.error(`\n${failures.length} link(s) failed:`)

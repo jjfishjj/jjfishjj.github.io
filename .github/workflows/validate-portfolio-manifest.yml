@@ -1,0 +1,32 @@
+name: Validate portfolio manifest
+
+on:
+  pull_request:
+    paths:
+      - public/portfolio-manifest.json
+      - public/portfolio-manifest.schema.json
+      - scripts/validate-portfolio-manifest.mjs
+      - scripts/check-portfolio-links.mjs
+  push:
+    branches: [main]
+    paths:
+      - public/portfolio-manifest.json
+      - public/portfolio-manifest.schema.json
+      - scripts/validate-portfolio-manifest.mjs
+      - scripts/check-portfolio-links.mjs
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run validate:portfolio

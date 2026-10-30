@@ -1,6 +1,7 @@
 {
+  "$schema": "https://jjfishjj.github.io/portfolio-manifest.schema.json",
   "schemaVersion": 1,
-  "updatedAt": "2026-10-29",
+  "updatedAt": "2026-10-30",
   "owner": {
     "name": "Jerome Kuo",
     "github": "https://github.com/jjfishjj",

@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Portfolio public-link health history and uptime dashboard.">
+  <title>Portfolio Health · Jerome Kuo</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <a class="brand" href="/">JK<span>/</span>LAB</a>
+    <nav><a href="/portfolio-manifest.json">Manifest ↗</a><a href="https://huggingface.co/spaces/junbin666/nvidia-project-portfolio">HF Portfolio ↗</a></nav>
+  </header>
+  <main>
+    <section class="hero">
+      <p class="eyebrow">PUBLIC EVIDENCE · AUTOMATED WEEKLY</p>
+      <h1>Portfolio<br><em>Health Monitor</em></h1>
+      <p>每週檢查 GitHub、Hugging Face 與公開 Demo，將結果保留為可追溯歷史。數據來自同一份 Portfolio Manifest。</p>
+    </section>
+    <section id="loading" class="state">讀取健康度歷史中…</section>
+    <section id="error" class="state error" hidden>
+      <strong>暫時無法讀取健康度歷史</strong><span>請稍後重試，或直接查看 GitHub Actions。</span>
+    </section>
+    <section id="empty" class="state" hidden>
+      <strong>等待第一次自動檢查</strong><span>Workflow 完成後，這裡會顯示成功率與失敗連結。</span>
+    </section>
+    <div id="dashboard" hidden>
+      <section class="metrics" aria-label="最新健康度摘要">
+        <article><span>最新狀態</span><b id="latest-status">—</b></article>
+        <article><span>健康連結</span><b id="latest-links">—</b></article>
+        <article><span>成功率</span><b id="latest-rate">—</b></article>
+        <article><span>保留紀錄</span><b id="history-count">—</b></article>
+      </section>
+      <section class="panel chart-panel">
+        <div class="panel-heading"><div><p class="eyebrow">HISTORY</p><h2>成功率趨勢</h2></div><p id="updated-at"></p></div>
+        <div id="chart" class="chart" role="img" aria-label="歷次連結健康成功率"></div>
+      </section>
+      <section class="panel">
+        <div class="panel-heading"><div><p class="eyebrow">RUN LOG</p><h2>檢查紀錄</h2></div><p>最多保留最近 52 次</p></div>
+        <div class="table-wrap"><table><thead><tr><th>時間</th><th>狀態</th><th>健康</th><th>成功率</th><th>耗時</th><th>證據</th></tr></thead><tbody id="run-list"></tbody></table></div>
+      </section>
+      <section class="panel" id="failure-panel">
+        <div class="panel-heading"><div><p class="eyebrow">LATEST FAILURES</p><h2>最新失敗連結</h2></div></div>
+        <div id="failures"></div>
+      </section>
+    </div>
+  </main>
+  <footer>Jerome Kuo · Evidence-first portfolio operations</footer>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
