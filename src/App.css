@@ -565,3 +565,26 @@ body {
 .hf-manifest-state.error {
   color: #ffb3a7;
 }
+
+/* Language switch */
+.hero { position: relative; }
+.lang-toggle {
+  position: absolute;
+  top: 18px;
+  right: clamp(12px, 4vw, 32px);
+  z-index: 2;
+  min-width: 64px;
+  border: 1px solid #76b90066;
+  border-radius: 999px;
+  padding: 7px 13px;
+  background: #14200f;
+  color: #b7e37d;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.2;
+  cursor: pointer;
+  transition: border-color .15s, color .15s, background .15s;
+}
+.lang-toggle:hover { border-color: #76b900; color: #d6ff9f; background: #17230f; }
+.lang-toggle:focus-visible { outline: 2px solid #76b900; outline-offset: 3px; }

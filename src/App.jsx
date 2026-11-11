@@ -1,6 +1,7 @@
 import { useEffect, useState, useMemo } from 'react'
 import './App.css'
 import { SKILLS, CATS, PROJECTS } from './skills'
+import { CATEGORIES_EN, PROJECTS_EN, SKILLS_EN, TAGS_EN, UI } from './translations'
 
 const CERTIFICATES = [
   {
@@ -35,7 +36,7 @@ const CERTIFICATES = [
   },
 ]
 
-function CopyButton({ text }) {
+function CopyButton({ text, language }) {
   const [copied, setCopied] = useState(false)
   return (
     <button
@@ -46,17 +47,35 @@ function CopyButton({ text }) {
         setTimeout(() => setCopied(false), 1800)
       }}
     >
-      {copied ? '✓ 已複製' : '複製'}
+      {copied ? UI[language].copied : UI[language].copy}
     </button>
   )
 }
 
 export default function App() {
+  const [language, setLanguage] = useState(() => {
+    const requested = new URLSearchParams(window.location.search).get('lang')
+    if (requested === 'en' || requested === 'zh') return requested
+    return localStorage.getItem('portfolio-language') === 'en' ? 'en' : 'zh'
+  })
+  const copy = UI[language]
   const [filter, setFilter] = useState('all')
   const [query, setQuery] = useState('')
   const [expanded, setExpanded] = useState(null)
   const [hfStats, setHfStats] = useState({ status: 'loading', data: null })
   const [portfolioManifest, setPortfolioManifest] = useState({ status: 'loading', data: null })
+
+  useEffect(() => {
+    localStorage.setItem('portfolio-language', language)
+    document.documentElement.lang = language === 'en' ? 'en' : 'zh-Hant'
+    document.title = copy.pageTitle
+    document.querySelector('meta[name="description"]')?.setAttribute('content', copy.pageDescription)
+    document.querySelector('meta[property="og:title"]')?.setAttribute('content', copy.pageTitle)
+    document.querySelector('meta[property="og:description"]')?.setAttribute('content', copy.pageDescription)
+    document.querySelector('meta[property="og:locale"]')?.setAttribute('content', language === 'en' ? 'en_US' : 'zh_TW')
+    document.querySelector('meta[name="twitter:title"]')?.setAttribute('content', copy.pageTitle)
+    document.querySelector('meta[name="twitter:description"]')?.setAttribute('content', copy.pageDescription)
+  }, [language, copy])
 
   useEffect(() => {
     let active = true
@@ -103,7 +122,9 @@ export default function App() {
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
-    return SKILLS.filter((s) => {
+    return SKILLS.map((skill) => language === 'en'
+      ? { ...skill, ...(SKILLS_EN[skill.skill] || {}) }
+      : skill).filter((s) => {
       const matchCat = filter === 'all' || s.cat === filter
       const matchQuery =
         !q ||
@@ -113,28 +134,39 @@ export default function App() {
         s.scenario.toLowerCase().includes(q)
       return matchCat && matchQuery
     })
-  }, [filter, query])
+  }, [filter, query, language])
 
   return (
     <div className="page">
       <header className="hero">
+        <button
+          className="lang-toggle"
+          type="button"
+          aria-label={copy.languageLabel}
+          onClick={() => {
+            const nextLanguage = language === 'en' ? 'zh' : 'en'
+            setLanguage(nextLanguage)
+            const nextUrl = new URL(window.location.href)
+            nextUrl.searchParams.set('lang', nextLanguage)
+            window.history.replaceState({}, '', `${nextUrl.pathname}${nextUrl.search}${nextUrl.hash}`)
+          }}
+        >
+          {copy.languageButton}
+        </button>
         <div className="nv-badge">NVIDIA Agent Skills</div>
-        <h1>實際應用案例展示</h1>
-        <p className="hero-sub">
-          {SKILLS.length} 個精選案例，涵蓋 GPU 計算、LLM 訓練、推論部署、醫療與視覺 AI —
-          教 AI agent 如何最佳地使用 NVIDIA 軟體
-        </p>
+        <h1>{copy.heroTitle}</h1>
+        <p className="hero-sub">{SKILLS.length}{copy.heroDescription}</p>
         <a className="hero-link" href="https://github.com/nvidia/skills" target="_blank" rel="noreferrer">
           github.com/nvidia/skills ↗
         </a>
         <div className="hero-actions">
-          <a className="profile-link" href="/projects/">專案總覽</a>
-          <a className="profile-link" href="/linkedin/">經歷儀表板</a>
+          <a className="profile-link" href="/projects/">{copy.projectsOverview}</a>
+          <a className="profile-link" href="/linkedin/">{copy.experienceDashboard}</a>
           <a className="profile-link hf-portfolio-link" href="https://huggingface.co/spaces/junbin666/nvidia-project-portfolio" target="_blank" rel="noreferrer">HF Portfolio ↗</a>
           <a className="profile-link" href="/portfolio-health/">Portfolio Health</a>
-          <a className="profile-link" href="/ai-prompt-game-tutorial/">AI 遊戲教學</a>
-          <a className="profile-link" href="/lectures/">語言講座</a>
-          <a className="profile-link" href="https://jjfishjj.github.io/claude-projects-hub/" target="_blank" rel="noreferrer">部署索引 ↗</a>
+          <a className="profile-link" href="/ai-prompt-game-tutorial/">{copy.aiGameTutorial}</a>
+          <a className="profile-link" href="/lectures/">{copy.languageLectures}</a>
+          <a className="profile-link" href="https://jjfishjj.github.io/claude-projects-hub/" target="_blank" rel="noreferrer">{copy.deployIndex}</a>
         </div>
       </header>
 
@@ -143,11 +175,11 @@ export default function App() {
           <div className="section-heading">
             <div>
               <span className="section-kicker">LIVE ON HUGGING FACE</span>
-              <h2 id="hf-showcase-title">可驗證的 NVIDIA 作品</h2>
+              <h2 id="hf-showcase-title">{copy.featuredWork}</h2>
             </div>
             <div className="hf-links">
               <a className="hf-profile featured" href="https://huggingface.co/spaces/junbin666/nvidia-project-portfolio" target="_blank" rel="noreferrer">
-                34 專案總覽 ↗
+                {copy.projectsCount}
               </a>
               <a className="hf-profile" href="https://huggingface.co/junbin666" target="_blank" rel="noreferrer">
                 @junbin666 ↗
@@ -155,19 +187,19 @@ export default function App() {
             </div>
           </div>
           <p className="section-intro">
-            不只展示概念：每個成果都提供公開互動頁、技術邊界與可檢查的 evidence。
+            {copy.showcaseIntro}
           </p>
           <p className={`hf-live-stats ${hfStats.status}`} aria-live="polite">
             {hfStats.status === 'ready' && (
               <>
-                Hugging Face API 即時統計：<strong>{hfStats.data.spaces} Spaces</strong>
+                {copy.hfStatsPrefix}<strong>{hfStats.data.spaces} Spaces</strong>
                 <span>·</span><strong>{hfStats.data.models} Models</strong>
                 <span>·</span><strong>{hfStats.data.datasets} {hfStats.data.datasets === 1 ? 'Dataset' : 'Datasets'}</strong>
-                <span>·</span><strong>{hfStats.data.total} 公開成果</strong>
+                <span>·</span><strong>{hfStats.data.total} {copy.publicArtifacts}</strong>
               </>
             )}
-            {hfStats.status === 'loading' && 'Hugging Face API 統計同步中…'}
-            {hfStats.status === 'unavailable' && 'Hugging Face API 暫時無法連線；下方保留已驗證的精選成果。'}
+            {hfStats.status === 'loading' && copy.statsLoading}
+            {hfStats.status === 'unavailable' && copy.statsUnavailable}
           </p>
           <div className="hf-grid">
             {featuredArtifacts.map((item) => (
@@ -178,15 +210,15 @@ export default function App() {
                   <span className="proj-arrow">↗</span>
                 </div>
                 <h3>{item.title}</h3>
-                <p>{item.summary.zh}</p>
-                <code>{item.evidence.zh}</code>
+                <p>{item.summary[language] || item.summary.zh}</p>
+                <code>{item.evidence[language] || item.evidence.zh}</code>
               </a>
             ))}
             {portfolioManifest.status === 'loading' && (
-              <div className="hf-manifest-state">Portfolio manifest 載入中…</div>
+              <div className="hf-manifest-state">{copy.manifestLoading}</div>
             )}
             {portfolioManifest.status === 'unavailable' && (
-              <div className="hf-manifest-state error">Portfolio manifest 暫時無法載入，請直接開啟 HF Portfolio。</div>
+              <div className="hf-manifest-state error">{copy.manifestUnavailable}</div>
             )}
           </div>
         </section>
@@ -197,7 +229,7 @@ export default function App() {
             <input
               className="search"
               type="text"
-              placeholder="搜尋 skill、關鍵字或場景…"
+              placeholder={copy.searchPlaceholder}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
             />
@@ -213,15 +245,15 @@ export default function App() {
                 className={`filter-btn ${filter === c.id ? 'active' : ''}`}
                 onClick={() => setFilter(c.id)}
               >
-                {c.label}
+                {language === 'en' ? CATEGORIES_EN[c.id] : c.label}
               </button>
             ))}
-            <span className="count">{filtered.length} 個案例</span>
+            <span className="count">{filtered.length} {copy.allCases}</span>
           </div>
         </div>
 
         {filtered.length === 0 ? (
-          <p className="empty">沒有符合「{query}」的案例，試試其他關鍵字。</p>
+          <p className="empty">{copy.noResultsStart}{query}{copy.noResultsEnd}</p>
         ) : (
           <div className="grid">
             {filtered.map((s) => (
@@ -243,7 +275,7 @@ export default function App() {
                     <p className="scenario">{s.scenario}</p>
                     <div className="cmd-row">
                       <code className="cmd">{s.cmd}</code>
-                      <CopyButton text={s.cmd} />
+                      <CopyButton text={s.cmd} language={language} />
                     </div>
                   </div>
                 )}
@@ -256,25 +288,25 @@ export default function App() {
           <div className="section-heading">
             <div>
               <span className="section-kicker">NVIDIA DEEP LEARNING INSTITUTE</span>
-              <h2>NVIDIA 專業認證</h2>
+              <h2>{copy.certificatesTitle}</h2>
             </div>
-            <span className="cert-count">{CERTIFICATES.length} 張證書</span>
+            <span className="cert-count">{CERTIFICATES.length} {copy.certificateCount}</span>
           </div>
           <div className="cert-grid">
-            {CERTIFICATES.map((certificate) => (
+            {CERTIFICATES.map((certificate, index) => (
               <article key={certificate.id} className="cert-card">
                 <div className="cert-mark" aria-hidden="true">NVIDIA</div>
                 <time className="cert-date" dateTime={certificate.date.replaceAll('.', '-')}>{certificate.date}</time>
-                <h3>{certificate.title}</h3>
+                <h3>{language === 'en' ? copy[`cert${index + 1}`] : certificate.title}</h3>
                 <p>Certificate of Competency</p>
                 <div className="cert-actions">
-                  <a href={certificate.pdf} target="_blank" rel="noreferrer">查看證書 PDF ↗</a>
+                  <a href={certificate.pdf} target="_blank" rel="noreferrer">{copy.viewCertificate}</a>
                   <a
                     href={`https://learn.nvidia.com/certificates?id=${certificate.id}`}
                     target="_blank"
                     rel="noreferrer"
                   >
-                    NVIDIA 官方驗證 ↗
+                    {copy.verifyCertificate}
                   </a>
                 </div>
               </article>
@@ -283,19 +315,19 @@ export default function App() {
         </section>
 
         <section className="projects">
-          <h2>我的精選作品入口</h2>
+          <h2>{copy.projectsTitle}</h2>
           <div className="proj-grid">
             {PROJECTS.map((p) => (
               <a key={p.url} className="proj-card" href={p.url} target="_blank" rel="noreferrer">
                 <div className="proj-top">
                   <span className="proj-icon">{p.icon}</span>
-                  <span className="proj-title">{p.title}</span>
+                  <span className="proj-title">{language === 'en' ? PROJECTS_EN[p.title]?.title || p.title : p.title}</span>
                   <span className="proj-arrow">↗</span>
                 </div>
-                <p className="proj-desc">{p.desc}</p>
+                <p className="proj-desc">{language === 'en' ? PROJECTS_EN[p.title]?.desc || p.desc : p.desc}</p>
                 <div className="proj-tags">
                   {p.tags.map((t) => (
-                    <span key={t} className="proj-tag">{t}</span>
+                    <span key={t} className="proj-tag">{language === 'en' ? TAGS_EN[t] || t : t}</span>
                   ))}
                 </div>
               </a>
@@ -311,17 +343,17 @@ export default function App() {
           {' · '}
           <a href="/projects/">Projects</a>
           {' · '}
-          <a href="/linkedin/">Professional Profile</a>
+          <a href="/linkedin/">{copy.footerProfessionalProfile}</a>
           {' · '}
           <a href="https://huggingface.co/spaces/junbin666/nvidia-project-portfolio" target="_blank" rel="noreferrer">Hugging Face Portfolio</a>
           {' · '}
-          <a href="/ai-prompt-game-tutorial/">AI Game Tutorial</a>
+          <a href="/ai-prompt-game-tutorial/">{copy.footerGameTutorial}</a>
           {' · '}
-          <a href="/lectures/">Lectures</a>
+          <a href="/lectures/">{copy.footerLectures}</a>
           {' · '}
-          <a href="https://jjfishjj.github.io/claude-projects-hub/" target="_blank" rel="noreferrer">Deploy Hub</a>
+          <a href="https://jjfishjj.github.io/claude-projects-hub/" target="_blank" rel="noreferrer">{copy.footerDeployHub}</a>
           {' · '}
-          Data from{' '}
+          {copy.footerDataFrom}{' '}
           <a href="https://github.com/nvidia/skills" target="_blank" rel="noreferrer">NVIDIA/skills</a>
         </p>
       </footer>
