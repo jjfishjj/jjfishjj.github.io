@@ -87,7 +87,7 @@
     "artifact": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "type", "icon", "title", "summary", "evidence", "tags", "url", "sourceUrl"],
+      "required": ["id", "type", "icon", "title", "summary", "evidence", "tags", "url"],
       "properties": {
         "id": { "$ref": "#/$defs/id" },
         "type": { "enum": ["space", "model", "dataset"] },
@@ -107,6 +107,15 @@
         "tags": { "$ref": "#/$defs/tags" },
         "url": { "$ref": "#/$defs/httpsUrl" },
         "sourceUrl": { "$ref": "#/$defs/httpsUrl" },
+        "relatedRepository": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["name", "url"],
+          "properties": {
+            "name": { "$ref": "#/$defs/nonEmptyString" },
+            "url": { "$ref": "#/$defs/httpsUrl" }
+          }
+        },
         "featuredOrder": { "type": "integer", "minimum": 1 }
       }
     },

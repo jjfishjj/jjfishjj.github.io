@@ -240,14 +240,28 @@ export default function App() {
                     <a className="hf-card-action primary" href={item.url} target="_blank" rel="noreferrer">
                       {artifactLabel} ↗
                     </a>
-                    <a
-                      className={`hf-card-action secondary ${isGitHubRepository(item.sourceUrl) ? '' : 'profile'}`}
-                      href={item.sourceUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      {sourceLabel} ↗
-                    </a>
+                    {item.relatedRepository && (
+                      <a
+                        className="hf-card-action secondary related-repository"
+                        href={item.relatedRepository.url}
+                        target="_blank"
+                        rel="noreferrer"
+                        aria-label={`${copy.relatedProjectSource}: ${item.relatedRepository.name}`}
+                      >
+                        <span>{copy.relatedProjectSource} ↗</span>
+                        <span className="related-repository-name">{item.relatedRepository.name}</span>
+                      </a>
+                    )}
+                    {item.sourceUrl && (
+                      <a
+                        className={`hf-card-action secondary ${isGitHubRepository(item.sourceUrl) ? '' : 'profile'}`}
+                        href={item.sourceUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        {sourceLabel} ↗
+                      </a>
+                    )}
                   </div>
                 </article>
               )

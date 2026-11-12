@@ -241,6 +241,22 @@ body {
 .hf-card-action.primary:hover,
 .proj-card-action.primary:hover { border-color: #76b900; color: #d6ff9f; }
 .hf-card-action.profile { color: #8b9784; }
+.hf-card-action.related-repository {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  max-width: 100%;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+.related-repository-name {
+  max-width: 100%;
+  color: #899486;
+  font-size: 9px;
+  font-weight: 500;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
 
 /* Controls */
 .controls { margin-bottom: 1.5rem; }
