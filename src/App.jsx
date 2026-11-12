@@ -52,6 +52,15 @@ function CopyButton({ text, language }) {
   )
 }
 
+function isGitHubRepository(url) {
+  try {
+    const parsed = new URL(url)
+    return parsed.hostname === 'github.com' && parsed.pathname.split('/').filter(Boolean).length >= 2
+  } catch {
+    return false
+  }
+}
+
 export default function App() {
   const [language, setLanguage] = useState(() => {
     const requested = new URLSearchParams(window.location.search).get('lang')
@@ -202,18 +211,47 @@ export default function App() {
             {hfStats.status === 'unavailable' && copy.statsUnavailable}
           </p>
           <div className="hf-grid">
-            {featuredArtifacts.map((item) => (
-              <a key={item.id} className="hf-card" href={item.url} target="_blank" rel="noreferrer">
-                <div className="hf-card-head">
-                  <span className="hf-icon" aria-hidden="true">{item.icon}</span>
-                  <span className="hf-kind">{item.type.toUpperCase()} · {item.tags[0]}</span>
-                  <span className="proj-arrow">↗</span>
-                </div>
-                <h3>{item.title}</h3>
-                <p>{item.summary[language] || item.summary.zh}</p>
-                <code>{item.evidence[language] || item.evidence.zh}</code>
-              </a>
-            ))}
+            {featuredArtifacts.map((item) => {
+              const artifactLabel = item.type === 'space'
+                ? copy.viewDemo
+                : item.type === 'model'
+                  ? copy.viewModel
+                  : copy.viewDataset
+              const sourceLabel = isGitHubRepository(item.sourceUrl) ? copy.viewCode : copy.githubProfile
+              return (
+                <article key={item.id} className="hf-card">
+                  <a
+                    className="hf-card-content"
+                    href={item.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={`${artifactLabel}: ${item.title}`}
+                  >
+                    <div className="hf-card-head">
+                      <span className="hf-icon" aria-hidden="true">{item.icon}</span>
+                      <span className="hf-kind">{item.type.toUpperCase()} · {item.tags[0]}</span>
+                      <span className="proj-arrow">↗</span>
+                    </div>
+                    <h3>{item.title}</h3>
+                    <p>{item.summary[language] || item.summary.zh}</p>
+                    <code>{item.evidence[language] || item.evidence.zh}</code>
+                  </a>
+                  <div className="hf-card-actions">
+                    <a className="hf-card-action primary" href={item.url} target="_blank" rel="noreferrer">
+                      {artifactLabel} ↗
+                    </a>
+                    <a
+                      className={`hf-card-action secondary ${isGitHubRepository(item.sourceUrl) ? '' : 'profile'}`}
+                      href={item.sourceUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {sourceLabel} ↗
+                    </a>
+                  </div>
+                </article>
+              )
+            })}
             {portfolioManifest.status === 'loading' && (
               <div className="hf-manifest-state">{copy.manifestLoading}</div>
             )}
@@ -318,19 +356,33 @@ export default function App() {
           <h2>{copy.projectsTitle}</h2>
           <div className="proj-grid">
             {PROJECTS.map((p) => (
-              <a key={p.url} className="proj-card" href={p.url} target="_blank" rel="noreferrer">
-                <div className="proj-top">
-                  <span className="proj-icon">{p.icon}</span>
-                  <span className="proj-title">{language === 'en' ? PROJECTS_EN[p.title]?.title || p.title : p.title}</span>
-                  <span className="proj-arrow">↗</span>
+              <article key={p.url} className="proj-card">
+                <a className="proj-card-main" href={p.url} target="_blank" rel="noreferrer">
+                  <div className="proj-top">
+                    <span className="proj-icon">{p.icon}</span>
+                    <span className="proj-title">{language === 'en' ? PROJECTS_EN[p.title]?.title || p.title : p.title}</span>
+                    <span className="proj-arrow">↗</span>
+                  </div>
+                  <p className="proj-desc">{language === 'en' ? PROJECTS_EN[p.title]?.desc || p.desc : p.desc}</p>
+                  <div className="proj-tags">
+                    {p.tags.map((t) => (
+                      <span key={t} className="proj-tag">{language === 'en' ? TAGS_EN[t] || t : t}</span>
+                    ))}
+                  </div>
+                </a>
+                <div className="proj-card-actions">
+                  {p.demoUrl && (
+                    <a className="proj-card-action primary" href={p.demoUrl} target="_blank" rel="noreferrer">
+                      {copy.viewDemo} ↗
+                    </a>
+                  )}
+                  {p.repoUrl && (
+                    <a className="proj-card-action" href={p.repoUrl} target="_blank" rel="noreferrer">
+                      {copy.repository} ↗
+                    </a>
+                  )}
                 </div>
-                <p className="proj-desc">{language === 'en' ? PROJECTS_EN[p.title]?.desc || p.desc : p.desc}</p>
-                <div className="proj-tags">
-                  {p.tags.map((t) => (
-                    <span key={t} className="proj-tag">{language === 'en' ? TAGS_EN[t] || t : t}</span>
-                  ))}
-                </div>
-              </a>
+              </article>
             ))}
           </div>
         </section>

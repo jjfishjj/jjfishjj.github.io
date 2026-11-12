@@ -313,6 +313,8 @@ export const PROJECTS = [
     desc: '依 AI/NVIDIA、3D/遊戲、語言學習、資料儀表板、產品原型、研究硬體分類的個人專案總覽',
     tags: ['Project Index', 'Portfolio', 'GitHub Pages', 'Category Pages'],
     url: '/projects/',
+    demoUrl: '/projects/',
+    repoUrl: 'https://github.com/jjfishjj/jjfishjj.github.io',
   },
   {
     icon: '🧭',
@@ -320,6 +322,8 @@ export const PROJECTS = [
     desc: '55 個 NVIDIA Agent Skills 專案索引頁 + 8 個精選延伸專案 README 作品集地圖',
     tags: ['NVIDIA Skills', 'Portfolio Map', 'AI Infrastructure', 'GitHub Pages'],
     url: '/nvidia-agent-skill-labs/',
+    demoUrl: '/nvidia-agent-skill-labs/',
+    repoUrl: 'https://github.com/jjfishjj/jjfishjj.github.io',
   },
   {
     icon: '🚀',
@@ -327,6 +331,7 @@ export const PROJECTS = [
     desc: 'Vera Rubin、Nemotron 3 Ultra 550B、Alpamayo 2 Super 的最佳化工具包',
     tags: ['Roofline', 'NVFP4 量化', 'Dynamo 部署', 'Speculative Decoding'],
     url: 'https://github.com/jjfishjj/nvidia-computex2026-optimizer',
+    repoUrl: 'https://github.com/jjfishjj/nvidia-computex2026-optimizer',
   },
   {
     icon: '🔋',
@@ -334,5 +339,6 @@ export const PROJECTS = [
     desc: 'IC 晶片節能技術研究 — Clock/Power Gating、DVFS 與 AI 功耗預測',
     tags: ['DVFS', 'Power Gating', 'AI 功耗預測'],
     url: 'https://github.com/jjfishjj/ic-power-efficiency',
+    repoUrl: 'https://github.com/jjfishjj/ic-power-efficiency',
   },
 ]
